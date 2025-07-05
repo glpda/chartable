@@ -54,3 +54,15 @@ pub fn markup_shorthand_from_codepoint_test() {
 
   assert Ok("--") == typst.markup_shorthand_from_codepoint(en_dash)
 }
+
+pub fn math_shorthand_to_codepoint_test() {
+  let arrow = string.utf_codepoint(0x2192)
+
+  assert arrow == typst.math_shorthand_to_codepoint("->")
+}
+
+pub fn math_shorthand_from_codepoint_test() {
+  let assert Ok(arrow) = string.utf_codepoint(0x2192)
+
+  assert Ok("->") == typst.math_shorthand_from_codepoint(arrow)
+}

@@ -296,3 +296,211 @@ pub fn markup_shorthand_from_codepoint(
     _ -> Error(Nil)
   }
 }
+
+/// Converts a Typst math mode shorthand `String` to a `UtfCodepoint`:
+/// - [Math Shorthands](https://typst.app/docs/reference/symbols/#shorthands)
+/// - [Math Primes](https://typst.app/docs/reference/math/primes/)
+///
+/// ## Examples
+///
+/// ```gleam
+/// let arrow = string.utf_codepoint(0x2192)  // Ok('→')
+///
+/// assert arrow == typst.math_shorthand_to_codepoint("->")
+/// ```
+///
+pub fn math_shorthand_to_codepoint(
+  shorthand: String,
+) -> Result(UtfCodepoint, Nil) {
+  case shorthand {
+    // rightwards arrow (→):
+    "->" -> string.utf_codepoint(0x2192)
+    // rightwards arrow from bar (↦):
+    "|->" -> string.utf_codepoint(0x21A6)
+    // rightwards double arrow (⇒):
+    "=>" -> string.utf_codepoint(0x21D2)
+    // rightwards double arrow from bar (⤇):
+    "|=>" -> string.utf_codepoint(0x2907)
+    // long rightwards double arrow (⟹):
+    "==>" -> string.utf_codepoint(0x27F9)
+    // long rightwards arrow (⟶):
+    "-->" -> string.utf_codepoint(0x27F6)
+    // long rightwards squiggle arrow (⟿):
+    "~~>" -> string.utf_codepoint(0x27FF)
+    // rightwards squiggle arrow (⇝):
+    "~>" -> string.utf_codepoint(0x21DD)
+    // rightwards arrow with tail (↣):
+    ">->" -> string.utf_codepoint(0x21A3)
+    // rightwards two headed arrow (↠):
+    "->>" -> string.utf_codepoint(0x21A0)
+    // leftwards arrow (←):
+    "<-" -> string.utf_codepoint(0x2190)
+    // leftwards long double arrow (⟸):
+    "<==" -> string.utf_codepoint(0x27F8)
+    // long leftwards arrow (⟵):
+    "<--" -> string.utf_codepoint(0x27F5)
+    // long leftwards squiggle arrow (⬳):
+    "<~~" -> string.utf_codepoint(0x2B33)
+    // leftwards squiggle arrow (⇜):
+    "<~" -> string.utf_codepoint(0x21DC)
+    // leftwards arrow with tail (↢):
+    "<-<" -> string.utf_codepoint(0x21A2)
+    // leftwards two headed arrow (↞):
+    "<<-" -> string.utf_codepoint(0x219E)
+    // left right arrow (↔):
+    "<->" -> string.utf_codepoint(0x2194)
+    // left right double arrow (⇔):
+    "<=>" -> string.utf_codepoint(0x21D4)
+    // long left right double arrow (⟺):
+    "<==>" -> string.utf_codepoint(0x27FA)
+    // long left right arrow (⟷):
+    "<-->" -> string.utf_codepoint(0x27F7)
+    // asterisk operator (∗):
+    "*" -> string.utf_codepoint(0x2217)
+    // double vertical line (‖):
+    "||" -> string.utf_codepoint(0x2016)
+    // left white square bracker (⟦):
+    "[|" -> string.utf_codepoint(0x27E6)
+    // right white square bracker (⟧):
+    "|]" -> string.utf_codepoint(0x27E7)
+    // colon equals (≔):
+    ":=" -> string.utf_codepoint(0x2254)
+    // double colon equals (⩴):
+    "::=" -> string.utf_codepoint(0x2A74)
+    // horizontal ellipsis (…):
+    "..." -> string.utf_codepoint(0x2026)
+    // equals colon (≕):
+    "=:" -> string.utf_codepoint(0x2255)
+    // not equal to (≠):
+    "!=" -> string.utf_codepoint(0x2260)
+    // much greater than (≫):
+    ">>" -> string.utf_codepoint(0x226B)
+    // greater than or equal to (≥):
+    ">=" -> string.utf_codepoint(0x2265)
+    // very much greater than (⋙):
+    ">>>" -> string.utf_codepoint(0x22D9)
+    // much less than (≪):
+    "<<" -> string.utf_codepoint(0x226A)
+    // less than or equal to (≤):
+    "<=" -> string.utf_codepoint(0x2264)
+    // very much less than (⋘):
+    "<<<" -> string.utf_codepoint(0x22D8)
+    // minus sign (−):
+    "-" -> string.utf_codepoint(0x2212)
+    // tilde operator (∼):
+    "~" -> string.utf_codepoint(0x223C)
+    // prime (′):
+    "'" -> string.utf_codepoint(0x2032)
+    // double pime (″):
+    "''" -> string.utf_codepoint(0x2033)
+    // triple prime (‴):
+    "'''" -> string.utf_codepoint(0x2034)
+    // quadruple prime (⁗):
+    "''''" -> string.utf_codepoint(0x2057)
+    _ -> Error(Nil)
+  }
+}
+
+/// Converts a `UtfCodepoint` to a Typst math mode shorthand `String`:
+/// - [Math Shorthands](https://typst.app/docs/reference/symbols/#shorthands)
+/// - [Math Primes](https://typst.app/docs/reference/math/primes/)
+///
+/// ## Examples
+///
+/// ```gleam
+/// let assert Ok(arrow) = string.utf_codepoint(0x2192)  // '→'
+///
+/// assert Ok("->") == typst.math_shorthand_from_codepoint(arrow)
+/// ```
+///
+pub fn math_shorthand_from_codepoint(
+  codepoint: UtfCodepoint,
+) -> Result(String, Nil) {
+  case string.utf_codepoint_to_int(codepoint) {
+    // rightwards arrow (→):
+    0x2192 -> Ok("->")
+    // rightwards arrow from bar (↦):
+    0x21A6 -> Ok("|->")
+    // rightwards double arrow (⇒):
+    0x21D2 -> Ok("=>")
+    // rightwards double arrow from bar (⤇):
+    0x2907 -> Ok("|=>")
+    // long rightwards double arrow (⟹):
+    0x27F9 -> Ok("==>")
+    // long rightwards arrow (⟶):
+    0x27F6 -> Ok("-->")
+    // long rightwards squiggle arrow (⟿):
+    0x27FF -> Ok("~~>")
+    // rightwards squiggle arrow (⇝):
+    0x21DD -> Ok("~>")
+    // rightwards arrow with tail (↣):
+    0x21A3 -> Ok(">->")
+    // rightwards two headed arrow (↠):
+    0x21A0 -> Ok("->>")
+    // leftwards arrow (←):
+    0x2190 -> Ok("<-")
+    // leftwards long double arrow (⟸):
+    0x27F8 -> Ok("<==")
+    // long leftwards arrow (⟵):
+    0x27F5 -> Ok("<--")
+    // long leftwards squiggle arrow (⬳):
+    0x2B33 -> Ok("<~~")
+    // leftwards squiggle arrow (⇜):
+    0x21DC -> Ok("<~")
+    // leftwards arrow with tail (↢):
+    0x21A2 -> Ok("<-<")
+    // leftwards two headed arrow (↞):
+    0x219E -> Ok("<<-")
+    // left right arrow (↔):
+    0x2194 -> Ok("<->")
+    // left right double arrow (⇔):
+    0x21D4 -> Ok("<=>")
+    // long left right double arrow (⟺):
+    0x27FA -> Ok("<==>")
+    // long left right arrow (⟷):
+    0x27F7 -> Ok("<-->")
+    // asterisk operator (∗):
+    0x2217 -> Ok("*")
+    // double vertical line (‖):
+    0x2016 -> Ok("||")
+    // left white square bracker (⟦):
+    0x27E6 -> Ok("[|")
+    // right white square bracker (⟧):
+    0x27E7 -> Ok("|]")
+    // colon equals (≔):
+    0x2254 -> Ok(":=")
+    // double colon equals (⩴):
+    0x2A74 -> Ok("::=")
+    // horizontal ellipsis (…):
+    0x2026 -> Ok("...")
+    // equals colon (≕):
+    0x2255 -> Ok("=:")
+    // not equal to (≠):
+    0x2260 -> Ok("!=")
+    // much greater than (≫):
+    0x226B -> Ok(">>")
+    // greater than or equal to (≥):
+    0x2265 -> Ok(">=")
+    // very much greater than (⋙):
+    0x22D9 -> Ok(">>>")
+    // much less than (≪):
+    0x226A -> Ok("<<")
+    // less than or equal to (≤):
+    0x2264 -> Ok("<=")
+    // very much less than (⋘):
+    0x22D8 -> Ok("<<<")
+    // minus sign (−):
+    0x2212 -> Ok("-")
+    // tilde operator (∼):
+    0x223C -> Ok("~")
+    // prime (′):
+    0x2032 -> Ok("'")
+    // double pime (″):
+    0x2033 -> Ok("''")
+    // triple prime (‴):
+    0x2034 -> Ok("'''")
+    // quadruple prime (⁗):
+    0x2057 -> Ok("''''")
+    _ -> Error(Nil)
+  }
+}
