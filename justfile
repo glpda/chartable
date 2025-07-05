@@ -11,6 +11,10 @@ whatwg := "https://html.spec.whatwg.org/"
 html-entities := "entities.json"
 html-entities-clean := "entities-clean.json"
 
+typst-codex := "https://raw.githubusercontent.com/typst/codex/refs/heads/main/src/modules/"
+typst-sym := "sym.txt"
+typst-emoji := "emoji.txt"
+
 
 default: fetch-all
 
@@ -29,8 +33,8 @@ extract file target:
 # 7z x -o tmp/{{target}} tmp/{{file}}
 
 [group('fetch')]
-make-const source target:
-	echo 'pub const json = "' > {{lib-path}}/{{target}}.gleam
+make-const source target const="txt":
+	echo 'pub const {{const}} = "' > {{lib-path}}/{{target}}.gleam
 	sed 's/\\/\\\\/g; s/"/\\"/g'  < tmp/{{source}} \
 	>> {{lib-path}}/{{target}}.gleam
 	echo '"' >> {{lib-path}}/{{target}}.gleam
@@ -41,7 +45,7 @@ make-const source target:
 # move instead of copy?
 
 [group('fetch')]
-fetch-all: fetch-unidata fetch-html
+fetch-all: fetch-unidata fetch-html fetch-typst
 
 [group('fetch')]
 fetch-unidata: \
@@ -65,7 +69,14 @@ clean-entities:
 fetch-html: \
 (download whatwg html-entities) \
 (clean-entities) \
-(make-const html-entities-clean "html/entities")
+(make-const html-entities-clean "html/entities" "json")
+
+[group('fetch')]
+fetch-typst: \
+(download typst-codex typst-sym) \
+(download typst-codex typst-emoji) \
+(make-const typst-sym "typst/sym") \
+(make-const typst-emoji "typst/emoji")
 
 
 # clear:
