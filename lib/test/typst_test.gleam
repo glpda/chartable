@@ -42,3 +42,15 @@ pub fn emojitable_test() {
   internal.from_codepoint_table_to_string(emojitable.from_codepoint)
   |> birdie.snap(title: "Typst emoji notation from codepoints")
 }
+
+pub fn markup_shorthand_to_codepoint_test() {
+  let en_dash = string.utf_codepoint(0x2013)
+
+  assert en_dash == typst.markup_shorthand_to_codepoint("--")
+}
+
+pub fn markup_shorthand_from_codepoint_test() {
+  let assert Ok(en_dash) = string.utf_codepoint(0x2013)
+
+  assert Ok("--") == typst.markup_shorthand_from_codepoint(en_dash)
+}

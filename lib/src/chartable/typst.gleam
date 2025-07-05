@@ -234,3 +234,65 @@ fn update_table(table: Table, codepoints: List(UtfCodepoint), notation: String) 
     dict.insert(codepoints, into: table.to_codepoints, for: notation)
   Table(from_codepoint:, to_codepoints:)
 }
+
+/// Converts a Typst markup mode shorthand `String` to a `UtfCodepoint`
+/// (see [Typst docs](https://typst.app/docs/reference/symbols/#shorthands)).
+///
+/// ## Examples
+///
+/// ```gleam
+/// let en_dash = string.utf_codepoint(0x2013)  // Ok('–')
+///
+/// assert en_dash == typst.markup_shorthand_to_codepoint("--")
+/// ```
+///
+pub fn markup_shorthand_to_codepoint(
+  shorthand: String,
+) -> Result(UtfCodepoint, Nil) {
+  case shorthand {
+    // en dash (–):
+    "--" -> string.utf_codepoint(0x2013)
+    // em dash (—):
+    "---" -> string.utf_codepoint(0x2014)
+    // horizontal ellipsis (…):
+    "..." -> string.utf_codepoint(0x2026)
+    // soft hyphen (shy):
+    "-?" -> string.utf_codepoint(0x00AD)
+    // minus sign (−):
+    "-" -> string.utf_codepoint(0x2212)
+    // no break space (nbsp):
+    "~" -> string.utf_codepoint(0x00A0)
+    _ -> Error(Nil)
+  }
+}
+
+/// Converts a `UtfCodepoint` to a Typst markup mode shorthand `String`
+/// (see [Typst docs](https://typst.app/docs/reference/symbols/#shorthands)).
+///
+/// ## Examples
+///
+/// ```gleam
+/// let assert Ok(en_dash) = string.utf_codepoint(0x2013)  // '–'
+///
+/// assert Ok("--") == typst.markup_shorthand_from_codepoint(en_dash)
+/// ```
+///
+pub fn markup_shorthand_from_codepoint(
+  codepoint: UtfCodepoint,
+) -> Result(String, Nil) {
+  case string.utf_codepoint_to_int(codepoint) {
+    // en dash (–):
+    0x2013 -> Ok("--")
+    // em dash (—):
+    0x2014 -> Ok("---")
+    // horizontal ellipsis (…):
+    0x2026 -> Ok("...")
+    // soft hyphen (shy):
+    0x00AD -> Ok("-?")
+    // minus sign (−):
+    0x2212 -> Ok("-")
+    // no break space (nbsp):
+    0x00A0 -> Ok("~")
+    _ -> Error(Nil)
+  }
+}
