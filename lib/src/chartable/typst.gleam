@@ -1,5 +1,6 @@
 //// Converts between Unicode code points and [typst notations](https://typst.app/docs/reference)
 
+import chartable/internal/math_alphanum.{Bold, Italic, Regular, Upright}
 import chartable/typst/emoji
 import chartable/typst/sym
 import gleam/dict.{type Dict}
@@ -502,5 +503,104 @@ pub fn math_shorthand_from_codepoint(
     // quadruple prime (⁗):
     0x2057 -> Ok("''''")
     _ -> Error(Nil)
+  }
+}
+
+/// Converts a `UtfCodepoint` to a Typst math alphanumeric symbol:
+/// - [Math Styles](https://typst.app/docs/reference/math/styles)
+/// - [Math Variants](https://typst.app/docs/reference/math/variants)
+///
+/// ## Examples
+///
+/// ```gleam
+/// let assert Ok(symtable) = typst.make_symtable()
+///
+/// assert Ok(["upright(C)"])
+///   == string.utf_codepoint(0x0043)
+///   |> result.try(typst.math_alphanum_from_codepoint(_, symtable))
+///
+/// assert Ok(["C"])
+///   == string.utf_codepoint(0x1D436)
+///   |> result.try(typst.math_alphanum_from_codepoint(_, symtable))
+///
+/// assert Error(Nil)
+///   == string.utf_codepoint(0x1D53A)
+///   |> result.try(typst.math_alphanum_from_codepoint(_, symtable))
+///
+/// assert Ok(["bb(C)"])
+///   == string.utf_codepoint(0x2102)
+///   |> result.try(typst.math_alphanum_from_codepoint(_, symtable))
+///
+/// assert Ok(["bold(Gamma)"])
+///   == string.utf_codepoint(0x1D6AA)
+///   |> result.try(typst.math_alphanum_from_codepoint(_, symtable))
+/// ```
+///
+pub fn math_alphanum_from_codepoint(
+  codepoint: UtfCodepoint,
+  table table: Table,
+) -> Result(List(String), Nil) {
+  use alphanum <- result.try(math_alphanum.from_codepoint(codepoint))
+
+  let notations = case dict.get(table.from_codepoint, alphanum.letter) {
+    Ok(notations) -> notations
+    Error(_) -> [string.from_utf_codepoints([alphanum.letter])]
+  }
+
+  // NOTE: "italic" default for roman letters and greek _lowercase_ letters
+  let math_styles = case alphanum {
+    math_alphanum.LatinSerif(_, Italic, Regular) -> []
+    math_alphanum.DigitSerif(_, Regular) -> []
+    math_alphanum.LatinSerif(_, Italic, Bold) -> ["bold"]
+    math_alphanum.DigitSerif(_, Bold) -> ["bold"]
+    math_alphanum.LatinSerif(_, Upright, Regular) -> ["upright"]
+    math_alphanum.LatinSerif(_, Upright, Bold) -> ["upright", "bold"]
+    math_alphanum.LatinScript(_, Regular) -> ["cal"]
+    math_alphanum.LatinScript(_, Bold) -> ["cal", "bold"]
+    math_alphanum.LatinFraktur(_, Regular) -> ["frak"]
+    math_alphanum.LatinFraktur(_, Bold) -> ["frak", "bold"]
+    math_alphanum.LatinSans(_, Italic, Regular) -> ["sans"]
+    math_alphanum.DigitSans(_, Regular) -> ["sans"]
+    math_alphanum.LatinSans(_, Italic, Bold) -> ["sans", "bold"]
+    math_alphanum.DigitSans(_, Bold) -> ["sans", "bold"]
+    math_alphanum.LatinSans(_, Upright, Regular) -> ["upright", "sans"]
+    math_alphanum.LatinSans(_, Upright, Bold) -> ["upright", "sans", "bold"]
+    math_alphanum.LatinMono(_) -> ["mono"]
+    math_alphanum.DigitMono(_) -> ["mono"]
+    math_alphanum.LatinDoubleStruck(_) -> ["bb"]
+    math_alphanum.DigitDoubleStruck(_) -> ["bb"]
+    math_alphanum.GreekDoubleStruck(_) -> ["bb"]
+    math_alphanum.GreekSerif(letter, slope, Regular) ->
+      greek_slope(letter, slope, [])
+    math_alphanum.GreekSerif(letter, slope, Bold) ->
+      greek_slope(letter, slope, ["bold"])
+    math_alphanum.GreekSansBold(letter:, slope:) ->
+      greek_slope(letter, slope, ["sans"])
+    math_alphanum.Hebrew(_) -> []
+  }
+
+  Ok(list.map(notations, apply_math_styles(_, math_styles)))
+}
+
+fn greek_slope(
+  letter: UtfCodepoint,
+  slope: math_alphanum.Slope,
+  styles: List(String),
+) -> List(String) {
+  let str = string.from_utf_codepoints([letter])
+  let is_lowercase =
+    str == string.lowercase(str) && str != string.uppercase(str)
+  case slope {
+    Italic if is_lowercase -> styles
+    Italic -> ["italic", ..styles]
+    Upright if is_lowercase -> ["upright", ..styles]
+    Upright -> styles
+  }
+}
+
+fn apply_math_styles(string: String, styles: List(String)) -> String {
+  case styles {
+    [] -> string
+    [style, ..rest] -> apply_math_styles(style <> "(" <> string <> ")", rest)
   }
 }

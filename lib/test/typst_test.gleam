@@ -66,3 +66,35 @@ pub fn math_shorthand_from_codepoint_test() {
 
   assert Ok("->") == typst.math_shorthand_from_codepoint(arrow)
 }
+
+pub fn math_alphanum_from_codepoint_test() {
+  let assert Ok(symtable) = typst.make_symtable()
+
+  assert Ok(["upright(C)"])
+    == string.utf_codepoint(0x0043)
+    |> result.try(typst.math_alphanum_from_codepoint(_, symtable))
+
+  assert Ok(["C"])
+    == string.utf_codepoint(0x1D436)
+    |> result.try(typst.math_alphanum_from_codepoint(_, symtable))
+
+  assert Error(Nil)
+    == string.utf_codepoint(0x1D53A)
+    |> result.try(typst.math_alphanum_from_codepoint(_, symtable))
+
+  assert Ok(["bb(C)"])
+    == string.utf_codepoint(0x2102)
+    |> result.try(typst.math_alphanum_from_codepoint(_, symtable))
+
+  assert Ok(["bold(Gamma)"])
+    == string.utf_codepoint(0x1D6AA)
+    |> result.try(typst.math_alphanum_from_codepoint(_, symtable))
+
+  assert Ok(["bold(upright(gamma))"])
+    == string.utf_codepoint(0x1D6C4)
+    |> result.try(typst.math_alphanum_from_codepoint(_, symtable))
+
+  assert Ok(["bold(cal(h))"])
+    == string.utf_codepoint(0x1D4F1)
+    |> result.try(typst.math_alphanum_from_codepoint(_, symtable))
+}
