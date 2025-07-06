@@ -171,7 +171,7 @@ fn parse_codepoints(
     "" ->
       case acc {
         [] -> Error(Nil)
-        _ -> Ok(acc)
+        _ -> Ok(list.reverse(acc))
       }
     "\\u{" <> rest -> {
       use #(hex_code, rest) <- result.try(string.split_once(rest, on: "}"))
@@ -181,7 +181,7 @@ fn parse_codepoints(
     }
     string -> {
       use #(grapheme, rest) <- result.try(string.pop_grapheme(string))
-      let acc = list.append(acc, string.to_utf_codepoints(grapheme))
+      let acc = list.append(string.to_utf_codepoints(grapheme), acc)
       parse_codepoints(rest, acc)
     }
   }
