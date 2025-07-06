@@ -1,0 +1,50 @@
+name: test
+
+on:
+  push:
+    branches:
+      - main
+  pull_request:
+
+jobs:
+  library:
+    name: Library tests
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: erlef/setup-beam@v1
+        with:
+          otp-version: "27.1.2"
+          gleam-version: "1.11.0"
+          rebar3-version: "3"
+          # elixir-version: "1"
+      - name: Download gleam dependencies
+        run: gleam deps download
+        working-directory: lib
+      - name: Run gleam test
+        run: gleam test
+        working-directory: lib
+      - name: Check gleam format
+        run: gleam format --check src test
+        working-directory: lib
+
+  # application:
+  #   name: Application tests
+  #   runs-on: ubuntu-latest
+  #   steps:
+  #     - uses: actions/checkout@v4
+  #     - uses: erlef/setup-beam@v1
+  #       with:
+  #         otp-version: "27.1.2"
+  #         gleam-version: "1.11.0"
+  #         rebar3-version: "3"
+  #         # elixir-version: "1"
+  #     - name: Download gleam dependencies
+  #       run: gleam deps download
+  #       working-directory: app
+  #     - name: Run gleam test
+  #       run: gleam test
+  #       working-directory: app
+  #     - name: Check gleam format
+  #       run: gleam format --check src test
+  #       working-directory: app
