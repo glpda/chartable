@@ -681,6 +681,65 @@ pub fn notations_from_codepoint(
   |> list.append(math_alphanum_notations)
 }
 
+/// Converts a Typst codex name `String` to a `UtfCodepoint`,
+/// only handles names listed these two modules:
+/// [sym](https://typst.app/docs/reference/symbols/sym/),
+/// and [emoji](https://typst.app/docs/reference/symbols/emoji/).
+///
+/// ## Examples
+///
+/// ```gleam
+/// let assert Ok(tables) = typst.make_tables()
+///
+/// assert Ok(string.to_utf_codepoints("\u{22C6}"))
+///   == typst.notation_to_codepoints("#sym.star.op", tables)
+///
+/// assert Ok(string.to_utf_codepoints("\u{2B50}"))
+///   == typst.notation_to_codepoints("#emoji.star", tables)
+///
+/// assert Error(Nil) == typst.notation_to_codepoints("emoji.star", tables)
+///
+/// assert Error(Nil) == typst.notation_to_codepoints("#emoji.staaar", tables)
+/// ```
+///
+pub fn notation_to_codepoints(
+  notation: String,
+  tables tables: Tables,
+) -> Result(List(UtfCodepoint), Nil) {
+  case notation {
+    "#sym." <> name -> dict.get(tables.symtable.to_codepoints, name)
+    "#emoji." <> name -> dict.get(tables.emojitable.to_codepoints, name)
+    _ -> Error(Nil)
+  }
+}
+
+/// Converts a Typst codex name `String` to the refered `String`,
+/// only handles names listed these two modules:
+/// [sym](https://typst.app/docs/reference/symbols/sym/),
+/// and [emoji](https://typst.app/docs/reference/symbols/emoji/).
+///
+/// ## Examples
+///
+/// ```gleam
+/// let assert Ok(tables) = typst.make_tables()
+///
+/// assert Ok("\u{22C6}") == typst.notation_to_string("#sym.star.op", tables)
+///
+/// assert Ok("\u{2B50}") == typst.notation_to_string("#emoji.star", tables)
+///
+/// assert Error(Nil) == typst.notation_to_string("emoji.star", tables)
+///
+/// assert Error(Nil) == typst.notation_to_string("#emoji.staaar", tables)
+/// ```
+///
+pub fn notation_to_string(
+  notation: String,
+  tables tables: Tables,
+) -> Result(String, Nil) {
+  notation_to_codepoints(notation, tables)
+  |> result.map(string.from_utf_codepoints)
+}
+
 fn display_math(string: String) -> String {
   "$ " <> string <> " $"
 }

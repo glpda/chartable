@@ -172,3 +172,29 @@ pub fn notations_from_codepoint_test() {
     == string.utf_codepoint(0x1D6AA)
     |> result.map(typst.notations_from_codepoint(_, tables))
 }
+
+pub fn notation_to_codepoints_test() {
+  let assert Ok(tables) = typst.make_tables()
+
+  assert Ok(string.to_utf_codepoints("\u{22C6}"))
+    == typst.notation_to_codepoints("#sym.star.op", tables)
+
+  assert Ok(string.to_utf_codepoints("\u{2B50}"))
+    == typst.notation_to_codepoints("#emoji.star", tables)
+
+  assert Error(Nil) == typst.notation_to_codepoints("emoji.star", tables)
+
+  assert Error(Nil) == typst.notation_to_codepoints("#emoji.staaar", tables)
+}
+
+pub fn notation_to_string_test() {
+  let assert Ok(tables) = typst.make_tables()
+
+  assert Ok("\u{22C6}") == typst.notation_to_string("#sym.star.op", tables)
+
+  assert Ok("\u{2B50}") == typst.notation_to_string("#emoji.star", tables)
+
+  assert Error(Nil) == typst.notation_to_string("emoji.star", tables)
+
+  assert Error(Nil) == typst.notation_to_string("#emoji.staaar", tables)
+}
