@@ -19,6 +19,9 @@ pub type FromCodepoint =
   Dict(UtfCodepoint, List(String))
 
 /// Maps typst codex identifiers to code points.
+///
+/// Prefer [`notation_to_codepoint`](#notation_to_codepoint)
+/// over direclty working with table dictionaries.
 pub type ToCodepoints =
   Dict(String, List(UtfCodepoint))
 
@@ -64,6 +67,8 @@ fn next_line(state state: ParserState, rest txt: String) -> ParserState {
 
 /// Makes symbol table. Requires parsing `sym.txt` from typst codex:
 /// for better performance, call only once and keep the dictionary.
+/// Only handles names listed in
+/// [this module](https://typst.app/docs/reference/symbols/sym/).
 ///
 /// ## Examples
 ///
@@ -85,6 +90,8 @@ pub fn make_symtable() -> Result(Table, ParserError) {
 
 /// Makes emoji table. Requires parsing `emoji.txt` from typst codex:
 /// for better performance, call only once and keep the dictionary.
+/// Only handles names listed in
+/// [this module](https://typst.app/docs/reference/symbols/emoji/).
 ///
 /// ## Examples
 ///
@@ -682,7 +689,7 @@ pub fn notations_from_codepoint(
 }
 
 /// Converts a Typst codex name `String` to a `UtfCodepoint`,
-/// only handles names listed these two modules:
+/// only handles names listed in these two modules:
 /// [sym](https://typst.app/docs/reference/symbols/sym/),
 /// and [emoji](https://typst.app/docs/reference/symbols/emoji/).
 ///
@@ -714,7 +721,7 @@ pub fn notation_to_codepoints(
 }
 
 /// Converts a Typst codex name `String` to the refered `String`,
-/// only handles names listed these two modules:
+/// only handles names listed in these two modules:
 /// [sym](https://typst.app/docs/reference/symbols/sym/),
 /// and [emoji](https://typst.app/docs/reference/symbols/emoji/).
 ///
