@@ -1,5 +1,5 @@
-//// Converts between Unicode code points and html
-//// [entities / character references](https://html.spec.whatwg.org/multipage/named-characters.html)
+//// Converts between Unicode code points and HTML
+//// [entities / character references](https://html.spec.whatwg.org/multipage/named-characters.html).
 
 import chartable/html/entities
 import gleam/dict.{type Dict}
@@ -11,14 +11,14 @@ import gleam/option.{None, Some}
 import gleam/result
 import gleam/string
 
-/// Maps code points to html named character references.
+/// Maps code points to HTML named character references.
 ///
 /// Prefer [`entity_from_codepoint`](#entities_from_codepoint)
 /// over direclty working with table dictionaries.
 pub type FromCodepoint =
   Dict(UtfCodepoint, List(String))
 
-/// Maps html named character references to code points.
+/// Maps HTML named character references to code points.
 ///
 /// Prefer [`entity_to_codepoints`](#entities_to_codepoints)
 /// over direclty working with table dictionaries.
@@ -72,7 +72,7 @@ fn make_reverse_table(input) {
   }
 }
 
-/// Converts an html character reference `String` to a `List` of `UtfCodepoint`.
+/// Converts an HTML character reference `String` to a `List` of `UtfCodepoint`.
 ///
 /// ## Examples
 ///
@@ -112,7 +112,7 @@ fn numeric_entity_to_codepoints(entity: String) -> Result(UtfCodepoint, Nil) {
   |> result.try(string.utf_codepoint)
 }
 
-/// Converts an html character reference `String` to the escaped string.
+/// Converts an HTML character reference `String` to the escaped string.
 ///
 /// ## Examples
 ///
@@ -138,7 +138,7 @@ pub fn entity_to_string(
   |> result.map(string.from_utf_codepoints)
 }
 
-/// Converts a `UtfCodepoint` to a `List` of html character references `String`.
+/// Converts a `UtfCodepoint` to a `List` of HTML character references `String`.
 ///
 /// ## Examples
 ///
