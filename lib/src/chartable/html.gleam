@@ -20,7 +20,7 @@ pub type FromCodepoint =
 
 /// Maps HTML named character references to code points.
 ///
-/// Prefer [`entity_to_codepoints`](#entities_to_codepoints)
+/// Prefer [`entity_to_codepoints`](#entity_to_codepoints)
 /// over direclty working with table dictionaries.
 pub type ToCodepoints =
   Dict(String, List(UtfCodepoint))

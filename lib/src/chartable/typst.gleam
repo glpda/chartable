@@ -20,7 +20,7 @@ pub type FromCodepoint =
 
 /// Maps typst codex identifiers to code points.
 ///
-/// Prefer [`notation_to_codepoint`](#notation_to_codepoint)
+/// Prefer [`notation_to_codepoints`](#notation_to_codepoints)
 /// over direclty working with table dictionaries.
 pub type ToCodepoints =
   Dict(String, List(UtfCodepoint))
