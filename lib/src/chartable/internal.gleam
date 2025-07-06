@@ -18,7 +18,10 @@ pub fn from_codepoint_table_to_string(from_codepoint) -> String {
   })
   |> list.map(fn(key_value) {
     let #(codepoint, notations) = key_value
-    let num = string.utf_codepoint_to_int(codepoint) |> int.to_string()
+    let num =
+      string.utf_codepoint_to_int(codepoint)
+      |> int.to_base16()
+      |> string.pad_start(to: 4, with: "0")
     let escapes =
       list.sort(notations, string.compare) |> string.join(with: ", ")
 

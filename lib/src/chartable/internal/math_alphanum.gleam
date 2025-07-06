@@ -45,6 +45,8 @@ pub fn from_codepoint(codepoint: UtfCodepoint) -> Result(Style, Nil) {
     // Lowercase Latin Letters:
     int if 0x0061 <= int && int <= 0x007A ->
       Ok(LatinSerif(codepoint, Upright, Regular))
+    // Dotless i & j (ı & ȷ):
+    0x0131 | 0x0237 -> Ok(LatinSerif(codepoint, Upright, Regular))
     // Greek Uppercase Letters:
     int if 0x0391 <= int && int <= 0x03A9 && int != 0x03A2 ->
       Ok(GreekSerif(codepoint, Upright, Regular))
@@ -274,8 +276,8 @@ fn digit_style(codepoint: Int) -> Result(Style, Nil) {
   case class {
     0 -> digit_codepoint(index) |> result.map(DigitSerif(_, Bold))
     1 -> digit_codepoint(index) |> result.map(DigitDoubleStruck)
-    2 -> digit_codepoint(index) |> result.map(DigitSans(_, Bold))
-    3 -> digit_codepoint(index) |> result.map(DigitSans(_, Regular))
+    2 -> digit_codepoint(index) |> result.map(DigitSans(_, Regular))
+    3 -> digit_codepoint(index) |> result.map(DigitSans(_, Bold))
     4 -> digit_codepoint(index) |> result.map(DigitMono)
     _ -> Error(Nil)
   }

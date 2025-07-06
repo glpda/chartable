@@ -4,1450 +4,1450 @@ title: HTML entities from codepoints
 file: ./test/html_test.gleam
 test_name: entities_test
 ---
-9 (	): Tab
-10 (
+0009 (	): Tab
+000A (
 ): NewLine
-33 (!): excl
-34 ("): QUOT, quot
-35 (#): num
-36 ($): dollar
-37 (%): percnt
-38 (&): AMP, amp
-39 ('): apos
-40 ((): lpar
-41 ()): rpar
-42 (*): ast, midast
-43 (+): plus
-44 (,): comma
-46 (.): period
-47 (/): sol
-58 (:): colon
-59 (;): semi
-60 (<): LT, lt
-61 (=): equals
-62 (>): GT, gt
-63 (?): quest
-64 (@): commat
-91 ([): lbrack, lsqb
-92 (\): bsol
-93 (]): rbrack, rsqb
-94 (^): Hat
-95 (_): UnderBar, lowbar
-96 (`): DiacriticalGrave, grave
-123 ({): lbrace, lcub
-124 (|): VerticalLine, verbar, vert
-125 (}): rbrace, rcub
-160 ( ): NonBreakingSpace, nbsp
-161 (¡): iexcl
-162 (¢): cent
-163 (£): pound
-164 (¤): curren
-165 (¥): yen
-166 (¦): brvbar
-167 (§): sect
-168 (¨): Dot, DoubleDot, die, uml
-169 (©): COPY, copy
-170 (ª): ordf
-171 («): laquo
-172 (¬): not
-173 (­): shy
-174 (®): REG, circledR, reg
-175 (¯): macr, strns
-176 (°): deg
-177 (±): PlusMinus, plusmn, pm
-178 (²): sup2
-179 (³): sup3
-180 (´): DiacriticalAcute, acute
-181 (µ): micro
-182 (¶): para
-183 (·): CenterDot, centerdot, middot
-184 (¸): Cedilla, cedil
-185 (¹): sup1
-186 (º): ordm
-187 (»): raquo
-188 (¼): frac14
-189 (½): frac12, half
-190 (¾): frac34
-191 (¿): iquest
-192 (À): Agrave
-193 (Á): Aacute
-194 (Â): Acirc
-195 (Ã): Atilde
-196 (Ä): Auml
-197 (Å): Aring, angst
-198 (Æ): AElig
-199 (Ç): Ccedil
-200 (È): Egrave
-201 (É): Eacute
-202 (Ê): Ecirc
-203 (Ë): Euml
-204 (Ì): Igrave
-205 (Í): Iacute
-206 (Î): Icirc
-207 (Ï): Iuml
-208 (Ð): ETH
-209 (Ñ): Ntilde
-210 (Ò): Ograve
-211 (Ó): Oacute
-212 (Ô): Ocirc
-213 (Õ): Otilde
-214 (Ö): Ouml
-215 (×): times
-216 (Ø): Oslash
-217 (Ù): Ugrave
-218 (Ú): Uacute
-219 (Û): Ucirc
-220 (Ü): Uuml
-221 (Ý): Yacute
-222 (Þ): THORN
-223 (ß): szlig
-224 (à): agrave
-225 (á): aacute
-226 (â): acirc
-227 (ã): atilde
-228 (ä): auml
-229 (å): aring
-230 (æ): aelig
-231 (ç): ccedil
-232 (è): egrave
-233 (é): eacute
-234 (ê): ecirc
-235 (ë): euml
-236 (ì): igrave
-237 (í): iacute
-238 (î): icirc
-239 (ï): iuml
-240 (ð): eth
-241 (ñ): ntilde
-242 (ò): ograve
-243 (ó): oacute
-244 (ô): ocirc
-245 (õ): otilde
-246 (ö): ouml
-247 (÷): div, divide
-248 (ø): oslash
-249 (ù): ugrave
-250 (ú): uacute
-251 (û): ucirc
-252 (ü): uuml
-253 (ý): yacute
-254 (þ): thorn
-255 (ÿ): yuml
-256 (Ā): Amacr
-257 (ā): amacr
-258 (Ă): Abreve
-259 (ă): abreve
-260 (Ą): Aogon
-261 (ą): aogon
-262 (Ć): Cacute
-263 (ć): cacute
-264 (Ĉ): Ccirc
-265 (ĉ): ccirc
-266 (Ċ): Cdot
-267 (ċ): cdot
-268 (Č): Ccaron
-269 (č): ccaron
-270 (Ď): Dcaron
-271 (ď): dcaron
-272 (Đ): Dstrok
-273 (đ): dstrok
-274 (Ē): Emacr
-275 (ē): emacr
-278 (Ė): Edot
-279 (ė): edot
-280 (Ę): Eogon
-281 (ę): eogon
-282 (Ě): Ecaron
-283 (ě): ecaron
-284 (Ĝ): Gcirc
-285 (ĝ): gcirc
-286 (Ğ): Gbreve
-287 (ğ): gbreve
-288 (Ġ): Gdot
-289 (ġ): gdot
-290 (Ģ): Gcedil
-292 (Ĥ): Hcirc
-293 (ĥ): hcirc
-294 (Ħ): Hstrok
-295 (ħ): hstrok
-296 (Ĩ): Itilde
-297 (ĩ): itilde
-298 (Ī): Imacr
-299 (ī): imacr
-302 (Į): Iogon
-303 (į): iogon
-304 (İ): Idot
-305 (ı): imath, inodot
-306 (Ĳ): IJlig
-307 (ĳ): ijlig
-308 (Ĵ): Jcirc
-309 (ĵ): jcirc
-310 (Ķ): Kcedil
-311 (ķ): kcedil
-312 (ĸ): kgreen
-313 (Ĺ): Lacute
-314 (ĺ): lacute
-315 (Ļ): Lcedil
-316 (ļ): lcedil
-317 (Ľ): Lcaron
-318 (ľ): lcaron
-319 (Ŀ): Lmidot
-320 (ŀ): lmidot
-321 (Ł): Lstrok
-322 (ł): lstrok
-323 (Ń): Nacute
-324 (ń): nacute
-325 (Ņ): Ncedil
-326 (ņ): ncedil
-327 (Ň): Ncaron
-328 (ň): ncaron
-329 (ŉ): napos
-330 (Ŋ): ENG
-331 (ŋ): eng
-332 (Ō): Omacr
-333 (ō): omacr
-336 (Ő): Odblac
-337 (ő): odblac
-338 (Œ): OElig
-339 (œ): oelig
-340 (Ŕ): Racute
-341 (ŕ): racute
-342 (Ŗ): Rcedil
-343 (ŗ): rcedil
-344 (Ř): Rcaron
-345 (ř): rcaron
-346 (Ś): Sacute
-347 (ś): sacute
-348 (Ŝ): Scirc
-349 (ŝ): scirc
-350 (Ş): Scedil
-351 (ş): scedil
-352 (Š): Scaron
-353 (š): scaron
-354 (Ţ): Tcedil
-355 (ţ): tcedil
-356 (Ť): Tcaron
-357 (ť): tcaron
-358 (Ŧ): Tstrok
-359 (ŧ): tstrok
-360 (Ũ): Utilde
-361 (ũ): utilde
-362 (Ū): Umacr
-363 (ū): umacr
-364 (Ŭ): Ubreve
-365 (ŭ): ubreve
-366 (Ů): Uring
-367 (ů): uring
-368 (Ű): Udblac
-369 (ű): udblac
-370 (Ų): Uogon
-371 (ų): uogon
-372 (Ŵ): Wcirc
-373 (ŵ): wcirc
-374 (Ŷ): Ycirc
-375 (ŷ): ycirc
-376 (Ÿ): Yuml
-377 (Ź): Zacute
-378 (ź): zacute
-379 (Ż): Zdot
-380 (ż): zdot
-381 (Ž): Zcaron
-382 (ž): zcaron
-402 (ƒ): fnof
-437 (Ƶ): imped
-501 (ǵ): gacute
-567 (ȷ): jmath
-710 (ˆ): circ
-711 (ˇ): Hacek, caron
-728 (˘): Breve, breve
-729 (˙): DiacriticalDot, dot
-730 (˚): ring
-731 (˛): ogon
-732 (˜): DiacriticalTilde, tilde
-733 (˝): DiacriticalDoubleAcute, dblac
-785 (̑): DownBreve
-913 (Α): Alpha
-914 (Β): Beta
-915 (Γ): Gamma
-916 (Δ): Delta
-917 (Ε): Epsilon
-918 (Ζ): Zeta
-919 (Η): Eta
-920 (Θ): Theta
-921 (Ι): Iota
-922 (Κ): Kappa
-923 (Λ): Lambda
-924 (Μ): Mu
-925 (Ν): Nu
-926 (Ξ): Xi
-927 (Ο): Omicron
-928 (Π): Pi
-929 (Ρ): Rho
-931 (Σ): Sigma
-932 (Τ): Tau
-933 (Υ): Upsilon
-934 (Φ): Phi
-935 (Χ): Chi
-936 (Ψ): Psi
-937 (Ω): Omega, ohm
-945 (α): alpha
-946 (β): beta
-947 (γ): gamma
-948 (δ): delta
-949 (ε): epsi, epsilon
-950 (ζ): zeta
-951 (η): eta
-952 (θ): theta
-953 (ι): iota
-954 (κ): kappa
-955 (λ): lambda
-956 (μ): mu
-957 (ν): nu
-958 (ξ): xi
-959 (ο): omicron
-960 (π): pi
-961 (ρ): rho
-962 (ς): sigmaf, sigmav, varsigma
-963 (σ): sigma
-964 (τ): tau
-965 (υ): upsi, upsilon
-966 (φ): phi
-967 (χ): chi
-968 (ψ): psi
-969 (ω): omega
-977 (ϑ): thetasym, thetav, vartheta
-978 (ϒ): Upsi, upsih
-981 (ϕ): phiv, straightphi, varphi
-982 (ϖ): piv, varpi
-988 (Ϝ): Gammad
-989 (ϝ): digamma, gammad
-1008 (ϰ): kappav, varkappa
-1009 (ϱ): rhov, varrho
-1013 (ϵ): epsiv, straightepsilon, varepsilon
-1014 (϶): backepsilon, bepsi
-1025 (Ё): IOcy
-1026 (Ђ): DJcy
-1027 (Ѓ): GJcy
-1028 (Є): Jukcy
-1029 (Ѕ): DScy
-1030 (І): Iukcy
-1031 (Ї): YIcy
-1032 (Ј): Jsercy
-1033 (Љ): LJcy
-1034 (Њ): NJcy
-1035 (Ћ): TSHcy
-1036 (Ќ): KJcy
-1038 (Ў): Ubrcy
-1039 (Џ): DZcy
-1040 (А): Acy
-1041 (Б): Bcy
-1042 (В): Vcy
-1043 (Г): Gcy
-1044 (Д): Dcy
-1045 (Е): IEcy
-1046 (Ж): ZHcy
-1047 (З): Zcy
-1048 (И): Icy
-1049 (Й): Jcy
-1050 (К): Kcy
-1051 (Л): Lcy
-1052 (М): Mcy
-1053 (Н): Ncy
-1054 (О): Ocy
-1055 (П): Pcy
-1056 (Р): Rcy
-1057 (С): Scy
-1058 (Т): Tcy
-1059 (У): Ucy
-1060 (Ф): Fcy
-1061 (Х): KHcy
-1062 (Ц): TScy
-1063 (Ч): CHcy
-1064 (Ш): SHcy
-1065 (Щ): SHCHcy
-1066 (Ъ): HARDcy
-1067 (Ы): Ycy
-1068 (Ь): SOFTcy
-1069 (Э): Ecy
-1070 (Ю): YUcy
-1071 (Я): YAcy
-1072 (а): acy
-1073 (б): bcy
-1074 (в): vcy
-1075 (г): gcy
-1076 (д): dcy
-1077 (е): iecy
-1078 (ж): zhcy
-1079 (з): zcy
-1080 (и): icy
-1081 (й): jcy
-1082 (к): kcy
-1083 (л): lcy
-1084 (м): mcy
-1085 (н): ncy
-1086 (о): ocy
-1087 (п): pcy
-1088 (р): rcy
-1089 (с): scy
-1090 (т): tcy
-1091 (у): ucy
-1092 (ф): fcy
-1093 (х): khcy
-1094 (ц): tscy
-1095 (ч): chcy
-1096 (ш): shcy
-1097 (щ): shchcy
-1098 (ъ): hardcy
-1099 (ы): ycy
-1100 (ь): softcy
-1101 (э): ecy
-1102 (ю): yucy
-1103 (я): yacy
-1105 (ё): iocy
-1106 (ђ): djcy
-1107 (ѓ): gjcy
-1108 (є): jukcy
-1109 (ѕ): dscy
-1110 (і): iukcy
-1111 (ї): yicy
-1112 (ј): jsercy
-1113 (љ): ljcy
-1114 (њ): njcy
-1115 (ћ): tshcy
-1116 (ќ): kjcy
-1118 (ў): ubrcy
-1119 (џ): dzcy
-8194 ( ): ensp
-8195 ( ): emsp
-8196 ( ): emsp13
-8197 ( ): emsp14
-8199 ( ): numsp
-8200 ( ): puncsp
-8201 ( ): ThinSpace, thinsp
-8202 ( ): VeryThinSpace, hairsp
-8203 (​): NegativeMediumSpace, NegativeThickSpace, NegativeThinSpace, NegativeVeryThinSpace, ZeroWidthSpace
-8204 (‌): zwnj
-8205 (‍): zwj
-8206 (‎): lrm
-8207 (‏): rlm
-8208 (‐): dash, hyphen
-8211 (–): ndash
-8212 (—): mdash
-8213 (―): horbar
-8214 (‖): Verbar, Vert
-8216 (‘): OpenCurlyQuote, lsquo
-8217 (’): CloseCurlyQuote, rsquo, rsquor
-8218 (‚): lsquor, sbquo
-8220 (“): OpenCurlyDoubleQuote, ldquo
-8221 (”): CloseCurlyDoubleQuote, rdquo, rdquor
-8222 („): bdquo, ldquor
-8224 (†): dagger
-8225 (‡): Dagger, ddagger
-8226 (•): bull, bullet
-8229 (‥): nldr
-8230 (…): hellip, mldr
-8240 (‰): permil
-8241 (‱): pertenk
-8242 (′): prime
-8243 (″): Prime
-8244 (‴): tprime
-8245 (‵): backprime, bprime
-8249 (‹): lsaquo
-8250 (›): rsaquo
-8254 (‾): OverBar, oline
-8257 (⁁): caret
-8259 (⁃): hybull
-8260 (⁄): frasl
-8271 (⁏): bsemi
-8279 (⁗): qprime
-8287 ( ): MediumSpace
-8288 (⁠): NoBreak
-8289 (⁡): ApplyFunction, af
-8290 (⁢): InvisibleTimes, it
-8291 (⁣): InvisibleComma, ic
-8364 (€): euro
-8411 (⃛): TripleDot, tdot
-8412 (⃜): DotDot
-8450 (ℂ): Copf, complexes
-8453 (℅): incare
-8458 (ℊ): gscr
-8459 (ℋ): HilbertSpace, Hscr, hamilt
-8460 (ℌ): Hfr, Poincareplane
-8461 (ℍ): Hopf, quaternions
-8462 (ℎ): planckh
-8463 (ℏ): hbar, hslash, planck, plankv
-8464 (ℐ): Iscr, imagline
-8465 (ℑ): Ifr, Im, image, imagpart
-8466 (ℒ): Laplacetrf, Lscr, lagran
-8467 (ℓ): ell
-8469 (ℕ): Nopf, naturals
-8470 (№): numero
-8471 (℗): copysr
-8472 (℘): weierp, wp
-8473 (ℙ): Popf, primes
-8474 (ℚ): Qopf, rationals
-8475 (ℛ): Rscr, realine
-8476 (ℜ): Re, Rfr, real, realpart
-8477 (ℝ): Ropf, reals
-8478 (℞): rx
-8482 (™): TRADE, trade
-8484 (ℤ): Zopf, integers
-8487 (℧): mho
-8488 (ℨ): Zfr, zeetrf
-8489 (℩): iiota
-8492 (ℬ): Bernoullis, Bscr, bernou
-8493 (ℭ): Cayleys, Cfr
-8495 (ℯ): escr
-8496 (ℰ): Escr, expectation
-8497 (ℱ): Fouriertrf, Fscr
-8499 (ℳ): Mellintrf, Mscr, phmmat
-8500 (ℴ): order, orderof, oscr
-8501 (ℵ): alefsym, aleph
-8502 (ℶ): beth
-8503 (ℷ): gimel
-8504 (ℸ): daleth
-8517 (ⅅ): CapitalDifferentialD, DD
-8518 (ⅆ): DifferentialD, dd
-8519 (ⅇ): ExponentialE, ee, exponentiale
-8520 (ⅈ): ImaginaryI, ii
-8531 (⅓): frac13
-8532 (⅔): frac23
-8533 (⅕): frac15
-8534 (⅖): frac25
-8535 (⅗): frac35
-8536 (⅘): frac45
-8537 (⅙): frac16
-8538 (⅚): frac56
-8539 (⅛): frac18
-8540 (⅜): frac38
-8541 (⅝): frac58
-8542 (⅞): frac78
-8592 (←): LeftArrow, ShortLeftArrow, larr, leftarrow, slarr
-8593 (↑): ShortUpArrow, UpArrow, uarr, uparrow
-8594 (→): RightArrow, ShortRightArrow, rarr, rightarrow, srarr
-8595 (↓): DownArrow, ShortDownArrow, darr, downarrow
-8596 (↔): LeftRightArrow, harr, leftrightarrow
-8597 (↕): UpDownArrow, updownarrow, varr
-8598 (↖): UpperLeftArrow, nwarr, nwarrow
-8599 (↗): UpperRightArrow, nearr, nearrow
-8600 (↘): LowerRightArrow, searr, searrow
-8601 (↙): LowerLeftArrow, swarr, swarrow
-8602 (↚): nlarr, nleftarrow
-8603 (↛): nrarr, nrightarrow
-8605 (↝): rarrw, rightsquigarrow
-8606 (↞): Larr, twoheadleftarrow
-8607 (↟): Uarr
-8608 (↠): Rarr, twoheadrightarrow
-8609 (↡): Darr
-8610 (↢): larrtl, leftarrowtail
-8611 (↣): rarrtl, rightarrowtail
-8612 (↤): LeftTeeArrow, mapstoleft
-8613 (↥): UpTeeArrow, mapstoup
-8614 (↦): RightTeeArrow, map, mapsto
-8615 (↧): DownTeeArrow, mapstodown
-8617 (↩): hookleftarrow, larrhk
-8618 (↪): hookrightarrow, rarrhk
-8619 (↫): larrlp, looparrowleft
-8620 (↬): looparrowright, rarrlp
-8621 (↭): harrw, leftrightsquigarrow
-8622 (↮): nharr, nleftrightarrow
-8624 (↰): Lsh, lsh
-8625 (↱): Rsh, rsh
-8626 (↲): ldsh
-8627 (↳): rdsh
-8629 (↵): crarr
-8630 (↶): cularr, curvearrowleft
-8631 (↷): curarr, curvearrowright
-8634 (↺): circlearrowleft, olarr
-8635 (↻): circlearrowright, orarr
-8636 (↼): LeftVector, leftharpoonup, lharu
-8637 (↽): DownLeftVector, leftharpoondown, lhard
-8638 (↾): RightUpVector, uharr, upharpoonright
-8639 (↿): LeftUpVector, uharl, upharpoonleft
-8640 (⇀): RightVector, rharu, rightharpoonup
-8641 (⇁): DownRightVector, rhard, rightharpoondown
-8642 (⇂): RightDownVector, dharr, downharpoonright
-8643 (⇃): LeftDownVector, dharl, downharpoonleft
-8644 (⇄): RightArrowLeftArrow, rightleftarrows, rlarr
-8645 (⇅): UpArrowDownArrow, udarr
-8646 (⇆): LeftArrowRightArrow, leftrightarrows, lrarr
-8647 (⇇): leftleftarrows, llarr
-8648 (⇈): upuparrows, uuarr
-8649 (⇉): rightrightarrows, rrarr
-8650 (⇊): ddarr, downdownarrows
-8651 (⇋): ReverseEquilibrium, leftrightharpoons, lrhar
-8652 (⇌): Equilibrium, rightleftharpoons, rlhar
-8653 (⇍): nLeftarrow, nlArr
-8654 (⇎): nLeftrightarrow, nhArr
-8655 (⇏): nRightarrow, nrArr
-8656 (⇐): DoubleLeftArrow, Leftarrow, lArr
-8657 (⇑): DoubleUpArrow, Uparrow, uArr
-8658 (⇒): DoubleRightArrow, Implies, Rightarrow, rArr
-8659 (⇓): DoubleDownArrow, Downarrow, dArr
-8660 (⇔): DoubleLeftRightArrow, Leftrightarrow, hArr, iff
-8661 (⇕): DoubleUpDownArrow, Updownarrow, vArr
-8662 (⇖): nwArr
-8663 (⇗): neArr
-8664 (⇘): seArr
-8665 (⇙): swArr
-8666 (⇚): Lleftarrow, lAarr
-8667 (⇛): Rrightarrow, rAarr
-8669 (⇝): zigrarr
-8676 (⇤): LeftArrowBar, larrb
-8677 (⇥): RightArrowBar, rarrb
-8693 (⇵): DownArrowUpArrow, duarr
-8701 (⇽): loarr
-8702 (⇾): roarr
-8703 (⇿): hoarr
-8704 (∀): ForAll, forall
-8705 (∁): comp, complement
-8706 (∂): PartialD, part
-8707 (∃): Exists, exist
-8708 (∄): NotExists, nexist, nexists
-8709 (∅): empty, emptyset, emptyv, varnothing
-8711 (∇): Del, nabla
-8712 (∈): Element, in, isin, isinv
-8713 (∉): NotElement, notin, notinva
-8715 (∋): ReverseElement, SuchThat, ni, niv
-8716 (∌): NotReverseElement, notni, notniva
-8719 (∏): Product, prod
-8720 (∐): Coproduct, coprod
-8721 (∑): Sum, sum
-8722 (−): minus
-8723 (∓): MinusPlus, mnplus, mp
-8724 (∔): dotplus, plusdo
-8726 (∖): Backslash, setminus, setmn, smallsetminus, ssetmn
-8727 (∗): lowast
-8728 (∘): SmallCircle, compfn
-8730 (√): Sqrt, radic
-8733 (∝): Proportional, prop, propto, varpropto, vprop
-8734 (∞): infin
-8735 (∟): angrt
-8736 (∠): ang, angle
-8737 (∡): angmsd, measuredangle
-8738 (∢): angsph
-8739 (∣): VerticalBar, mid, shortmid, smid
-8740 (∤): NotVerticalBar, nmid, nshortmid, nsmid
-8741 (∥): DoubleVerticalBar, par, parallel, shortparallel, spar
-8742 (∦): NotDoubleVerticalBar, npar, nparallel, nshortparallel, nspar
-8743 (∧): and, wedge
-8744 (∨): or, vee
-8745 (∩): cap
-8746 (∪): cup
-8747 (∫): Integral, int
-8748 (∬): Int
-8749 (∭): iiint, tint
-8750 (∮): ContourIntegral, conint, oint
-8751 (∯): Conint, DoubleContourIntegral
-8752 (∰): Cconint
-8753 (∱): cwint
-8754 (∲): ClockwiseContourIntegral, cwconint
-8755 (∳): CounterClockwiseContourIntegral, awconint
-8756 (∴): Therefore, there4, therefore
-8757 (∵): Because, becaus, because
-8758 (∶): ratio
-8759 (∷): Colon, Proportion
-8760 (∸): dotminus, minusd
-8762 (∺): mDDot
-8763 (∻): homtht
-8764 (∼): Tilde, sim, thicksim, thksim
-8765 (∽): backsim, bsim
-8766 (∾): ac, mstpos
-8767 (∿): acd
-8768 (≀): VerticalTilde, wr, wreath
-8769 (≁): NotTilde, nsim
-8770 (≂): EqualTilde, eqsim, esim
-8771 (≃): TildeEqual, sime, simeq
-8772 (≄): NotTildeEqual, nsime, nsimeq
-8773 (≅): TildeFullEqual, cong
-8774 (≆): simne
-8775 (≇): NotTildeFullEqual, ncong
-8776 (≈): TildeTilde, ap, approx, asymp, thickapprox, thkap
-8777 (≉): NotTildeTilde, nap, napprox
-8778 (≊): ape, approxeq
-8779 (≋): apid
-8780 (≌): backcong, bcong
-8781 (≍): CupCap, asympeq
-8782 (≎): Bumpeq, HumpDownHump, bump
-8783 (≏): HumpEqual, bumpe, bumpeq
-8784 (≐): DotEqual, doteq, esdot
-8785 (≑): doteqdot, eDot
-8786 (≒): efDot, fallingdotseq
-8787 (≓): erDot, risingdotseq
-8788 (≔): Assign, colone, coloneq
-8789 (≕): ecolon, eqcolon
-8790 (≖): ecir, eqcirc
-8791 (≗): circeq, cire
-8793 (≙): wedgeq
-8794 (≚): veeeq
-8796 (≜): triangleq, trie
-8799 (≟): equest, questeq
-8800 (≠): NotEqual, ne
-8801 (≡): Congruent, equiv
-8802 (≢): NotCongruent, nequiv
-8804 (≤): le, leq
-8805 (≥): GreaterEqual, ge, geq
-8806 (≦): LessFullEqual, lE, leqq
-8807 (≧): GreaterFullEqual, gE, geqq
-8808 (≨): lnE, lneqq
-8809 (≩): gnE, gneqq
-8810 (≪): Lt, NestedLessLess, ll
-8811 (≫): Gt, NestedGreaterGreater, gg
-8812 (≬): between, twixt
-8813 (≭): NotCupCap
-8814 (≮): NotLess, nless, nlt
-8815 (≯): NotGreater, ngt, ngtr
-8816 (≰): NotLessEqual, nle, nleq
-8817 (≱): NotGreaterEqual, nge, ngeq
-8818 (≲): LessTilde, lesssim, lsim
-8819 (≳): GreaterTilde, gsim, gtrsim
-8820 (≴): NotLessTilde, nlsim
-8821 (≵): NotGreaterTilde, ngsim
-8822 (≶): LessGreater, lessgtr, lg
-8823 (≷): GreaterLess, gl, gtrless
-8824 (≸): NotLessGreater, ntlg
-8825 (≹): NotGreaterLess, ntgl
-8826 (≺): Precedes, pr, prec
-8827 (≻): Succeeds, sc, succ
-8828 (≼): PrecedesSlantEqual, prcue, preccurlyeq
-8829 (≽): SucceedsSlantEqual, sccue, succcurlyeq
-8830 (≾): PrecedesTilde, precsim, prsim
-8831 (≿): SucceedsTilde, scsim, succsim
-8832 (⊀): NotPrecedes, npr, nprec
-8833 (⊁): NotSucceeds, nsc, nsucc
-8834 (⊂): sub, subset
-8835 (⊃): Superset, sup, supset
-8836 (⊄): nsub
-8837 (⊅): nsup
-8838 (⊆): SubsetEqual, sube, subseteq
-8839 (⊇): SupersetEqual, supe, supseteq
-8840 (⊈): NotSubsetEqual, nsube, nsubseteq
-8841 (⊉): NotSupersetEqual, nsupe, nsupseteq
-8842 (⊊): subne, subsetneq
-8843 (⊋): supne, supsetneq
-8845 (⊍): cupdot
-8846 (⊎): UnionPlus, uplus
-8847 (⊏): SquareSubset, sqsub, sqsubset
-8848 (⊐): SquareSuperset, sqsup, sqsupset
-8849 (⊑): SquareSubsetEqual, sqsube, sqsubseteq
-8850 (⊒): SquareSupersetEqual, sqsupe, sqsupseteq
-8851 (⊓): SquareIntersection, sqcap
-8852 (⊔): SquareUnion, sqcup
-8853 (⊕): CirclePlus, oplus
-8854 (⊖): CircleMinus, ominus
-8855 (⊗): CircleTimes, otimes
-8856 (⊘): osol
-8857 (⊙): CircleDot, odot
-8858 (⊚): circledcirc, ocir
-8859 (⊛): circledast, oast
-8861 (⊝): circleddash, odash
-8862 (⊞): boxplus, plusb
-8863 (⊟): boxminus, minusb
-8864 (⊠): boxtimes, timesb
-8865 (⊡): dotsquare, sdotb
-8866 (⊢): RightTee, vdash
-8867 (⊣): LeftTee, dashv
-8868 (⊤): DownTee, top
-8869 (⊥): UpTee, bot, bottom, perp
-8871 (⊧): models
-8872 (⊨): DoubleRightTee, vDash
-8873 (⊩): Vdash
-8874 (⊪): Vvdash
-8875 (⊫): VDash
-8876 (⊬): nvdash
-8877 (⊭): nvDash
-8878 (⊮): nVdash
-8879 (⊯): nVDash
-8880 (⊰): prurel
-8882 (⊲): LeftTriangle, vartriangleleft, vltri
-8883 (⊳): RightTriangle, vartriangleright, vrtri
-8884 (⊴): LeftTriangleEqual, ltrie, trianglelefteq
-8885 (⊵): RightTriangleEqual, rtrie, trianglerighteq
-8886 (⊶): origof
-8887 (⊷): imof
-8888 (⊸): multimap, mumap
-8889 (⊹): hercon
-8890 (⊺): intcal, intercal
-8891 (⊻): veebar
-8893 (⊽): barvee
-8894 (⊾): angrtvb
-8895 (⊿): lrtri
-8896 (⋀): Wedge, bigwedge, xwedge
-8897 (⋁): Vee, bigvee, xvee
-8898 (⋂): Intersection, bigcap, xcap
-8899 (⋃): Union, bigcup, xcup
-8900 (⋄): Diamond, diam, diamond
-8901 (⋅): sdot
-8902 (⋆): Star, sstarf
-8903 (⋇): divideontimes, divonx
-8904 (⋈): bowtie
-8905 (⋉): ltimes
-8906 (⋊): rtimes
-8907 (⋋): leftthreetimes, lthree
-8908 (⋌): rightthreetimes, rthree
-8909 (⋍): backsimeq, bsime
-8910 (⋎): curlyvee, cuvee
-8911 (⋏): curlywedge, cuwed
-8912 (⋐): Sub, Subset
-8913 (⋑): Sup, Supset
-8914 (⋒): Cap
-8915 (⋓): Cup
-8916 (⋔): fork, pitchfork
-8917 (⋕): epar
-8918 (⋖): lessdot, ltdot
-8919 (⋗): gtdot, gtrdot
-8920 (⋘): Ll
-8921 (⋙): Gg, ggg
-8922 (⋚): LessEqualGreater, leg, lesseqgtr
-8923 (⋛): GreaterEqualLess, gel, gtreqless
-8926 (⋞): cuepr, curlyeqprec
-8927 (⋟): cuesc, curlyeqsucc
-8928 (⋠): NotPrecedesSlantEqual, nprcue
-8929 (⋡): NotSucceedsSlantEqual, nsccue
-8930 (⋢): NotSquareSubsetEqual, nsqsube
-8931 (⋣): NotSquareSupersetEqual, nsqsupe
-8934 (⋦): lnsim
-8935 (⋧): gnsim
-8936 (⋨): precnsim, prnsim
-8937 (⋩): scnsim, succnsim
-8938 (⋪): NotLeftTriangle, nltri, ntriangleleft
-8939 (⋫): NotRightTriangle, nrtri, ntriangleright
-8940 (⋬): NotLeftTriangleEqual, nltrie, ntrianglelefteq
-8941 (⋭): NotRightTriangleEqual, nrtrie, ntrianglerighteq
-8942 (⋮): vellip
-8943 (⋯): ctdot
-8944 (⋰): utdot
-8945 (⋱): dtdot
-8946 (⋲): disin
-8947 (⋳): isinsv
-8948 (⋴): isins
-8949 (⋵): isindot
-8950 (⋶): notinvc
-8951 (⋷): notinvb
-8953 (⋹): isinE
-8954 (⋺): nisd
-8955 (⋻): xnis
-8956 (⋼): nis
-8957 (⋽): notnivc
-8958 (⋾): notnivb
-8965 (⌅): barwed, barwedge
-8966 (⌆): Barwed, doublebarwedge
-8968 (⌈): LeftCeiling, lceil
-8969 (⌉): RightCeiling, rceil
-8970 (⌊): LeftFloor, lfloor
-8971 (⌋): RightFloor, rfloor
-8972 (⌌): drcrop
-8973 (⌍): dlcrop
-8974 (⌎): urcrop
-8975 (⌏): ulcrop
-8976 (⌐): bnot
-8978 (⌒): profline
-8979 (⌓): profsurf
-8981 (⌕): telrec
-8982 (⌖): target
-8988 (⌜): ulcorn, ulcorner
-8989 (⌝): urcorn, urcorner
-8990 (⌞): dlcorn, llcorner
-8991 (⌟): drcorn, lrcorner
-8994 (⌢): frown, sfrown
-8995 (⌣): smile, ssmile
-9005 (⌭): cylcty
-9006 (⌮): profalar
-9014 (⌶): topbot
-9021 (⌽): ovbar
-9023 (⌿): solbar
-9084 (⍼): angzarr
-9136 (⎰): lmoust, lmoustache
-9137 (⎱): rmoust, rmoustache
-9140 (⎴): OverBracket, tbrk
-9141 (⎵): UnderBracket, bbrk
-9142 (⎶): bbrktbrk
-9180 (⏜): OverParenthesis
-9181 (⏝): UnderParenthesis
-9182 (⏞): OverBrace
-9183 (⏟): UnderBrace
-9186 (⏢): trpezium
-9191 (⏧): elinters
-9251 (␣): blank
-9416 (Ⓢ): circledS, oS
-9472 (─): HorizontalLine, boxh
-9474 (│): boxv
-9484 (┌): boxdr
-9488 (┐): boxdl
-9492 (└): boxur
-9496 (┘): boxul
-9500 (├): boxvr
-9508 (┤): boxvl
-9516 (┬): boxhd
-9524 (┴): boxhu
-9532 (┼): boxvh
-9552 (═): boxH
-9553 (║): boxV
-9554 (╒): boxdR
-9555 (╓): boxDr
-9556 (╔): boxDR
-9557 (╕): boxdL
-9558 (╖): boxDl
-9559 (╗): boxDL
-9560 (╘): boxuR
-9561 (╙): boxUr
-9562 (╚): boxUR
-9563 (╛): boxuL
-9564 (╜): boxUl
-9565 (╝): boxUL
-9566 (╞): boxvR
-9567 (╟): boxVr
-9568 (╠): boxVR
-9569 (╡): boxvL
-9570 (╢): boxVl
-9571 (╣): boxVL
-9572 (╤): boxHd
-9573 (╥): boxhD
-9574 (╦): boxHD
-9575 (╧): boxHu
-9576 (╨): boxhU
-9577 (╩): boxHU
-9578 (╪): boxvH
-9579 (╫): boxVh
-9580 (╬): boxVH
-9600 (▀): uhblk
-9604 (▄): lhblk
-9608 (█): block
-9617 (░): blk14
-9618 (▒): blk12
-9619 (▓): blk34
-9633 (□): Square, squ, square
-9642 (▪): FilledVerySmallSquare, blacksquare, squarf, squf
-9643 (▫): EmptyVerySmallSquare
-9645 (▭): rect
-9646 (▮): marker
-9649 (▱): fltns
-9651 (△): bigtriangleup, xutri
-9652 (▴): blacktriangle, utrif
-9653 (▵): triangle, utri
-9656 (▸): blacktriangleright, rtrif
-9657 (▹): rtri, triangleright
-9661 (▽): bigtriangledown, xdtri
-9662 (▾): blacktriangledown, dtrif
-9663 (▿): dtri, triangledown
-9666 (◂): blacktriangleleft, ltrif
-9667 (◃): ltri, triangleleft
-9674 (◊): loz, lozenge
-9675 (○): cir
-9708 (◬): tridot
-9711 (◯): bigcirc, xcirc
-9720 (◸): ultri
-9721 (◹): urtri
-9722 (◺): lltri
-9723 (◻): EmptySmallSquare
-9724 (◼): FilledSmallSquare
-9733 (★): bigstar, starf
-9734 (☆): star
-9742 (☎): phone
-9792 (♀): female
-9794 (♂): male
-9824 (♠): spades, spadesuit
-9827 (♣): clubs, clubsuit
-9829 (♥): hearts, heartsuit
-9830 (♦): diamondsuit, diams
-9834 (♪): sung
-9837 (♭): flat
-9838 (♮): natur, natural
-9839 (♯): sharp
-10003 (✓): check, checkmark
-10007 (✗): cross
-10016 (✠): malt, maltese
-10038 (✶): sext
-10072 (❘): VerticalSeparator
-10098 (❲): lbbrk
-10099 (❳): rbbrk
-10184 (⟈): bsolhsub
-10185 (⟉): suphsol
-10214 (⟦): LeftDoubleBracket, lobrk
-10215 (⟧): RightDoubleBracket, robrk
-10216 (⟨): LeftAngleBracket, lang, langle
-10217 (⟩): RightAngleBracket, rang, rangle
-10218 (⟪): Lang
-10219 (⟫): Rang
-10220 (⟬): loang
-10221 (⟭): roang
-10229 (⟵): LongLeftArrow, longleftarrow, xlarr
-10230 (⟶): LongRightArrow, longrightarrow, xrarr
-10231 (⟷): LongLeftRightArrow, longleftrightarrow, xharr
-10232 (⟸): DoubleLongLeftArrow, Longleftarrow, xlArr
-10233 (⟹): DoubleLongRightArrow, Longrightarrow, xrArr
-10234 (⟺): DoubleLongLeftRightArrow, Longleftrightarrow, xhArr
-10236 (⟼): longmapsto, xmap
-10239 (⟿): dzigrarr
-10498 (⤂): nvlArr
-10499 (⤃): nvrArr
-10500 (⤄): nvHarr
-10501 (⤅): Map
-10508 (⤌): lbarr
-10509 (⤍): bkarow, rbarr
-10510 (⤎): lBarr
-10511 (⤏): dbkarow, rBarr
-10512 (⤐): RBarr, drbkarow
-10513 (⤑): DDotrahd
-10514 (⤒): UpArrowBar
-10515 (⤓): DownArrowBar
-10518 (⤖): Rarrtl
-10521 (⤙): latail
-10522 (⤚): ratail
-10523 (⤛): lAtail
-10524 (⤜): rAtail
-10525 (⤝): larrfs
-10526 (⤞): rarrfs
-10527 (⤟): larrbfs
-10528 (⤠): rarrbfs
-10531 (⤣): nwarhk
-10532 (⤤): nearhk
-10533 (⤥): hksearow, searhk
-10534 (⤦): hkswarow, swarhk
-10535 (⤧): nwnear
-10536 (⤨): nesear, toea
-10537 (⤩): seswar, tosa
-10538 (⤪): swnwar
-10547 (⤳): rarrc
-10549 (⤵): cudarrr
-10550 (⤶): ldca
-10551 (⤷): rdca
-10552 (⤸): cudarrl
-10553 (⤹): larrpl
-10556 (⤼): curarrm
-10557 (⤽): cularrp
-10565 (⥅): rarrpl
-10568 (⥈): harrcir
-10569 (⥉): Uarrocir
-10570 (⥊): lurdshar
-10571 (⥋): ldrushar
-10574 (⥎): LeftRightVector
-10575 (⥏): RightUpDownVector
-10576 (⥐): DownLeftRightVector
-10577 (⥑): LeftUpDownVector
-10578 (⥒): LeftVectorBar
-10579 (⥓): RightVectorBar
-10580 (⥔): RightUpVectorBar
-10581 (⥕): RightDownVectorBar
-10582 (⥖): DownLeftVectorBar
-10583 (⥗): DownRightVectorBar
-10584 (⥘): LeftUpVectorBar
-10585 (⥙): LeftDownVectorBar
-10586 (⥚): LeftTeeVector
-10587 (⥛): RightTeeVector
-10588 (⥜): RightUpTeeVector
-10589 (⥝): RightDownTeeVector
-10590 (⥞): DownLeftTeeVector
-10591 (⥟): DownRightTeeVector
-10592 (⥠): LeftUpTeeVector
-10593 (⥡): LeftDownTeeVector
-10594 (⥢): lHar
-10595 (⥣): uHar
-10596 (⥤): rHar
-10597 (⥥): dHar
-10598 (⥦): luruhar
-10599 (⥧): ldrdhar
-10600 (⥨): ruluhar
-10601 (⥩): rdldhar
-10602 (⥪): lharul
-10603 (⥫): llhard
-10604 (⥬): rharul
-10605 (⥭): lrhard
-10606 (⥮): UpEquilibrium, udhar
-10607 (⥯): ReverseUpEquilibrium, duhar
-10608 (⥰): RoundImplies
-10609 (⥱): erarr
-10610 (⥲): simrarr
-10611 (⥳): larrsim
-10612 (⥴): rarrsim
-10613 (⥵): rarrap
-10614 (⥶): ltlarr
-10616 (⥸): gtrarr
-10617 (⥹): subrarr
-10619 (⥻): suplarr
-10620 (⥼): lfisht
-10621 (⥽): rfisht
-10622 (⥾): ufisht
-10623 (⥿): dfisht
-10629 (⦅): lopar
-10630 (⦆): ropar
-10635 (⦋): lbrke
-10636 (⦌): rbrke
-10637 (⦍): lbrkslu
-10638 (⦎): rbrksld
-10639 (⦏): lbrksld
-10640 (⦐): rbrkslu
-10641 (⦑): langd
-10642 (⦒): rangd
-10643 (⦓): lparlt
-10644 (⦔): rpargt
-10645 (⦕): gtlPar
-10646 (⦖): ltrPar
-10650 (⦚): vzigzag
-10652 (⦜): vangrt
-10653 (⦝): angrtvbd
-10660 (⦤): ange
-10661 (⦥): range
-10662 (⦦): dwangle
-10663 (⦧): uwangle
-10664 (⦨): angmsdaa
-10665 (⦩): angmsdab
-10666 (⦪): angmsdac
-10667 (⦫): angmsdad
-10668 (⦬): angmsdae
-10669 (⦭): angmsdaf
-10670 (⦮): angmsdag
-10671 (⦯): angmsdah
-10672 (⦰): bemptyv
-10673 (⦱): demptyv
-10674 (⦲): cemptyv
-10675 (⦳): raemptyv
-10676 (⦴): laemptyv
-10677 (⦵): ohbar
-10678 (⦶): omid
-10679 (⦷): opar
-10681 (⦹): operp
-10683 (⦻): olcross
-10684 (⦼): odsold
-10686 (⦾): olcir
-10687 (⦿): ofcir
-10688 (⧀): olt
-10689 (⧁): ogt
-10690 (⧂): cirscir
-10691 (⧃): cirE
-10692 (⧄): solb
-10693 (⧅): bsolb
-10697 (⧉): boxbox
-10701 (⧍): trisb
-10702 (⧎): rtriltri
-10703 (⧏): LeftTriangleBar
-10704 (⧐): RightTriangleBar
-10716 (⧜): iinfin
-10717 (⧝): infintie
-10718 (⧞): nvinfin
-10723 (⧣): eparsl
-10724 (⧤): smeparsl
-10725 (⧥): eqvparsl
-10731 (⧫): blacklozenge, lozf
-10740 (⧴): RuleDelayed
-10742 (⧶): dsol
-10752 (⨀): bigodot, xodot
-10753 (⨁): bigoplus, xoplus
-10754 (⨂): bigotimes, xotime
-10756 (⨄): biguplus, xuplus
-10758 (⨆): bigsqcup, xsqcup
-10764 (⨌): iiiint, qint
-10765 (⨍): fpartint
-10768 (⨐): cirfnint
-10769 (⨑): awint
-10770 (⨒): rppolint
-10771 (⨓): scpolint
-10772 (⨔): npolint
-10773 (⨕): pointint
-10774 (⨖): quatint
-10775 (⨗): intlarhk
-10786 (⨢): pluscir
-10787 (⨣): plusacir
-10788 (⨤): simplus
-10789 (⨥): plusdu
-10790 (⨦): plussim
-10791 (⨧): plustwo
-10793 (⨩): mcomma
-10794 (⨪): minusdu
-10797 (⨭): loplus
-10798 (⨮): roplus
-10799 (⨯): Cross
-10800 (⨰): timesd
-10801 (⨱): timesbar
-10803 (⨳): smashp
-10804 (⨴): lotimes
-10805 (⨵): rotimes
-10806 (⨶): otimesas
-10807 (⨷): Otimes
-10808 (⨸): odiv
-10809 (⨹): triplus
-10810 (⨺): triminus
-10811 (⨻): tritime
-10812 (⨼): intprod, iprod
-10815 (⨿): amalg
-10816 (⩀): capdot
-10818 (⩂): ncup
-10819 (⩃): ncap
-10820 (⩄): capand
-10821 (⩅): cupor
-10822 (⩆): cupcap
-10823 (⩇): capcup
-10824 (⩈): cupbrcap
-10825 (⩉): capbrcup
-10826 (⩊): cupcup
-10827 (⩋): capcap
-10828 (⩌): ccups
-10829 (⩍): ccaps
-10832 (⩐): ccupssm
-10835 (⩓): And
-10836 (⩔): Or
-10837 (⩕): andand
-10838 (⩖): oror
-10839 (⩗): orslope
-10840 (⩘): andslope
-10842 (⩚): andv
-10843 (⩛): orv
-10844 (⩜): andd
-10845 (⩝): ord
-10847 (⩟): wedbar
-10854 (⩦): sdote
-10858 (⩪): simdot
-10861 (⩭): congdot
-10862 (⩮): easter
-10863 (⩯): apacir
-10864 (⩰): apE
-10865 (⩱): eplus
-10866 (⩲): pluse
-10867 (⩳): Esim
-10868 (⩴): Colone
-10869 (⩵): Equal
-10871 (⩷): ddotseq, eDDot
-10872 (⩸): equivDD
-10873 (⩹): ltcir
-10874 (⩺): gtcir
-10875 (⩻): ltquest
-10876 (⩼): gtquest
-10877 (⩽): LessSlantEqual, leqslant, les
-10878 (⩾): GreaterSlantEqual, geqslant, ges
-10879 (⩿): lesdot
-10880 (⪀): gesdot
-10881 (⪁): lesdoto
-10882 (⪂): gesdoto
-10883 (⪃): lesdotor
-10884 (⪄): gesdotol
-10885 (⪅): lap, lessapprox
-10886 (⪆): gap, gtrapprox
-10887 (⪇): lne, lneq
-10888 (⪈): gne, gneq
-10889 (⪉): lnap, lnapprox
-10890 (⪊): gnap, gnapprox
-10891 (⪋): lEg, lesseqqgtr
-10892 (⪌): gEl, gtreqqless
-10893 (⪍): lsime
-10894 (⪎): gsime
-10895 (⪏): lsimg
-10896 (⪐): gsiml
-10897 (⪑): lgE
-10898 (⪒): glE
-10899 (⪓): lesges
-10900 (⪔): gesles
-10901 (⪕): els, eqslantless
-10902 (⪖): egs, eqslantgtr
-10903 (⪗): elsdot
-10904 (⪘): egsdot
-10905 (⪙): el
-10906 (⪚): eg
-10909 (⪝): siml
-10910 (⪞): simg
-10911 (⪟): simlE
-10912 (⪠): simgE
-10913 (⪡): LessLess
-10914 (⪢): GreaterGreater
-10916 (⪤): glj
-10917 (⪥): gla
-10918 (⪦): ltcc
-10919 (⪧): gtcc
-10920 (⪨): lescc
-10921 (⪩): gescc
-10922 (⪪): smt
-10923 (⪫): lat
-10924 (⪬): smte
-10925 (⪭): late
-10926 (⪮): bumpE
-10927 (⪯): PrecedesEqual, pre, preceq
-10928 (⪰): SucceedsEqual, sce, succeq
-10931 (⪳): prE
-10932 (⪴): scE
-10933 (⪵): precneqq, prnE
-10934 (⪶): scnE, succneqq
-10935 (⪷): prap, precapprox
-10936 (⪸): scap, succapprox
-10937 (⪹): precnapprox, prnap
-10938 (⪺): scnap, succnapprox
-10939 (⪻): Pr
-10940 (⪼): Sc
-10941 (⪽): subdot
-10942 (⪾): supdot
-10943 (⪿): subplus
-10944 (⫀): supplus
-10945 (⫁): submult
-10946 (⫂): supmult
-10947 (⫃): subedot
-10948 (⫄): supedot
-10949 (⫅): subE, subseteqq
-10950 (⫆): supE, supseteqq
-10951 (⫇): subsim
-10952 (⫈): supsim
-10955 (⫋): subnE, subsetneqq
-10956 (⫌): supnE, supsetneqq
-10959 (⫏): csub
-10960 (⫐): csup
-10961 (⫑): csube
-10962 (⫒): csupe
-10963 (⫓): subsup
-10964 (⫔): supsub
-10965 (⫕): subsub
-10966 (⫖): supsup
-10967 (⫗): suphsub
-10968 (⫘): supdsub
-10969 (⫙): forkv
-10970 (⫚): topfork
-10971 (⫛): mlcp
-10980 (⫤): Dashv, DoubleLeftTee
-10982 (⫦): Vdashl
-10983 (⫧): Barv
-10984 (⫨): vBar
-10985 (⫩): vBarv
-10987 (⫫): Vbar
-10988 (⫬): Not
-10989 (⫭): bNot
-10990 (⫮): rnmid
-10991 (⫯): cirmid
-10992 (⫰): midcir
-10993 (⫱): topcir
-10994 (⫲): nhpar
-10995 (⫳): parsim
-11005 (⫽): parsl
-64256 (ﬀ): fflig
-64257 (ﬁ): filig
-64258 (ﬂ): fllig
-64259 (ﬃ): ffilig
-64260 (ﬄ): ffllig
-119964 (𝒜): Ascr
-119966 (𝒞): Cscr
-119967 (𝒟): Dscr
-119970 (𝒢): Gscr
-119973 (𝒥): Jscr
-119974 (𝒦): Kscr
-119977 (𝒩): Nscr
-119978 (𝒪): Oscr
-119979 (𝒫): Pscr
-119980 (𝒬): Qscr
-119982 (𝒮): Sscr
-119983 (𝒯): Tscr
-119984 (𝒰): Uscr
-119985 (𝒱): Vscr
-119986 (𝒲): Wscr
-119987 (𝒳): Xscr
-119988 (𝒴): Yscr
-119989 (𝒵): Zscr
-119990 (𝒶): ascr
-119991 (𝒷): bscr
-119992 (𝒸): cscr
-119993 (𝒹): dscr
-119995 (𝒻): fscr
-119997 (𝒽): hscr
-119998 (𝒾): iscr
-119999 (𝒿): jscr
-120000 (𝓀): kscr
-120001 (𝓁): lscr
-120002 (𝓂): mscr
-120003 (𝓃): nscr
-120005 (𝓅): pscr
-120006 (𝓆): qscr
-120007 (𝓇): rscr
-120008 (𝓈): sscr
-120009 (𝓉): tscr
-120010 (𝓊): uscr
-120011 (𝓋): vscr
-120012 (𝓌): wscr
-120013 (𝓍): xscr
-120014 (𝓎): yscr
-120015 (𝓏): zscr
-120068 (𝔄): Afr
-120069 (𝔅): Bfr
-120071 (𝔇): Dfr
-120072 (𝔈): Efr
-120073 (𝔉): Ffr
-120074 (𝔊): Gfr
-120077 (𝔍): Jfr
-120078 (𝔎): Kfr
-120079 (𝔏): Lfr
-120080 (𝔐): Mfr
-120081 (𝔑): Nfr
-120082 (𝔒): Ofr
-120083 (𝔓): Pfr
-120084 (𝔔): Qfr
-120086 (𝔖): Sfr
-120087 (𝔗): Tfr
-120088 (𝔘): Ufr
-120089 (𝔙): Vfr
-120090 (𝔚): Wfr
-120091 (𝔛): Xfr
-120092 (𝔜): Yfr
-120094 (𝔞): afr
-120095 (𝔟): bfr
-120096 (𝔠): cfr
-120097 (𝔡): dfr
-120098 (𝔢): efr
-120099 (𝔣): ffr
-120100 (𝔤): gfr
-120101 (𝔥): hfr
-120102 (𝔦): ifr
-120103 (𝔧): jfr
-120104 (𝔨): kfr
-120105 (𝔩): lfr
-120106 (𝔪): mfr
-120107 (𝔫): nfr
-120108 (𝔬): ofr
-120109 (𝔭): pfr
-120110 (𝔮): qfr
-120111 (𝔯): rfr
-120112 (𝔰): sfr
-120113 (𝔱): tfr
-120114 (𝔲): ufr
-120115 (𝔳): vfr
-120116 (𝔴): wfr
-120117 (𝔵): xfr
-120118 (𝔶): yfr
-120119 (𝔷): zfr
-120120 (𝔸): Aopf
-120121 (𝔹): Bopf
-120123 (𝔻): Dopf
-120124 (𝔼): Eopf
-120125 (𝔽): Fopf
-120126 (𝔾): Gopf
-120128 (𝕀): Iopf
-120129 (𝕁): Jopf
-120130 (𝕂): Kopf
-120131 (𝕃): Lopf
-120132 (𝕄): Mopf
-120134 (𝕆): Oopf
-120138 (𝕊): Sopf
-120139 (𝕋): Topf
-120140 (𝕌): Uopf
-120141 (𝕍): Vopf
-120142 (𝕎): Wopf
-120143 (𝕏): Xopf
-120144 (𝕐): Yopf
-120146 (𝕒): aopf
-120147 (𝕓): bopf
-120148 (𝕔): copf
-120149 (𝕕): dopf
-120150 (𝕖): eopf
-120151 (𝕗): fopf
-120152 (𝕘): gopf
-120153 (𝕙): hopf
-120154 (𝕚): iopf
-120155 (𝕛): jopf
-120156 (𝕜): kopf
-120157 (𝕝): lopf
-120158 (𝕞): mopf
-120159 (𝕟): nopf
-120160 (𝕠): oopf
-120161 (𝕡): popf
-120162 (𝕢): qopf
-120163 (𝕣): ropf
-120164 (𝕤): sopf
-120165 (𝕥): topf
-120166 (𝕦): uopf
-120167 (𝕧): vopf
-120168 (𝕨): wopf
-120169 (𝕩): xopf
-120170 (𝕪): yopf
-120171 (𝕫): zopf
+0021 (!): excl
+0022 ("): QUOT, quot
+0023 (#): num
+0024 ($): dollar
+0025 (%): percnt
+0026 (&): AMP, amp
+0027 ('): apos
+0028 ((): lpar
+0029 ()): rpar
+002A (*): ast, midast
+002B (+): plus
+002C (,): comma
+002E (.): period
+002F (/): sol
+003A (:): colon
+003B (;): semi
+003C (<): LT, lt
+003D (=): equals
+003E (>): GT, gt
+003F (?): quest
+0040 (@): commat
+005B ([): lbrack, lsqb
+005C (\): bsol
+005D (]): rbrack, rsqb
+005E (^): Hat
+005F (_): UnderBar, lowbar
+0060 (`): DiacriticalGrave, grave
+007B ({): lbrace, lcub
+007C (|): VerticalLine, verbar, vert
+007D (}): rbrace, rcub
+00A0 ( ): NonBreakingSpace, nbsp
+00A1 (¡): iexcl
+00A2 (¢): cent
+00A3 (£): pound
+00A4 (¤): curren
+00A5 (¥): yen
+00A6 (¦): brvbar
+00A7 (§): sect
+00A8 (¨): Dot, DoubleDot, die, uml
+00A9 (©): COPY, copy
+00AA (ª): ordf
+00AB («): laquo
+00AC (¬): not
+00AD (­): shy
+00AE (®): REG, circledR, reg
+00AF (¯): macr, strns
+00B0 (°): deg
+00B1 (±): PlusMinus, plusmn, pm
+00B2 (²): sup2
+00B3 (³): sup3
+00B4 (´): DiacriticalAcute, acute
+00B5 (µ): micro
+00B6 (¶): para
+00B7 (·): CenterDot, centerdot, middot
+00B8 (¸): Cedilla, cedil
+00B9 (¹): sup1
+00BA (º): ordm
+00BB (»): raquo
+00BC (¼): frac14
+00BD (½): frac12, half
+00BE (¾): frac34
+00BF (¿): iquest
+00C0 (À): Agrave
+00C1 (Á): Aacute
+00C2 (Â): Acirc
+00C3 (Ã): Atilde
+00C4 (Ä): Auml
+00C5 (Å): Aring, angst
+00C6 (Æ): AElig
+00C7 (Ç): Ccedil
+00C8 (È): Egrave
+00C9 (É): Eacute
+00CA (Ê): Ecirc
+00CB (Ë): Euml
+00CC (Ì): Igrave
+00CD (Í): Iacute
+00CE (Î): Icirc
+00CF (Ï): Iuml
+00D0 (Ð): ETH
+00D1 (Ñ): Ntilde
+00D2 (Ò): Ograve
+00D3 (Ó): Oacute
+00D4 (Ô): Ocirc
+00D5 (Õ): Otilde
+00D6 (Ö): Ouml
+00D7 (×): times
+00D8 (Ø): Oslash
+00D9 (Ù): Ugrave
+00DA (Ú): Uacute
+00DB (Û): Ucirc
+00DC (Ü): Uuml
+00DD (Ý): Yacute
+00DE (Þ): THORN
+00DF (ß): szlig
+00E0 (à): agrave
+00E1 (á): aacute
+00E2 (â): acirc
+00E3 (ã): atilde
+00E4 (ä): auml
+00E5 (å): aring
+00E6 (æ): aelig
+00E7 (ç): ccedil
+00E8 (è): egrave
+00E9 (é): eacute
+00EA (ê): ecirc
+00EB (ë): euml
+00EC (ì): igrave
+00ED (í): iacute
+00EE (î): icirc
+00EF (ï): iuml
+00F0 (ð): eth
+00F1 (ñ): ntilde
+00F2 (ò): ograve
+00F3 (ó): oacute
+00F4 (ô): ocirc
+00F5 (õ): otilde
+00F6 (ö): ouml
+00F7 (÷): div, divide
+00F8 (ø): oslash
+00F9 (ù): ugrave
+00FA (ú): uacute
+00FB (û): ucirc
+00FC (ü): uuml
+00FD (ý): yacute
+00FE (þ): thorn
+00FF (ÿ): yuml
+0100 (Ā): Amacr
+0101 (ā): amacr
+0102 (Ă): Abreve
+0103 (ă): abreve
+0104 (Ą): Aogon
+0105 (ą): aogon
+0106 (Ć): Cacute
+0107 (ć): cacute
+0108 (Ĉ): Ccirc
+0109 (ĉ): ccirc
+010A (Ċ): Cdot
+010B (ċ): cdot
+010C (Č): Ccaron
+010D (č): ccaron
+010E (Ď): Dcaron
+010F (ď): dcaron
+0110 (Đ): Dstrok
+0111 (đ): dstrok
+0112 (Ē): Emacr
+0113 (ē): emacr
+0116 (Ė): Edot
+0117 (ė): edot
+0118 (Ę): Eogon
+0119 (ę): eogon
+011A (Ě): Ecaron
+011B (ě): ecaron
+011C (Ĝ): Gcirc
+011D (ĝ): gcirc
+011E (Ğ): Gbreve
+011F (ğ): gbreve
+0120 (Ġ): Gdot
+0121 (ġ): gdot
+0122 (Ģ): Gcedil
+0124 (Ĥ): Hcirc
+0125 (ĥ): hcirc
+0126 (Ħ): Hstrok
+0127 (ħ): hstrok
+0128 (Ĩ): Itilde
+0129 (ĩ): itilde
+012A (Ī): Imacr
+012B (ī): imacr
+012E (Į): Iogon
+012F (į): iogon
+0130 (İ): Idot
+0131 (ı): imath, inodot
+0132 (Ĳ): IJlig
+0133 (ĳ): ijlig
+0134 (Ĵ): Jcirc
+0135 (ĵ): jcirc
+0136 (Ķ): Kcedil
+0137 (ķ): kcedil
+0138 (ĸ): kgreen
+0139 (Ĺ): Lacute
+013A (ĺ): lacute
+013B (Ļ): Lcedil
+013C (ļ): lcedil
+013D (Ľ): Lcaron
+013E (ľ): lcaron
+013F (Ŀ): Lmidot
+0140 (ŀ): lmidot
+0141 (Ł): Lstrok
+0142 (ł): lstrok
+0143 (Ń): Nacute
+0144 (ń): nacute
+0145 (Ņ): Ncedil
+0146 (ņ): ncedil
+0147 (Ň): Ncaron
+0148 (ň): ncaron
+0149 (ŉ): napos
+014A (Ŋ): ENG
+014B (ŋ): eng
+014C (Ō): Omacr
+014D (ō): omacr
+0150 (Ő): Odblac
+0151 (ő): odblac
+0152 (Œ): OElig
+0153 (œ): oelig
+0154 (Ŕ): Racute
+0155 (ŕ): racute
+0156 (Ŗ): Rcedil
+0157 (ŗ): rcedil
+0158 (Ř): Rcaron
+0159 (ř): rcaron
+015A (Ś): Sacute
+015B (ś): sacute
+015C (Ŝ): Scirc
+015D (ŝ): scirc
+015E (Ş): Scedil
+015F (ş): scedil
+0160 (Š): Scaron
+0161 (š): scaron
+0162 (Ţ): Tcedil
+0163 (ţ): tcedil
+0164 (Ť): Tcaron
+0165 (ť): tcaron
+0166 (Ŧ): Tstrok
+0167 (ŧ): tstrok
+0168 (Ũ): Utilde
+0169 (ũ): utilde
+016A (Ū): Umacr
+016B (ū): umacr
+016C (Ŭ): Ubreve
+016D (ŭ): ubreve
+016E (Ů): Uring
+016F (ů): uring
+0170 (Ű): Udblac
+0171 (ű): udblac
+0172 (Ų): Uogon
+0173 (ų): uogon
+0174 (Ŵ): Wcirc
+0175 (ŵ): wcirc
+0176 (Ŷ): Ycirc
+0177 (ŷ): ycirc
+0178 (Ÿ): Yuml
+0179 (Ź): Zacute
+017A (ź): zacute
+017B (Ż): Zdot
+017C (ż): zdot
+017D (Ž): Zcaron
+017E (ž): zcaron
+0192 (ƒ): fnof
+01B5 (Ƶ): imped
+01F5 (ǵ): gacute
+0237 (ȷ): jmath
+02C6 (ˆ): circ
+02C7 (ˇ): Hacek, caron
+02D8 (˘): Breve, breve
+02D9 (˙): DiacriticalDot, dot
+02DA (˚): ring
+02DB (˛): ogon
+02DC (˜): DiacriticalTilde, tilde
+02DD (˝): DiacriticalDoubleAcute, dblac
+0311 (̑): DownBreve
+0391 (Α): Alpha
+0392 (Β): Beta
+0393 (Γ): Gamma
+0394 (Δ): Delta
+0395 (Ε): Epsilon
+0396 (Ζ): Zeta
+0397 (Η): Eta
+0398 (Θ): Theta
+0399 (Ι): Iota
+039A (Κ): Kappa
+039B (Λ): Lambda
+039C (Μ): Mu
+039D (Ν): Nu
+039E (Ξ): Xi
+039F (Ο): Omicron
+03A0 (Π): Pi
+03A1 (Ρ): Rho
+03A3 (Σ): Sigma
+03A4 (Τ): Tau
+03A5 (Υ): Upsilon
+03A6 (Φ): Phi
+03A7 (Χ): Chi
+03A8 (Ψ): Psi
+03A9 (Ω): Omega, ohm
+03B1 (α): alpha
+03B2 (β): beta
+03B3 (γ): gamma
+03B4 (δ): delta
+03B5 (ε): epsi, epsilon
+03B6 (ζ): zeta
+03B7 (η): eta
+03B8 (θ): theta
+03B9 (ι): iota
+03BA (κ): kappa
+03BB (λ): lambda
+03BC (μ): mu
+03BD (ν): nu
+03BE (ξ): xi
+03BF (ο): omicron
+03C0 (π): pi
+03C1 (ρ): rho
+03C2 (ς): sigmaf, sigmav, varsigma
+03C3 (σ): sigma
+03C4 (τ): tau
+03C5 (υ): upsi, upsilon
+03C6 (φ): phi
+03C7 (χ): chi
+03C8 (ψ): psi
+03C9 (ω): omega
+03D1 (ϑ): thetasym, thetav, vartheta
+03D2 (ϒ): Upsi, upsih
+03D5 (ϕ): phiv, straightphi, varphi
+03D6 (ϖ): piv, varpi
+03DC (Ϝ): Gammad
+03DD (ϝ): digamma, gammad
+03F0 (ϰ): kappav, varkappa
+03F1 (ϱ): rhov, varrho
+03F5 (ϵ): epsiv, straightepsilon, varepsilon
+03F6 (϶): backepsilon, bepsi
+0401 (Ё): IOcy
+0402 (Ђ): DJcy
+0403 (Ѓ): GJcy
+0404 (Є): Jukcy
+0405 (Ѕ): DScy
+0406 (І): Iukcy
+0407 (Ї): YIcy
+0408 (Ј): Jsercy
+0409 (Љ): LJcy
+040A (Њ): NJcy
+040B (Ћ): TSHcy
+040C (Ќ): KJcy
+040E (Ў): Ubrcy
+040F (Џ): DZcy
+0410 (А): Acy
+0411 (Б): Bcy
+0412 (В): Vcy
+0413 (Г): Gcy
+0414 (Д): Dcy
+0415 (Е): IEcy
+0416 (Ж): ZHcy
+0417 (З): Zcy
+0418 (И): Icy
+0419 (Й): Jcy
+041A (К): Kcy
+041B (Л): Lcy
+041C (М): Mcy
+041D (Н): Ncy
+041E (О): Ocy
+041F (П): Pcy
+0420 (Р): Rcy
+0421 (С): Scy
+0422 (Т): Tcy
+0423 (У): Ucy
+0424 (Ф): Fcy
+0425 (Х): KHcy
+0426 (Ц): TScy
+0427 (Ч): CHcy
+0428 (Ш): SHcy
+0429 (Щ): SHCHcy
+042A (Ъ): HARDcy
+042B (Ы): Ycy
+042C (Ь): SOFTcy
+042D (Э): Ecy
+042E (Ю): YUcy
+042F (Я): YAcy
+0430 (а): acy
+0431 (б): bcy
+0432 (в): vcy
+0433 (г): gcy
+0434 (д): dcy
+0435 (е): iecy
+0436 (ж): zhcy
+0437 (з): zcy
+0438 (и): icy
+0439 (й): jcy
+043A (к): kcy
+043B (л): lcy
+043C (м): mcy
+043D (н): ncy
+043E (о): ocy
+043F (п): pcy
+0440 (р): rcy
+0441 (с): scy
+0442 (т): tcy
+0443 (у): ucy
+0444 (ф): fcy
+0445 (х): khcy
+0446 (ц): tscy
+0447 (ч): chcy
+0448 (ш): shcy
+0449 (щ): shchcy
+044A (ъ): hardcy
+044B (ы): ycy
+044C (ь): softcy
+044D (э): ecy
+044E (ю): yucy
+044F (я): yacy
+0451 (ё): iocy
+0452 (ђ): djcy
+0453 (ѓ): gjcy
+0454 (є): jukcy
+0455 (ѕ): dscy
+0456 (і): iukcy
+0457 (ї): yicy
+0458 (ј): jsercy
+0459 (љ): ljcy
+045A (њ): njcy
+045B (ћ): tshcy
+045C (ќ): kjcy
+045E (ў): ubrcy
+045F (џ): dzcy
+2002 ( ): ensp
+2003 ( ): emsp
+2004 ( ): emsp13
+2005 ( ): emsp14
+2007 ( ): numsp
+2008 ( ): puncsp
+2009 ( ): ThinSpace, thinsp
+200A ( ): VeryThinSpace, hairsp
+200B (​): NegativeMediumSpace, NegativeThickSpace, NegativeThinSpace, NegativeVeryThinSpace, ZeroWidthSpace
+200C (‌): zwnj
+200D (‍): zwj
+200E (‎): lrm
+200F (‏): rlm
+2010 (‐): dash, hyphen
+2013 (–): ndash
+2014 (—): mdash
+2015 (―): horbar
+2016 (‖): Verbar, Vert
+2018 (‘): OpenCurlyQuote, lsquo
+2019 (’): CloseCurlyQuote, rsquo, rsquor
+201A (‚): lsquor, sbquo
+201C (“): OpenCurlyDoubleQuote, ldquo
+201D (”): CloseCurlyDoubleQuote, rdquo, rdquor
+201E („): bdquo, ldquor
+2020 (†): dagger
+2021 (‡): Dagger, ddagger
+2022 (•): bull, bullet
+2025 (‥): nldr
+2026 (…): hellip, mldr
+2030 (‰): permil
+2031 (‱): pertenk
+2032 (′): prime
+2033 (″): Prime
+2034 (‴): tprime
+2035 (‵): backprime, bprime
+2039 (‹): lsaquo
+203A (›): rsaquo
+203E (‾): OverBar, oline
+2041 (⁁): caret
+2043 (⁃): hybull
+2044 (⁄): frasl
+204F (⁏): bsemi
+2057 (⁗): qprime
+205F ( ): MediumSpace
+2060 (⁠): NoBreak
+2061 (⁡): ApplyFunction, af
+2062 (⁢): InvisibleTimes, it
+2063 (⁣): InvisibleComma, ic
+20AC (€): euro
+20DB (⃛): TripleDot, tdot
+20DC (⃜): DotDot
+2102 (ℂ): Copf, complexes
+2105 (℅): incare
+210A (ℊ): gscr
+210B (ℋ): HilbertSpace, Hscr, hamilt
+210C (ℌ): Hfr, Poincareplane
+210D (ℍ): Hopf, quaternions
+210E (ℎ): planckh
+210F (ℏ): hbar, hslash, planck, plankv
+2110 (ℐ): Iscr, imagline
+2111 (ℑ): Ifr, Im, image, imagpart
+2112 (ℒ): Laplacetrf, Lscr, lagran
+2113 (ℓ): ell
+2115 (ℕ): Nopf, naturals
+2116 (№): numero
+2117 (℗): copysr
+2118 (℘): weierp, wp
+2119 (ℙ): Popf, primes
+211A (ℚ): Qopf, rationals
+211B (ℛ): Rscr, realine
+211C (ℜ): Re, Rfr, real, realpart
+211D (ℝ): Ropf, reals
+211E (℞): rx
+2122 (™): TRADE, trade
+2124 (ℤ): Zopf, integers
+2127 (℧): mho
+2128 (ℨ): Zfr, zeetrf
+2129 (℩): iiota
+212C (ℬ): Bernoullis, Bscr, bernou
+212D (ℭ): Cayleys, Cfr
+212F (ℯ): escr
+2130 (ℰ): Escr, expectation
+2131 (ℱ): Fouriertrf, Fscr
+2133 (ℳ): Mellintrf, Mscr, phmmat
+2134 (ℴ): order, orderof, oscr
+2135 (ℵ): alefsym, aleph
+2136 (ℶ): beth
+2137 (ℷ): gimel
+2138 (ℸ): daleth
+2145 (ⅅ): CapitalDifferentialD, DD
+2146 (ⅆ): DifferentialD, dd
+2147 (ⅇ): ExponentialE, ee, exponentiale
+2148 (ⅈ): ImaginaryI, ii
+2153 (⅓): frac13
+2154 (⅔): frac23
+2155 (⅕): frac15
+2156 (⅖): frac25
+2157 (⅗): frac35
+2158 (⅘): frac45
+2159 (⅙): frac16
+215A (⅚): frac56
+215B (⅛): frac18
+215C (⅜): frac38
+215D (⅝): frac58
+215E (⅞): frac78
+2190 (←): LeftArrow, ShortLeftArrow, larr, leftarrow, slarr
+2191 (↑): ShortUpArrow, UpArrow, uarr, uparrow
+2192 (→): RightArrow, ShortRightArrow, rarr, rightarrow, srarr
+2193 (↓): DownArrow, ShortDownArrow, darr, downarrow
+2194 (↔): LeftRightArrow, harr, leftrightarrow
+2195 (↕): UpDownArrow, updownarrow, varr
+2196 (↖): UpperLeftArrow, nwarr, nwarrow
+2197 (↗): UpperRightArrow, nearr, nearrow
+2198 (↘): LowerRightArrow, searr, searrow
+2199 (↙): LowerLeftArrow, swarr, swarrow
+219A (↚): nlarr, nleftarrow
+219B (↛): nrarr, nrightarrow
+219D (↝): rarrw, rightsquigarrow
+219E (↞): Larr, twoheadleftarrow
+219F (↟): Uarr
+21A0 (↠): Rarr, twoheadrightarrow
+21A1 (↡): Darr
+21A2 (↢): larrtl, leftarrowtail
+21A3 (↣): rarrtl, rightarrowtail
+21A4 (↤): LeftTeeArrow, mapstoleft
+21A5 (↥): UpTeeArrow, mapstoup
+21A6 (↦): RightTeeArrow, map, mapsto
+21A7 (↧): DownTeeArrow, mapstodown
+21A9 (↩): hookleftarrow, larrhk
+21AA (↪): hookrightarrow, rarrhk
+21AB (↫): larrlp, looparrowleft
+21AC (↬): looparrowright, rarrlp
+21AD (↭): harrw, leftrightsquigarrow
+21AE (↮): nharr, nleftrightarrow
+21B0 (↰): Lsh, lsh
+21B1 (↱): Rsh, rsh
+21B2 (↲): ldsh
+21B3 (↳): rdsh
+21B5 (↵): crarr
+21B6 (↶): cularr, curvearrowleft
+21B7 (↷): curarr, curvearrowright
+21BA (↺): circlearrowleft, olarr
+21BB (↻): circlearrowright, orarr
+21BC (↼): LeftVector, leftharpoonup, lharu
+21BD (↽): DownLeftVector, leftharpoondown, lhard
+21BE (↾): RightUpVector, uharr, upharpoonright
+21BF (↿): LeftUpVector, uharl, upharpoonleft
+21C0 (⇀): RightVector, rharu, rightharpoonup
+21C1 (⇁): DownRightVector, rhard, rightharpoondown
+21C2 (⇂): RightDownVector, dharr, downharpoonright
+21C3 (⇃): LeftDownVector, dharl, downharpoonleft
+21C4 (⇄): RightArrowLeftArrow, rightleftarrows, rlarr
+21C5 (⇅): UpArrowDownArrow, udarr
+21C6 (⇆): LeftArrowRightArrow, leftrightarrows, lrarr
+21C7 (⇇): leftleftarrows, llarr
+21C8 (⇈): upuparrows, uuarr
+21C9 (⇉): rightrightarrows, rrarr
+21CA (⇊): ddarr, downdownarrows
+21CB (⇋): ReverseEquilibrium, leftrightharpoons, lrhar
+21CC (⇌): Equilibrium, rightleftharpoons, rlhar
+21CD (⇍): nLeftarrow, nlArr
+21CE (⇎): nLeftrightarrow, nhArr
+21CF (⇏): nRightarrow, nrArr
+21D0 (⇐): DoubleLeftArrow, Leftarrow, lArr
+21D1 (⇑): DoubleUpArrow, Uparrow, uArr
+21D2 (⇒): DoubleRightArrow, Implies, Rightarrow, rArr
+21D3 (⇓): DoubleDownArrow, Downarrow, dArr
+21D4 (⇔): DoubleLeftRightArrow, Leftrightarrow, hArr, iff
+21D5 (⇕): DoubleUpDownArrow, Updownarrow, vArr
+21D6 (⇖): nwArr
+21D7 (⇗): neArr
+21D8 (⇘): seArr
+21D9 (⇙): swArr
+21DA (⇚): Lleftarrow, lAarr
+21DB (⇛): Rrightarrow, rAarr
+21DD (⇝): zigrarr
+21E4 (⇤): LeftArrowBar, larrb
+21E5 (⇥): RightArrowBar, rarrb
+21F5 (⇵): DownArrowUpArrow, duarr
+21FD (⇽): loarr
+21FE (⇾): roarr
+21FF (⇿): hoarr
+2200 (∀): ForAll, forall
+2201 (∁): comp, complement
+2202 (∂): PartialD, part
+2203 (∃): Exists, exist
+2204 (∄): NotExists, nexist, nexists
+2205 (∅): empty, emptyset, emptyv, varnothing
+2207 (∇): Del, nabla
+2208 (∈): Element, in, isin, isinv
+2209 (∉): NotElement, notin, notinva
+220B (∋): ReverseElement, SuchThat, ni, niv
+220C (∌): NotReverseElement, notni, notniva
+220F (∏): Product, prod
+2210 (∐): Coproduct, coprod
+2211 (∑): Sum, sum
+2212 (−): minus
+2213 (∓): MinusPlus, mnplus, mp
+2214 (∔): dotplus, plusdo
+2216 (∖): Backslash, setminus, setmn, smallsetminus, ssetmn
+2217 (∗): lowast
+2218 (∘): SmallCircle, compfn
+221A (√): Sqrt, radic
+221D (∝): Proportional, prop, propto, varpropto, vprop
+221E (∞): infin
+221F (∟): angrt
+2220 (∠): ang, angle
+2221 (∡): angmsd, measuredangle
+2222 (∢): angsph
+2223 (∣): VerticalBar, mid, shortmid, smid
+2224 (∤): NotVerticalBar, nmid, nshortmid, nsmid
+2225 (∥): DoubleVerticalBar, par, parallel, shortparallel, spar
+2226 (∦): NotDoubleVerticalBar, npar, nparallel, nshortparallel, nspar
+2227 (∧): and, wedge
+2228 (∨): or, vee
+2229 (∩): cap
+222A (∪): cup
+222B (∫): Integral, int
+222C (∬): Int
+222D (∭): iiint, tint
+222E (∮): ContourIntegral, conint, oint
+222F (∯): Conint, DoubleContourIntegral
+2230 (∰): Cconint
+2231 (∱): cwint
+2232 (∲): ClockwiseContourIntegral, cwconint
+2233 (∳): CounterClockwiseContourIntegral, awconint
+2234 (∴): Therefore, there4, therefore
+2235 (∵): Because, becaus, because
+2236 (∶): ratio
+2237 (∷): Colon, Proportion
+2238 (∸): dotminus, minusd
+223A (∺): mDDot
+223B (∻): homtht
+223C (∼): Tilde, sim, thicksim, thksim
+223D (∽): backsim, bsim
+223E (∾): ac, mstpos
+223F (∿): acd
+2240 (≀): VerticalTilde, wr, wreath
+2241 (≁): NotTilde, nsim
+2242 (≂): EqualTilde, eqsim, esim
+2243 (≃): TildeEqual, sime, simeq
+2244 (≄): NotTildeEqual, nsime, nsimeq
+2245 (≅): TildeFullEqual, cong
+2246 (≆): simne
+2247 (≇): NotTildeFullEqual, ncong
+2248 (≈): TildeTilde, ap, approx, asymp, thickapprox, thkap
+2249 (≉): NotTildeTilde, nap, napprox
+224A (≊): ape, approxeq
+224B (≋): apid
+224C (≌): backcong, bcong
+224D (≍): CupCap, asympeq
+224E (≎): Bumpeq, HumpDownHump, bump
+224F (≏): HumpEqual, bumpe, bumpeq
+2250 (≐): DotEqual, doteq, esdot
+2251 (≑): doteqdot, eDot
+2252 (≒): efDot, fallingdotseq
+2253 (≓): erDot, risingdotseq
+2254 (≔): Assign, colone, coloneq
+2255 (≕): ecolon, eqcolon
+2256 (≖): ecir, eqcirc
+2257 (≗): circeq, cire
+2259 (≙): wedgeq
+225A (≚): veeeq
+225C (≜): triangleq, trie
+225F (≟): equest, questeq
+2260 (≠): NotEqual, ne
+2261 (≡): Congruent, equiv
+2262 (≢): NotCongruent, nequiv
+2264 (≤): le, leq
+2265 (≥): GreaterEqual, ge, geq
+2266 (≦): LessFullEqual, lE, leqq
+2267 (≧): GreaterFullEqual, gE, geqq
+2268 (≨): lnE, lneqq
+2269 (≩): gnE, gneqq
+226A (≪): Lt, NestedLessLess, ll
+226B (≫): Gt, NestedGreaterGreater, gg
+226C (≬): between, twixt
+226D (≭): NotCupCap
+226E (≮): NotLess, nless, nlt
+226F (≯): NotGreater, ngt, ngtr
+2270 (≰): NotLessEqual, nle, nleq
+2271 (≱): NotGreaterEqual, nge, ngeq
+2272 (≲): LessTilde, lesssim, lsim
+2273 (≳): GreaterTilde, gsim, gtrsim
+2274 (≴): NotLessTilde, nlsim
+2275 (≵): NotGreaterTilde, ngsim
+2276 (≶): LessGreater, lessgtr, lg
+2277 (≷): GreaterLess, gl, gtrless
+2278 (≸): NotLessGreater, ntlg
+2279 (≹): NotGreaterLess, ntgl
+227A (≺): Precedes, pr, prec
+227B (≻): Succeeds, sc, succ
+227C (≼): PrecedesSlantEqual, prcue, preccurlyeq
+227D (≽): SucceedsSlantEqual, sccue, succcurlyeq
+227E (≾): PrecedesTilde, precsim, prsim
+227F (≿): SucceedsTilde, scsim, succsim
+2280 (⊀): NotPrecedes, npr, nprec
+2281 (⊁): NotSucceeds, nsc, nsucc
+2282 (⊂): sub, subset
+2283 (⊃): Superset, sup, supset
+2284 (⊄): nsub
+2285 (⊅): nsup
+2286 (⊆): SubsetEqual, sube, subseteq
+2287 (⊇): SupersetEqual, supe, supseteq
+2288 (⊈): NotSubsetEqual, nsube, nsubseteq
+2289 (⊉): NotSupersetEqual, nsupe, nsupseteq
+228A (⊊): subne, subsetneq
+228B (⊋): supne, supsetneq
+228D (⊍): cupdot
+228E (⊎): UnionPlus, uplus
+228F (⊏): SquareSubset, sqsub, sqsubset
+2290 (⊐): SquareSuperset, sqsup, sqsupset
+2291 (⊑): SquareSubsetEqual, sqsube, sqsubseteq
+2292 (⊒): SquareSupersetEqual, sqsupe, sqsupseteq
+2293 (⊓): SquareIntersection, sqcap
+2294 (⊔): SquareUnion, sqcup
+2295 (⊕): CirclePlus, oplus
+2296 (⊖): CircleMinus, ominus
+2297 (⊗): CircleTimes, otimes
+2298 (⊘): osol
+2299 (⊙): CircleDot, odot
+229A (⊚): circledcirc, ocir
+229B (⊛): circledast, oast
+229D (⊝): circleddash, odash
+229E (⊞): boxplus, plusb
+229F (⊟): boxminus, minusb
+22A0 (⊠): boxtimes, timesb
+22A1 (⊡): dotsquare, sdotb
+22A2 (⊢): RightTee, vdash
+22A3 (⊣): LeftTee, dashv
+22A4 (⊤): DownTee, top
+22A5 (⊥): UpTee, bot, bottom, perp
+22A7 (⊧): models
+22A8 (⊨): DoubleRightTee, vDash
+22A9 (⊩): Vdash
+22AA (⊪): Vvdash
+22AB (⊫): VDash
+22AC (⊬): nvdash
+22AD (⊭): nvDash
+22AE (⊮): nVdash
+22AF (⊯): nVDash
+22B0 (⊰): prurel
+22B2 (⊲): LeftTriangle, vartriangleleft, vltri
+22B3 (⊳): RightTriangle, vartriangleright, vrtri
+22B4 (⊴): LeftTriangleEqual, ltrie, trianglelefteq
+22B5 (⊵): RightTriangleEqual, rtrie, trianglerighteq
+22B6 (⊶): origof
+22B7 (⊷): imof
+22B8 (⊸): multimap, mumap
+22B9 (⊹): hercon
+22BA (⊺): intcal, intercal
+22BB (⊻): veebar
+22BD (⊽): barvee
+22BE (⊾): angrtvb
+22BF (⊿): lrtri
+22C0 (⋀): Wedge, bigwedge, xwedge
+22C1 (⋁): Vee, bigvee, xvee
+22C2 (⋂): Intersection, bigcap, xcap
+22C3 (⋃): Union, bigcup, xcup
+22C4 (⋄): Diamond, diam, diamond
+22C5 (⋅): sdot
+22C6 (⋆): Star, sstarf
+22C7 (⋇): divideontimes, divonx
+22C8 (⋈): bowtie
+22C9 (⋉): ltimes
+22CA (⋊): rtimes
+22CB (⋋): leftthreetimes, lthree
+22CC (⋌): rightthreetimes, rthree
+22CD (⋍): backsimeq, bsime
+22CE (⋎): curlyvee, cuvee
+22CF (⋏): curlywedge, cuwed
+22D0 (⋐): Sub, Subset
+22D1 (⋑): Sup, Supset
+22D2 (⋒): Cap
+22D3 (⋓): Cup
+22D4 (⋔): fork, pitchfork
+22D5 (⋕): epar
+22D6 (⋖): lessdot, ltdot
+22D7 (⋗): gtdot, gtrdot
+22D8 (⋘): Ll
+22D9 (⋙): Gg, ggg
+22DA (⋚): LessEqualGreater, leg, lesseqgtr
+22DB (⋛): GreaterEqualLess, gel, gtreqless
+22DE (⋞): cuepr, curlyeqprec
+22DF (⋟): cuesc, curlyeqsucc
+22E0 (⋠): NotPrecedesSlantEqual, nprcue
+22E1 (⋡): NotSucceedsSlantEqual, nsccue
+22E2 (⋢): NotSquareSubsetEqual, nsqsube
+22E3 (⋣): NotSquareSupersetEqual, nsqsupe
+22E6 (⋦): lnsim
+22E7 (⋧): gnsim
+22E8 (⋨): precnsim, prnsim
+22E9 (⋩): scnsim, succnsim
+22EA (⋪): NotLeftTriangle, nltri, ntriangleleft
+22EB (⋫): NotRightTriangle, nrtri, ntriangleright
+22EC (⋬): NotLeftTriangleEqual, nltrie, ntrianglelefteq
+22ED (⋭): NotRightTriangleEqual, nrtrie, ntrianglerighteq
+22EE (⋮): vellip
+22EF (⋯): ctdot
+22F0 (⋰): utdot
+22F1 (⋱): dtdot
+22F2 (⋲): disin
+22F3 (⋳): isinsv
+22F4 (⋴): isins
+22F5 (⋵): isindot
+22F6 (⋶): notinvc
+22F7 (⋷): notinvb
+22F9 (⋹): isinE
+22FA (⋺): nisd
+22FB (⋻): xnis
+22FC (⋼): nis
+22FD (⋽): notnivc
+22FE (⋾): notnivb
+2305 (⌅): barwed, barwedge
+2306 (⌆): Barwed, doublebarwedge
+2308 (⌈): LeftCeiling, lceil
+2309 (⌉): RightCeiling, rceil
+230A (⌊): LeftFloor, lfloor
+230B (⌋): RightFloor, rfloor
+230C (⌌): drcrop
+230D (⌍): dlcrop
+230E (⌎): urcrop
+230F (⌏): ulcrop
+2310 (⌐): bnot
+2312 (⌒): profline
+2313 (⌓): profsurf
+2315 (⌕): telrec
+2316 (⌖): target
+231C (⌜): ulcorn, ulcorner
+231D (⌝): urcorn, urcorner
+231E (⌞): dlcorn, llcorner
+231F (⌟): drcorn, lrcorner
+2322 (⌢): frown, sfrown
+2323 (⌣): smile, ssmile
+232D (⌭): cylcty
+232E (⌮): profalar
+2336 (⌶): topbot
+233D (⌽): ovbar
+233F (⌿): solbar
+237C (⍼): angzarr
+23B0 (⎰): lmoust, lmoustache
+23B1 (⎱): rmoust, rmoustache
+23B4 (⎴): OverBracket, tbrk
+23B5 (⎵): UnderBracket, bbrk
+23B6 (⎶): bbrktbrk
+23DC (⏜): OverParenthesis
+23DD (⏝): UnderParenthesis
+23DE (⏞): OverBrace
+23DF (⏟): UnderBrace
+23E2 (⏢): trpezium
+23E7 (⏧): elinters
+2423 (␣): blank
+24C8 (Ⓢ): circledS, oS
+2500 (─): HorizontalLine, boxh
+2502 (│): boxv
+250C (┌): boxdr
+2510 (┐): boxdl
+2514 (└): boxur
+2518 (┘): boxul
+251C (├): boxvr
+2524 (┤): boxvl
+252C (┬): boxhd
+2534 (┴): boxhu
+253C (┼): boxvh
+2550 (═): boxH
+2551 (║): boxV
+2552 (╒): boxdR
+2553 (╓): boxDr
+2554 (╔): boxDR
+2555 (╕): boxdL
+2556 (╖): boxDl
+2557 (╗): boxDL
+2558 (╘): boxuR
+2559 (╙): boxUr
+255A (╚): boxUR
+255B (╛): boxuL
+255C (╜): boxUl
+255D (╝): boxUL
+255E (╞): boxvR
+255F (╟): boxVr
+2560 (╠): boxVR
+2561 (╡): boxvL
+2562 (╢): boxVl
+2563 (╣): boxVL
+2564 (╤): boxHd
+2565 (╥): boxhD
+2566 (╦): boxHD
+2567 (╧): boxHu
+2568 (╨): boxhU
+2569 (╩): boxHU
+256A (╪): boxvH
+256B (╫): boxVh
+256C (╬): boxVH
+2580 (▀): uhblk
+2584 (▄): lhblk
+2588 (█): block
+2591 (░): blk14
+2592 (▒): blk12
+2593 (▓): blk34
+25A1 (□): Square, squ, square
+25AA (▪): FilledVerySmallSquare, blacksquare, squarf, squf
+25AB (▫): EmptyVerySmallSquare
+25AD (▭): rect
+25AE (▮): marker
+25B1 (▱): fltns
+25B3 (△): bigtriangleup, xutri
+25B4 (▴): blacktriangle, utrif
+25B5 (▵): triangle, utri
+25B8 (▸): blacktriangleright, rtrif
+25B9 (▹): rtri, triangleright
+25BD (▽): bigtriangledown, xdtri
+25BE (▾): blacktriangledown, dtrif
+25BF (▿): dtri, triangledown
+25C2 (◂): blacktriangleleft, ltrif
+25C3 (◃): ltri, triangleleft
+25CA (◊): loz, lozenge
+25CB (○): cir
+25EC (◬): tridot
+25EF (◯): bigcirc, xcirc
+25F8 (◸): ultri
+25F9 (◹): urtri
+25FA (◺): lltri
+25FB (◻): EmptySmallSquare
+25FC (◼): FilledSmallSquare
+2605 (★): bigstar, starf
+2606 (☆): star
+260E (☎): phone
+2640 (♀): female
+2642 (♂): male
+2660 (♠): spades, spadesuit
+2663 (♣): clubs, clubsuit
+2665 (♥): hearts, heartsuit
+2666 (♦): diamondsuit, diams
+266A (♪): sung
+266D (♭): flat
+266E (♮): natur, natural
+266F (♯): sharp
+2713 (✓): check, checkmark
+2717 (✗): cross
+2720 (✠): malt, maltese
+2736 (✶): sext
+2758 (❘): VerticalSeparator
+2772 (❲): lbbrk
+2773 (❳): rbbrk
+27C8 (⟈): bsolhsub
+27C9 (⟉): suphsol
+27E6 (⟦): LeftDoubleBracket, lobrk
+27E7 (⟧): RightDoubleBracket, robrk
+27E8 (⟨): LeftAngleBracket, lang, langle
+27E9 (⟩): RightAngleBracket, rang, rangle
+27EA (⟪): Lang
+27EB (⟫): Rang
+27EC (⟬): loang
+27ED (⟭): roang
+27F5 (⟵): LongLeftArrow, longleftarrow, xlarr
+27F6 (⟶): LongRightArrow, longrightarrow, xrarr
+27F7 (⟷): LongLeftRightArrow, longleftrightarrow, xharr
+27F8 (⟸): DoubleLongLeftArrow, Longleftarrow, xlArr
+27F9 (⟹): DoubleLongRightArrow, Longrightarrow, xrArr
+27FA (⟺): DoubleLongLeftRightArrow, Longleftrightarrow, xhArr
+27FC (⟼): longmapsto, xmap
+27FF (⟿): dzigrarr
+2902 (⤂): nvlArr
+2903 (⤃): nvrArr
+2904 (⤄): nvHarr
+2905 (⤅): Map
+290C (⤌): lbarr
+290D (⤍): bkarow, rbarr
+290E (⤎): lBarr
+290F (⤏): dbkarow, rBarr
+2910 (⤐): RBarr, drbkarow
+2911 (⤑): DDotrahd
+2912 (⤒): UpArrowBar
+2913 (⤓): DownArrowBar
+2916 (⤖): Rarrtl
+2919 (⤙): latail
+291A (⤚): ratail
+291B (⤛): lAtail
+291C (⤜): rAtail
+291D (⤝): larrfs
+291E (⤞): rarrfs
+291F (⤟): larrbfs
+2920 (⤠): rarrbfs
+2923 (⤣): nwarhk
+2924 (⤤): nearhk
+2925 (⤥): hksearow, searhk
+2926 (⤦): hkswarow, swarhk
+2927 (⤧): nwnear
+2928 (⤨): nesear, toea
+2929 (⤩): seswar, tosa
+292A (⤪): swnwar
+2933 (⤳): rarrc
+2935 (⤵): cudarrr
+2936 (⤶): ldca
+2937 (⤷): rdca
+2938 (⤸): cudarrl
+2939 (⤹): larrpl
+293C (⤼): curarrm
+293D (⤽): cularrp
+2945 (⥅): rarrpl
+2948 (⥈): harrcir
+2949 (⥉): Uarrocir
+294A (⥊): lurdshar
+294B (⥋): ldrushar
+294E (⥎): LeftRightVector
+294F (⥏): RightUpDownVector
+2950 (⥐): DownLeftRightVector
+2951 (⥑): LeftUpDownVector
+2952 (⥒): LeftVectorBar
+2953 (⥓): RightVectorBar
+2954 (⥔): RightUpVectorBar
+2955 (⥕): RightDownVectorBar
+2956 (⥖): DownLeftVectorBar
+2957 (⥗): DownRightVectorBar
+2958 (⥘): LeftUpVectorBar
+2959 (⥙): LeftDownVectorBar
+295A (⥚): LeftTeeVector
+295B (⥛): RightTeeVector
+295C (⥜): RightUpTeeVector
+295D (⥝): RightDownTeeVector
+295E (⥞): DownLeftTeeVector
+295F (⥟): DownRightTeeVector
+2960 (⥠): LeftUpTeeVector
+2961 (⥡): LeftDownTeeVector
+2962 (⥢): lHar
+2963 (⥣): uHar
+2964 (⥤): rHar
+2965 (⥥): dHar
+2966 (⥦): luruhar
+2967 (⥧): ldrdhar
+2968 (⥨): ruluhar
+2969 (⥩): rdldhar
+296A (⥪): lharul
+296B (⥫): llhard
+296C (⥬): rharul
+296D (⥭): lrhard
+296E (⥮): UpEquilibrium, udhar
+296F (⥯): ReverseUpEquilibrium, duhar
+2970 (⥰): RoundImplies
+2971 (⥱): erarr
+2972 (⥲): simrarr
+2973 (⥳): larrsim
+2974 (⥴): rarrsim
+2975 (⥵): rarrap
+2976 (⥶): ltlarr
+2978 (⥸): gtrarr
+2979 (⥹): subrarr
+297B (⥻): suplarr
+297C (⥼): lfisht
+297D (⥽): rfisht
+297E (⥾): ufisht
+297F (⥿): dfisht
+2985 (⦅): lopar
+2986 (⦆): ropar
+298B (⦋): lbrke
+298C (⦌): rbrke
+298D (⦍): lbrkslu
+298E (⦎): rbrksld
+298F (⦏): lbrksld
+2990 (⦐): rbrkslu
+2991 (⦑): langd
+2992 (⦒): rangd
+2993 (⦓): lparlt
+2994 (⦔): rpargt
+2995 (⦕): gtlPar
+2996 (⦖): ltrPar
+299A (⦚): vzigzag
+299C (⦜): vangrt
+299D (⦝): angrtvbd
+29A4 (⦤): ange
+29A5 (⦥): range
+29A6 (⦦): dwangle
+29A7 (⦧): uwangle
+29A8 (⦨): angmsdaa
+29A9 (⦩): angmsdab
+29AA (⦪): angmsdac
+29AB (⦫): angmsdad
+29AC (⦬): angmsdae
+29AD (⦭): angmsdaf
+29AE (⦮): angmsdag
+29AF (⦯): angmsdah
+29B0 (⦰): bemptyv
+29B1 (⦱): demptyv
+29B2 (⦲): cemptyv
+29B3 (⦳): raemptyv
+29B4 (⦴): laemptyv
+29B5 (⦵): ohbar
+29B6 (⦶): omid
+29B7 (⦷): opar
+29B9 (⦹): operp
+29BB (⦻): olcross
+29BC (⦼): odsold
+29BE (⦾): olcir
+29BF (⦿): ofcir
+29C0 (⧀): olt
+29C1 (⧁): ogt
+29C2 (⧂): cirscir
+29C3 (⧃): cirE
+29C4 (⧄): solb
+29C5 (⧅): bsolb
+29C9 (⧉): boxbox
+29CD (⧍): trisb
+29CE (⧎): rtriltri
+29CF (⧏): LeftTriangleBar
+29D0 (⧐): RightTriangleBar
+29DC (⧜): iinfin
+29DD (⧝): infintie
+29DE (⧞): nvinfin
+29E3 (⧣): eparsl
+29E4 (⧤): smeparsl
+29E5 (⧥): eqvparsl
+29EB (⧫): blacklozenge, lozf
+29F4 (⧴): RuleDelayed
+29F6 (⧶): dsol
+2A00 (⨀): bigodot, xodot
+2A01 (⨁): bigoplus, xoplus
+2A02 (⨂): bigotimes, xotime
+2A04 (⨄): biguplus, xuplus
+2A06 (⨆): bigsqcup, xsqcup
+2A0C (⨌): iiiint, qint
+2A0D (⨍): fpartint
+2A10 (⨐): cirfnint
+2A11 (⨑): awint
+2A12 (⨒): rppolint
+2A13 (⨓): scpolint
+2A14 (⨔): npolint
+2A15 (⨕): pointint
+2A16 (⨖): quatint
+2A17 (⨗): intlarhk
+2A22 (⨢): pluscir
+2A23 (⨣): plusacir
+2A24 (⨤): simplus
+2A25 (⨥): plusdu
+2A26 (⨦): plussim
+2A27 (⨧): plustwo
+2A29 (⨩): mcomma
+2A2A (⨪): minusdu
+2A2D (⨭): loplus
+2A2E (⨮): roplus
+2A2F (⨯): Cross
+2A30 (⨰): timesd
+2A31 (⨱): timesbar
+2A33 (⨳): smashp
+2A34 (⨴): lotimes
+2A35 (⨵): rotimes
+2A36 (⨶): otimesas
+2A37 (⨷): Otimes
+2A38 (⨸): odiv
+2A39 (⨹): triplus
+2A3A (⨺): triminus
+2A3B (⨻): tritime
+2A3C (⨼): intprod, iprod
+2A3F (⨿): amalg
+2A40 (⩀): capdot
+2A42 (⩂): ncup
+2A43 (⩃): ncap
+2A44 (⩄): capand
+2A45 (⩅): cupor
+2A46 (⩆): cupcap
+2A47 (⩇): capcup
+2A48 (⩈): cupbrcap
+2A49 (⩉): capbrcup
+2A4A (⩊): cupcup
+2A4B (⩋): capcap
+2A4C (⩌): ccups
+2A4D (⩍): ccaps
+2A50 (⩐): ccupssm
+2A53 (⩓): And
+2A54 (⩔): Or
+2A55 (⩕): andand
+2A56 (⩖): oror
+2A57 (⩗): orslope
+2A58 (⩘): andslope
+2A5A (⩚): andv
+2A5B (⩛): orv
+2A5C (⩜): andd
+2A5D (⩝): ord
+2A5F (⩟): wedbar
+2A66 (⩦): sdote
+2A6A (⩪): simdot
+2A6D (⩭): congdot
+2A6E (⩮): easter
+2A6F (⩯): apacir
+2A70 (⩰): apE
+2A71 (⩱): eplus
+2A72 (⩲): pluse
+2A73 (⩳): Esim
+2A74 (⩴): Colone
+2A75 (⩵): Equal
+2A77 (⩷): ddotseq, eDDot
+2A78 (⩸): equivDD
+2A79 (⩹): ltcir
+2A7A (⩺): gtcir
+2A7B (⩻): ltquest
+2A7C (⩼): gtquest
+2A7D (⩽): LessSlantEqual, leqslant, les
+2A7E (⩾): GreaterSlantEqual, geqslant, ges
+2A7F (⩿): lesdot
+2A80 (⪀): gesdot
+2A81 (⪁): lesdoto
+2A82 (⪂): gesdoto
+2A83 (⪃): lesdotor
+2A84 (⪄): gesdotol
+2A85 (⪅): lap, lessapprox
+2A86 (⪆): gap, gtrapprox
+2A87 (⪇): lne, lneq
+2A88 (⪈): gne, gneq
+2A89 (⪉): lnap, lnapprox
+2A8A (⪊): gnap, gnapprox
+2A8B (⪋): lEg, lesseqqgtr
+2A8C (⪌): gEl, gtreqqless
+2A8D (⪍): lsime
+2A8E (⪎): gsime
+2A8F (⪏): lsimg
+2A90 (⪐): gsiml
+2A91 (⪑): lgE
+2A92 (⪒): glE
+2A93 (⪓): lesges
+2A94 (⪔): gesles
+2A95 (⪕): els, eqslantless
+2A96 (⪖): egs, eqslantgtr
+2A97 (⪗): elsdot
+2A98 (⪘): egsdot
+2A99 (⪙): el
+2A9A (⪚): eg
+2A9D (⪝): siml
+2A9E (⪞): simg
+2A9F (⪟): simlE
+2AA0 (⪠): simgE
+2AA1 (⪡): LessLess
+2AA2 (⪢): GreaterGreater
+2AA4 (⪤): glj
+2AA5 (⪥): gla
+2AA6 (⪦): ltcc
+2AA7 (⪧): gtcc
+2AA8 (⪨): lescc
+2AA9 (⪩): gescc
+2AAA (⪪): smt
+2AAB (⪫): lat
+2AAC (⪬): smte
+2AAD (⪭): late
+2AAE (⪮): bumpE
+2AAF (⪯): PrecedesEqual, pre, preceq
+2AB0 (⪰): SucceedsEqual, sce, succeq
+2AB3 (⪳): prE
+2AB4 (⪴): scE
+2AB5 (⪵): precneqq, prnE
+2AB6 (⪶): scnE, succneqq
+2AB7 (⪷): prap, precapprox
+2AB8 (⪸): scap, succapprox
+2AB9 (⪹): precnapprox, prnap
+2ABA (⪺): scnap, succnapprox
+2ABB (⪻): Pr
+2ABC (⪼): Sc
+2ABD (⪽): subdot
+2ABE (⪾): supdot
+2ABF (⪿): subplus
+2AC0 (⫀): supplus
+2AC1 (⫁): submult
+2AC2 (⫂): supmult
+2AC3 (⫃): subedot
+2AC4 (⫄): supedot
+2AC5 (⫅): subE, subseteqq
+2AC6 (⫆): supE, supseteqq
+2AC7 (⫇): subsim
+2AC8 (⫈): supsim
+2ACB (⫋): subnE, subsetneqq
+2ACC (⫌): supnE, supsetneqq
+2ACF (⫏): csub
+2AD0 (⫐): csup
+2AD1 (⫑): csube
+2AD2 (⫒): csupe
+2AD3 (⫓): subsup
+2AD4 (⫔): supsub
+2AD5 (⫕): subsub
+2AD6 (⫖): supsup
+2AD7 (⫗): suphsub
+2AD8 (⫘): supdsub
+2AD9 (⫙): forkv
+2ADA (⫚): topfork
+2ADB (⫛): mlcp
+2AE4 (⫤): Dashv, DoubleLeftTee
+2AE6 (⫦): Vdashl
+2AE7 (⫧): Barv
+2AE8 (⫨): vBar
+2AE9 (⫩): vBarv
+2AEB (⫫): Vbar
+2AEC (⫬): Not
+2AED (⫭): bNot
+2AEE (⫮): rnmid
+2AEF (⫯): cirmid
+2AF0 (⫰): midcir
+2AF1 (⫱): topcir
+2AF2 (⫲): nhpar
+2AF3 (⫳): parsim
+2AFD (⫽): parsl
+FB00 (ﬀ): fflig
+FB01 (ﬁ): filig
+FB02 (ﬂ): fllig
+FB03 (ﬃ): ffilig
+FB04 (ﬄ): ffllig
+1D49C (𝒜): Ascr
+1D49E (𝒞): Cscr
+1D49F (𝒟): Dscr
+1D4A2 (𝒢): Gscr
+1D4A5 (𝒥): Jscr
+1D4A6 (𝒦): Kscr
+1D4A9 (𝒩): Nscr
+1D4AA (𝒪): Oscr
+1D4AB (𝒫): Pscr
+1D4AC (𝒬): Qscr
+1D4AE (𝒮): Sscr
+1D4AF (𝒯): Tscr
+1D4B0 (𝒰): Uscr
+1D4B1 (𝒱): Vscr
+1D4B2 (𝒲): Wscr
+1D4B3 (𝒳): Xscr
+1D4B4 (𝒴): Yscr
+1D4B5 (𝒵): Zscr
+1D4B6 (𝒶): ascr
+1D4B7 (𝒷): bscr
+1D4B8 (𝒸): cscr
+1D4B9 (𝒹): dscr
+1D4BB (𝒻): fscr
+1D4BD (𝒽): hscr
+1D4BE (𝒾): iscr
+1D4BF (𝒿): jscr
+1D4C0 (𝓀): kscr
+1D4C1 (𝓁): lscr
+1D4C2 (𝓂): mscr
+1D4C3 (𝓃): nscr
+1D4C5 (𝓅): pscr
+1D4C6 (𝓆): qscr
+1D4C7 (𝓇): rscr
+1D4C8 (𝓈): sscr
+1D4C9 (𝓉): tscr
+1D4CA (𝓊): uscr
+1D4CB (𝓋): vscr
+1D4CC (𝓌): wscr
+1D4CD (𝓍): xscr
+1D4CE (𝓎): yscr
+1D4CF (𝓏): zscr
+1D504 (𝔄): Afr
+1D505 (𝔅): Bfr
+1D507 (𝔇): Dfr
+1D508 (𝔈): Efr
+1D509 (𝔉): Ffr
+1D50A (𝔊): Gfr
+1D50D (𝔍): Jfr
+1D50E (𝔎): Kfr
+1D50F (𝔏): Lfr
+1D510 (𝔐): Mfr
+1D511 (𝔑): Nfr
+1D512 (𝔒): Ofr
+1D513 (𝔓): Pfr
+1D514 (𝔔): Qfr
+1D516 (𝔖): Sfr
+1D517 (𝔗): Tfr
+1D518 (𝔘): Ufr
+1D519 (𝔙): Vfr
+1D51A (𝔚): Wfr
+1D51B (𝔛): Xfr
+1D51C (𝔜): Yfr
+1D51E (𝔞): afr
+1D51F (𝔟): bfr
+1D520 (𝔠): cfr
+1D521 (𝔡): dfr
+1D522 (𝔢): efr
+1D523 (𝔣): ffr
+1D524 (𝔤): gfr
+1D525 (𝔥): hfr
+1D526 (𝔦): ifr
+1D527 (𝔧): jfr
+1D528 (𝔨): kfr
+1D529 (𝔩): lfr
+1D52A (𝔪): mfr
+1D52B (𝔫): nfr
+1D52C (𝔬): ofr
+1D52D (𝔭): pfr
+1D52E (𝔮): qfr
+1D52F (𝔯): rfr
+1D530 (𝔰): sfr
+1D531 (𝔱): tfr
+1D532 (𝔲): ufr
+1D533 (𝔳): vfr
+1D534 (𝔴): wfr
+1D535 (𝔵): xfr
+1D536 (𝔶): yfr
+1D537 (𝔷): zfr
+1D538 (𝔸): Aopf
+1D539 (𝔹): Bopf
+1D53B (𝔻): Dopf
+1D53C (𝔼): Eopf
+1D53D (𝔽): Fopf
+1D53E (𝔾): Gopf
+1D540 (𝕀): Iopf
+1D541 (𝕁): Jopf
+1D542 (𝕂): Kopf
+1D543 (𝕃): Lopf
+1D544 (𝕄): Mopf
+1D546 (𝕆): Oopf
+1D54A (𝕊): Sopf
+1D54B (𝕋): Topf
+1D54C (𝕌): Uopf
+1D54D (𝕍): Vopf
+1D54E (𝕎): Wopf
+1D54F (𝕏): Xopf
+1D550 (𝕐): Yopf
+1D552 (𝕒): aopf
+1D553 (𝕓): bopf
+1D554 (𝕔): copf
+1D555 (𝕕): dopf
+1D556 (𝕖): eopf
+1D557 (𝕗): fopf
+1D558 (𝕘): gopf
+1D559 (𝕙): hopf
+1D55A (𝕚): iopf
+1D55B (𝕛): jopf
+1D55C (𝕜): kopf
+1D55D (𝕝): lopf
+1D55E (𝕞): mopf
+1D55F (𝕟): nopf
+1D560 (𝕠): oopf
+1D561 (𝕡): popf
+1D562 (𝕢): qopf
+1D563 (𝕣): ropf
+1D564 (𝕤): sopf
+1D565 (𝕥): topf
+1D566 (𝕦): uopf
+1D567 (𝕧): vopf
+1D568 (𝕨): wopf
+1D569 (𝕩): xopf
+1D56A (𝕪): yopf
+1D56B (𝕫): zopf
