@@ -144,3 +144,31 @@ pub fn math_alphanum_from_codepoint_test() {
   |> internal.from_codepoint_table_to_string()
   |> birdie.snap(title: "Typst math alphanumeric notations from codepoints")
 }
+
+pub fn notations_from_codepoint_test() {
+  let assert Ok(tables) = typst.make_tables()
+
+  assert Ok(["#emoji.star.glow"])
+    == string.utf_codepoint(0x1F31F)
+    |> result.map(typst.notations_from_codepoint(_, tables))
+
+  assert Ok(["#sym.star.op"])
+    == string.utf_codepoint(0x22C6)
+    |> result.map(typst.notations_from_codepoint(_, tables))
+
+  assert Ok(["#sym.dash.en", "--"])
+    == string.utf_codepoint(0x2013)
+    |> result.map(typst.notations_from_codepoint(_, tables))
+
+  assert Ok(["#sym.arrow.r", "$ -> $"])
+    == string.utf_codepoint(0x2192)
+    |> result.map(typst.notations_from_codepoint(_, tables))
+
+  assert Ok(["#sym.Gamma", "$ Gamma $"])
+    == string.utf_codepoint(0x0393)
+    |> result.map(typst.notations_from_codepoint(_, tables))
+
+  assert Ok(["$ bold(Gamma) $"])
+    == string.utf_codepoint(0x1D6AA)
+    |> result.map(typst.notations_from_codepoint(_, tables))
+}

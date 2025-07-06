@@ -12,6 +12,9 @@ import gleam/string
 import splitter.{split}
 
 /// Maps code points to typst codex identifiers.
+///
+/// Prefer [`notations_from_codepoint`](#notations_from_codepoint)
+/// over direclty working with table dictionaries.
 pub type FromCodepoint =
   Dict(UtfCodepoint, List(String))
 
@@ -22,6 +25,10 @@ pub type ToCodepoints =
 /// Maps code points to typst codex identifiers and the other way around.
 pub type Table {
   Table(from_codepoint: FromCodepoint, to_codepoints: ToCodepoints)
+}
+
+pub opaque type Tables {
+  Tables(emojitable: Table, symtable: Table)
 }
 
 /// The parser is only called on constant input fetched from
@@ -94,6 +101,13 @@ pub fn make_symtable() -> Result(Table, ParserError) {
 ///
 pub fn make_emojitable() -> Result(Table, ParserError) {
   parse_codex(emoji.txt)
+}
+
+pub fn make_tables() -> Result(Tables, ParserError) {
+  use symtable <- result.try(make_symtable())
+  use emojitable <- result.try(make_emojitable())
+
+  Ok(Tables(emojitable:, symtable:))
 }
 
 fn parse_codex(txt: String) -> Result(Table, ParserError) {
@@ -603,4 +617,70 @@ fn apply_math_styles(string: String, styles: List(String)) -> String {
     [] -> string
     [style, ..rest] -> apply_math_styles(style <> "(" <> string <> ")", rest)
   }
+}
+
+/// Converts a `UtfCodepoint` to a `List` of Typst notations `String`.
+///
+/// ## Examples
+///
+/// ```gleam
+/// let assert Ok(tables) = typst.make_tables()
+///
+/// assert Ok(["#emoji.star.glow"])
+///   == string.utf_codepoint(0x1F31F)
+///   |> result.map(typst.notations_from_codepoint(_, tables))
+///
+/// assert Ok(["#sym.star.op"])
+///   == string.utf_codepoint(0x22C6)
+///   |> result.map(typst.notations_from_codepoint(_, tables))
+///
+/// assert Ok(["#sym.dash.en", "--"])
+///   == string.utf_codepoint(0x2013)
+///   |> result.map(typst.notations_from_codepoint(_, tables))
+///
+/// assert Ok(["#sym.arrow.r", "$ -> $"])
+///   == string.utf_codepoint(0x2192)
+///   |> result.map(typst.notations_from_codepoint(_, tables))
+///
+/// assert Ok(["#sym.Gamma", "$ Gamma $"])
+///   == string.utf_codepoint(0x0393)
+///   |> result.map(typst.notations_from_codepoint(_, tables))
+///
+/// assert Ok(["$ bold(Gamma) $"])
+///   == string.utf_codepoint(0x1D6AA)
+///   |> result.map(typst.notations_from_codepoint(_, tables))
+/// ```
+///
+pub fn notations_from_codepoint(
+  codepoint: UtfCodepoint,
+  tables tables: Tables,
+) -> List(String) {
+  let sym_notations =
+    result.unwrap(dict.get(tables.symtable.from_codepoint, codepoint), or: [])
+    |> list.map(fn(notation) { "#sym." <> notation })
+  let emoji_notations =
+    result.unwrap(dict.get(tables.emojitable.from_codepoint, codepoint), or: [])
+    |> list.map(fn(notation) { "#emoji." <> notation })
+  let markup_shorthand =
+    markup_shorthand_from_codepoint(codepoint)
+    |> result.map(list.wrap)
+    |> result.unwrap([])
+  let math_shorthand =
+    math_shorthand_from_codepoint(codepoint)
+    |> result.map(list.wrap)
+    |> result.unwrap([])
+    |> list.map(display_math)
+  let math_alphanum_notations =
+    math_alphanum_from_codepoint(codepoint, tables.symtable)
+    |> result.unwrap([])
+    |> list.map(display_math)
+  sym_notations
+  |> list.append(emoji_notations)
+  |> list.append(markup_shorthand)
+  |> list.append(math_shorthand)
+  |> list.append(math_alphanum_notations)
+}
+
+fn display_math(string: String) -> String {
+  "$ " <> string <> " $"
 }
