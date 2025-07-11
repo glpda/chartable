@@ -42,7 +42,7 @@ pub type GeneralCategory {
   /// a closing punctuation mark (of a pair)
   PunctuationClose
   /// an initial quotation mark
-  PunctuationIntial
+  PunctuationInitial
   /// a final quotation mark
   PunctuationFinal
   /// a punctuation mark of other type
@@ -111,7 +111,7 @@ pub fn from_abbreviation(abbr: String) -> Result(GeneralCategory, Nil) {
     "Pd" -> Ok(PunctuationDash)
     "Ps" -> Ok(PunctuationOpen)
     "Pe" -> Ok(PunctuationClose)
-    "Pi" -> Ok(PunctuationIntial)
+    "Pi" -> Ok(PunctuationInitial)
     "Pf" -> Ok(PunctuationFinal)
     "Po" -> Ok(PunctuationOther)
     // Symbols:
@@ -165,7 +165,7 @@ pub fn to_abbreviation(category: GeneralCategory) -> String {
     PunctuationDash -> "Pd"
     PunctuationOpen -> "Ps"
     PunctuationClose -> "Pe"
-    PunctuationIntial -> "Pi"
+    PunctuationInitial -> "Pi"
     PunctuationFinal -> "Pf"
     PunctuationOther -> "Po"
     // Symbols:
@@ -219,7 +219,7 @@ pub fn from_long_name(name: String) -> Result(GeneralCategory, Nil) {
     "Dash_Punctuation" -> Ok(PunctuationDash)
     "Open_Punctuation" -> Ok(PunctuationOpen)
     "Close_Punctuation" -> Ok(PunctuationClose)
-    "Initial_Punctuation" -> Ok(PunctuationIntial)
+    "Initial_Punctuation" -> Ok(PunctuationInitial)
     "Final_Punctuation" -> Ok(PunctuationFinal)
     "Other_Punctuation" -> Ok(PunctuationOther)
     // Symbols:
@@ -273,7 +273,7 @@ pub fn to_long_name(category: GeneralCategory) -> String {
     PunctuationDash -> "Dash_Punctuation"
     PunctuationOpen -> "Open_Punctuation"
     PunctuationClose -> "Close_Punctuation"
-    PunctuationIntial -> "Initial_Punctuation"
+    PunctuationInitial -> "Initial_Punctuation"
     PunctuationFinal -> "Final_Punctuation"
     PunctuationOther -> "Other_Punctuation"
     // Symbols:
@@ -373,7 +373,7 @@ pub fn is_punctuation(category: GeneralCategory) -> Bool {
   || category == PunctuationDash
   || category == PunctuationOpen
   || category == PunctuationClose
-  || category == PunctuationIntial
+  || category == PunctuationInitial
   || category == PunctuationFinal
   || category == PunctuationOther
 }
@@ -385,12 +385,12 @@ pub fn is_punctuation(category: GeneralCategory) -> Bool {
 /// ## Examples
 ///
 /// ```gleam
-/// assert category.is_quotation(category.PunctuationIntial)
+/// assert category.is_quotation(category.PunctuationInitial)
 /// assert !category.is_quotation(category.PunctuationOpen)
 /// ```
 ///
 pub fn is_quotation(category: GeneralCategory) -> Bool {
-  category == PunctuationIntial || category == PunctuationFinal
+  category == PunctuationInitial || category == PunctuationFinal
 }
 
 /// Returns `True` if the [`GeneralCategory`](#GeneralCategory) provided

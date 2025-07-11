@@ -53,7 +53,7 @@ pub fn is_punctuation_test() {
 }
 
 pub fn is_quotation_test() {
-  assert category.is_quotation(category.PunctuationIntial)
+  assert category.is_quotation(category.PunctuationInitial)
   assert !category.is_quotation(category.PunctuationOpen)
 }
 
