@@ -1,4 +1,6 @@
 import chartable/unicode/category
+import gleam/list
+import gleam/string
 
 pub fn category_from_abbreviation_test() {
   assert Ok(category.LetterUppercase) == category.from_abbreviation("Lu")
@@ -70,4 +72,82 @@ pub fn is_separator_test() {
 pub fn is_other_test() {
   assert category.is_other(category.Control)
   assert !category.is_other(category.NumberDecimal)
+}
+
+fn assert_category_consistency(cat) {
+  let abbr = category.to_abbreviation(cat)
+  assert Ok(cat) == category.from_abbreviation(abbr)
+
+  let name = category.to_long_name(cat)
+  assert Ok(cat) == category.from_long_name(name)
+
+  assert case abbr {
+    "L" <> _ -> category.is_letter(cat)
+    "M" <> _ -> category.is_mark(cat)
+    "N" <> _ -> category.is_number(cat)
+    "P" <> _ -> category.is_punctuation(cat)
+    "S" <> _ -> category.is_symbol(cat)
+    "Z" <> _ -> category.is_separator(cat)
+    "C" <> _ -> category.is_other(cat)
+    _ -> False
+  }
+
+  assert case name {
+    "Control" | "Format" | "Surrogate" | "Private_Use" | "Unassigned" ->
+      category.is_other(cat)
+
+    _ ->
+      case string.split_once(name, on: "_") {
+        Ok(#(_, "Letter")) -> category.is_letter(cat)
+        Ok(#(_, "Mark")) -> category.is_mark(cat)
+        Ok(#(_, "Number")) -> category.is_number(cat)
+        Ok(#(_, "Punctuation")) -> category.is_punctuation(cat)
+        Ok(#(_, "Symbol")) -> category.is_symbol(cat)
+        Ok(#(_, "Separator")) -> category.is_separator(cat)
+        _ -> False
+      }
+  }
+}
+
+pub fn consistency_test() {
+  let categories = [
+    // Letters:
+    category.LetterUppercase,
+    category.LetterLowercase,
+    category.LetterTitlecase,
+    category.LetterModifier,
+    category.LetterOther,
+    // Marks:
+    category.MarkNonspacing,
+    category.MarkSpacing,
+    category.MarkEnclosing,
+    // Numbers:
+    category.NumberDecimal,
+    category.NumberLetter,
+    category.NumberOther,
+    // Punctuations:
+    category.PunctuationConnector,
+    category.PunctuationDash,
+    category.PunctuationOpen,
+    category.PunctuationClose,
+    category.PunctuationInitial,
+    category.PunctuationFinal,
+    category.PunctuationOther,
+    // Symbols:
+    category.SymbolMath,
+    category.SymbolCurrency,
+    category.SymbolModifier,
+    category.SymbolOther,
+    // Separators:
+    category.SeparatorSpace,
+    category.SeparatorLine,
+    category.SeparatorParagraph,
+    // Others:
+    category.Control,
+    category.Format,
+    category.Surrogate,
+    category.PrivateUse,
+    category.Unassigned,
+  ]
+  list.each(categories, assert_category_consistency)
 }
