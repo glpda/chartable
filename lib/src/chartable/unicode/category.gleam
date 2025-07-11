@@ -78,3 +78,109 @@ pub type GeneralCategory {
   /// a reserved unassigned code point or a noncharacter
   Unassigned
 }
+
+/// Converts an abbreviation `String` to a [`GeneralCategory`](#GeneralCategory).
+///
+/// ## Examples
+///
+/// ```gleam
+/// assert Ok(category.LetterUppercase) == category.from_abbreviation("Lu")
+/// assert Ok(category.Unassigned) == category.from_abbreviation("Cn")
+/// assert Ok(category.SymbolMath) == category.from_abbreviation("Sm")
+/// assert Error(Nil) == category.from_abbreviation("Xyz")
+/// ```
+///
+pub fn from_abbreviation(abbr: String) -> Result(GeneralCategory, Nil) {
+  case abbr {
+    // Letters
+    "Lu" -> Ok(LetterUppercase)
+    "Ll" -> Ok(LetterLowercase)
+    "Lt" -> Ok(LetterTitlecase)
+    "Lm" -> Ok(LetterModifier)
+    "Lo" -> Ok(LetterOther)
+    // Marks:
+    "Mn" -> Ok(MarkNonspacing)
+    "Mc" -> Ok(MarkSpacing)
+    "Me" -> Ok(MarkEnclosing)
+    // Numbers:
+    "Nd" -> Ok(NumberDecimal)
+    "Nl" -> Ok(NumberLetter)
+    "No" -> Ok(NumberOther)
+    // Punctuations:
+    "Pc" -> Ok(PunctuationConnector)
+    "Pd" -> Ok(PunctuationDash)
+    "Ps" -> Ok(PunctuationOpen)
+    "Pe" -> Ok(PunctuationClose)
+    "Pi" -> Ok(PunctuationIntial)
+    "Pf" -> Ok(PunctuationFinal)
+    "Po" -> Ok(PunctuationOther)
+    // Symbols:
+    "Sm" -> Ok(SymbolMath)
+    "Sc" -> Ok(SymbolCurrency)
+    "Sk" -> Ok(SymbolModifier)
+    "So" -> Ok(SymbolOther)
+    // Separators:
+    "Zs" -> Ok(SeparatorSpace)
+    "Zl" -> Ok(SeparatorLine)
+    "Zp" -> Ok(SeparatorParagraph)
+    // Others:
+    "Cc" -> Ok(Control)
+    "Cf" -> Ok(Format)
+    "Cs" -> Ok(Surrogate)
+    "Co" -> Ok(PrivateUse)
+    "Cn" -> Ok(Unassigned)
+    _ -> Error(Nil)
+  }
+}
+
+/// Converts a [`GeneralCategory`](#GeneralCategory) to an abbreviation `String`.
+///
+/// ## Examples
+///
+/// ```gleam
+/// assert "Lu" == category.to_abbreviation(category.LetterUppercase)
+/// assert "Cn" == category.to_abbreviation(category.Unassigned)
+/// assert "Sm" == category.to_abbreviation(category.SymbolMath)
+/// ```
+///
+pub fn to_abbreviation(category: GeneralCategory) -> String {
+  case category {
+    // Letters:
+    LetterUppercase -> "Lu"
+    LetterLowercase -> "Ll"
+    LetterTitlecase -> "Lt"
+    LetterModifier -> "Lm"
+    LetterOther -> "Lo"
+    // Marks:
+    MarkNonspacing -> "Mn"
+    MarkSpacing -> "Mc"
+    MarkEnclosing -> "Me"
+    // Numbers:
+    NumberDecimal -> "Nd"
+    NumberLetter -> "Nl"
+    NumberOther -> "No"
+    // Punctuations:
+    PunctuationConnector -> "Pc"
+    PunctuationDash -> "Pd"
+    PunctuationOpen -> "Ps"
+    PunctuationClose -> "Pe"
+    PunctuationIntial -> "Pi"
+    PunctuationFinal -> "Pf"
+    PunctuationOther -> "Po"
+    // Symbols:
+    SymbolMath -> "Sm"
+    SymbolCurrency -> "Sc"
+    SymbolModifier -> "Sk"
+    SymbolOther -> "So"
+    // Separators:
+    SeparatorSpace -> "Zs"
+    SeparatorLine -> "Zl"
+    SeparatorParagraph -> "Zp"
+    // Others:
+    Control -> "Cc"
+    Format -> "Cf"
+    Surrogate -> "Cs"
+    PrivateUse -> "Co"
+    Unassigned -> "Cn"
+  }
+}
