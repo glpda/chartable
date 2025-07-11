@@ -26,3 +26,48 @@ pub fn to_long_name_test() {
   assert "Unassigned" == category.to_long_name(category.Unassigned)
   assert "Math_Symbol" == category.to_long_name(category.SymbolMath)
 }
+
+pub fn is_cased_letter_test() {
+  assert category.is_cased_letter(category.LetterLowercase)
+  assert !category.is_cased_letter(category.LetterOther)
+}
+
+pub fn is_letter_test() {
+  assert category.is_letter(category.LetterLowercase)
+  assert !category.is_letter(category.NumberDecimal)
+}
+
+pub fn is_mark_test() {
+  assert category.is_mark(category.MarkSpacing)
+  assert !category.is_mark(category.NumberDecimal)
+}
+
+pub fn is_number_test() {
+  assert category.is_number(category.NumberDecimal)
+  assert !category.is_number(category.LetterLowercase)
+}
+
+pub fn is_punctuation_test() {
+  assert category.is_punctuation(category.PunctuationOther)
+  assert !category.is_punctuation(category.NumberDecimal)
+}
+
+pub fn is_quotation_test() {
+  assert category.is_quotation(category.PunctuationIntial)
+  assert !category.is_quotation(category.PunctuationOpen)
+}
+
+pub fn is_symbol_test() {
+  assert category.is_symbol(category.SymbolCurrency)
+  assert !category.is_symbol(category.NumberDecimal)
+}
+
+pub fn is_separator_test() {
+  assert category.is_separator(category.SeparatorSpace)
+  assert !category.is_separator(category.NumberDecimal)
+}
+
+pub fn is_other_test() {
+  assert category.is_other(category.Control)
+  assert !category.is_other(category.NumberDecimal)
+}

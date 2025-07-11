@@ -293,3 +293,153 @@ pub fn to_long_name(category: GeneralCategory) -> String {
     Unassigned -> "Unassigned"
   }
 }
+
+/// Returns `True` if the [`GeneralCategory`](#GeneralCategory) provided
+/// is a cased letter category (uppercase, lowercase, or titlecase).
+///
+/// ## Examples
+///
+/// ```gleam
+/// assert category.is_cased_letter(category.LetterLowercase)
+/// assert !category.is_cased_letter(category.LetterOther)
+/// ```
+///
+pub fn is_cased_letter(category: GeneralCategory) -> Bool {
+  category == LetterUppercase
+  || category == LetterLowercase
+  || category == LetterTitlecase
+}
+
+/// Returns `True` if the [`GeneralCategory`](#GeneralCategory) provided
+/// is a letter category.
+///
+/// ## Examples
+///
+/// ```gleam
+/// assert category.is_letter(category.LetterLowercase)
+/// assert !category.is_letter(category.NumberDecimal)
+/// ```
+///
+pub fn is_letter(category: GeneralCategory) -> Bool {
+  is_cased_letter(category)
+  || category == LetterModifier
+  || category == LetterOther
+}
+
+/// Returns `True` if the [`GeneralCategory`](#GeneralCategory) provided
+/// is a mark category.
+///
+/// ## Examples
+///
+/// ```gleam
+/// assert category.is_letter(category.MarkSpacing)
+/// assert !category.is_letter(category.NumberDecimal)
+/// ```
+///
+pub fn is_mark(category: GeneralCategory) -> Bool {
+  category == MarkNonspacing
+  || category == MarkSpacing
+  || category == MarkEnclosing
+}
+
+/// Returns `True` if the [`GeneralCategory`](#GeneralCategory) provided
+/// is a number category.
+///
+/// ## Examples
+///
+/// ```gleam
+/// assert category.is_letter(category.NumberDecimal)
+/// assert !category.is_letter(category.LetterLowercase)
+/// ```
+///
+pub fn is_number(category: GeneralCategory) -> Bool {
+  category == NumberDecimal
+  || category == NumberLetter
+  || category == NumberOther
+}
+
+/// Returns `True` if the [`GeneralCategory`](#GeneralCategory) provided
+/// is a punctuation category.
+///
+/// ## Examples
+///
+/// ```gleam
+/// assert category.is_punctuation(category.PunctuationOther)
+/// assert !category.is_punctuation(category.NumberDecimal)
+/// ```
+///
+pub fn is_punctuation(category: GeneralCategory) -> Bool {
+  category == PunctuationConnector
+  || category == PunctuationDash
+  || category == PunctuationOpen
+  || category == PunctuationClose
+  || category == PunctuationIntial
+  || category == PunctuationFinal
+  || category == PunctuationOther
+}
+
+/// Returns `True` if the [`GeneralCategory`](#GeneralCategory) provided
+/// is a quotation category (initial or final punctuation).
+/// Note that not all quotation marks are in those categories.
+///
+/// ## Examples
+///
+/// ```gleam
+/// assert category.is_quotation(category.PunctuationIntial)
+/// assert !category.is_quotation(category.PunctuationOpen)
+/// ```
+///
+pub fn is_quotation(category: GeneralCategory) -> Bool {
+  category == PunctuationIntial || category == PunctuationFinal
+}
+
+/// Returns `True` if the [`GeneralCategory`](#GeneralCategory) provided
+/// is a symbol category.
+///
+/// ## Examples
+///
+/// ```gleam
+/// assert category.is_symbol(category.SymbolCurrency)
+/// assert !category.is_symbol(category.NumberDecimal)
+/// ```
+///
+pub fn is_symbol(category: GeneralCategory) -> Bool {
+  category == SymbolMath
+  || category == SymbolCurrency
+  || category == SymbolModifier
+  || category == SymbolOther
+}
+
+/// Returns `True` if the [`GeneralCategory`](#GeneralCategory) provided
+/// is a separator category.
+///
+/// ## Examples
+///
+/// ```gleam
+/// assert category.is_separator(category.SeparatorSpace)
+/// assert !category.is_separator(category.NumberDecimal)
+/// ```
+///
+pub fn is_separator(category: GeneralCategory) -> Bool {
+  category == SeparatorSpace
+  || category == SeparatorLine
+  || category == SeparatorParagraph
+}
+
+/// Returns `True` if the [`GeneralCategory`](#GeneralCategory) provided
+/// is an "other" category.
+///
+/// ## Examples
+///
+/// ```gleam
+/// assert category.is_other(category.Control)
+/// assert !category.is_other(category.NumberDecimal)
+/// ```
+///
+pub fn is_other(category: GeneralCategory) -> Bool {
+  category == Control
+  || category == Format
+  || category == Surrogate
+  || category == PrivateUse
+  || category == Unassigned
+}
