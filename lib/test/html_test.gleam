@@ -15,7 +15,7 @@ pub fn entities_test() {
   assert Ok(string.to_utf_codepoints("\u{22C6}"))
     == dict.get(entity_table.to_codepoints, "Star")
 
-  internal.assert_table_equality(
+  internal.assert_table_consistency(
     entity_table.from_codepoint,
     entity_table.to_codepoints,
   )

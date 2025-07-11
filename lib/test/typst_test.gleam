@@ -16,7 +16,7 @@ pub fn symtable_test() {
   assert Ok(string.to_utf_codepoints("\u{22C6}"))
     == dict.get(symtable.to_codepoints, "star.op")
 
-  internal.assert_table_equality(
+  internal.assert_table_consistency(
     symtable.from_codepoint,
     symtable.to_codepoints,
   )
@@ -35,7 +35,7 @@ pub fn emojitable_test() {
   assert Ok(string.to_utf_codepoints("\u{1F31F}"))
     == dict.get(emojitable.to_codepoints, "star.glow")
 
-  internal.assert_table_equality(
+  internal.assert_table_consistency(
     emojitable.from_codepoint,
     emojitable.to_codepoints,
   )

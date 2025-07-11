@@ -33,7 +33,7 @@ pub fn from_codepoint_table_to_string(from_codepoint) -> String {
 /// Asserts table consistency (`from_codepoint` match `to_codepoints`),
 /// ignores names mapping to multiple codepoints wich are not included in
 /// the `from_codepoint` table.
-pub fn assert_table_equality(from_codepoint, to_codepoints) -> Nil {
+pub fn assert_table_consistency(from_codepoint, to_codepoints) -> Nil {
   dict.each(to_codepoints, fn(name, codepoints) {
     case codepoints {
       [codepoint] -> {
