@@ -5,77 +5,102 @@
 
 pub type GeneralCategory {
   // Letters:
-  /// an uppercase letter
+  /// `"Lu"` uppercase letters,
+  /// e.g. U+0041 "Latin Capital Letter A" ( A )
   LetterUppercase
-  /// a lowercase letter
+  /// `"Ll"` lowercase letters,
+  /// e.g. U+0061 "Latin Small Letter A" ( a )
   LetterLowercase
-  /// a digraph encoded as a single character, with first part uppercase
+  /// `"Lt"`  digraphs encoded as a single character, with first part uppercase,
+  /// e.g. U+01F2 "Latin Capital Letter D with Small Letter Z" ( ǲ )
   LetterTitlecase
-  /// a modifier letter
+  /// `"Lm"` modifier letters,
+  /// e.g. U+02B0 "Modifier Letter Small H" ( ʰ )
   LetterModifier
-  /// other letters, including syllables and ideographs
+  /// `"Lo"` other letters, including syllables and ideographs,
+  /// e.g. U+304B "Hiragana Letter Ka" ( か )
   LetterOther
 
   // Marks:
-  /// a nonspacing combining mark (zero advance width)
+  /// `"Mn"` nonspacing combining marks (zero advance width),
+  /// e.g. U+0301 "Combining Acute Accent" ( ◌́ )
   MarkNonspacing
-  /// a spacing combining mark (positive advance width)
+  /// `"Mc"` spacing combining marks (positive advance width),
+  /// e.g. U+0903 "Devanagari Sign Visarga" ( ◌ः )
   MarkSpacing
-  /// an enclosing combining mark
+  /// `"Me"` enclosing combining marks,
+  /// e.g. U+20E0 "Combining Enclosing Circle Backslash" ( ◌⃠ )
   MarkEnclosing
 
   // Numbers:
-  /// a decimal digit
+  /// `"Nd"` decimal digits,
+  /// e.g. U+0032 "Digit Two" ( 2 )
   NumberDecimal
-  /// a letterlike numeric character
+  /// `"Nl"` letterlike numeric characters,
+  /// e.g. U+2162 "Roman Numeral Three" ( Ⅲ )
   NumberLetter
-  /// a numeric character of other type
+  /// `"No"` numeric character of other type,
+  /// e.g. U+00BD "Vulgar Fraction One Half" ( ½ )
   NumberOther
 
-  // Punctuations:
-  /// a connecting punctuation mark, like a tie
+  // Punctuations: a⁀b b_a
+  /// `"Pc"`, connecting punctuation marks,
+  /// e.g. U+2040 "Character Tie" (◌⁀◌)
   PunctuationConnector
-  /// a dash or hyphen punctuation mark
+  /// `"Pd"` dash or hyphen punctuation marks,
+  /// e.g. U+2013 "En Dash" ( – )
   PunctuationDash
-  /// an opening punctuation mark (of a pair)
+  /// `"Ps"` opening/starting punctuation marks (of a pair),
+  /// e.g. U+2329 "Left-Pointing Angle Bracket" ( 〈 )
   PunctuationOpen
-  /// a closing punctuation mark (of a pair)
+  /// `"Pe"` closing/ending punctuation marks (of a pair),
+  /// e.g. U+232A "Right-Pointing Angle Bracket" ( 〉 )
   PunctuationClose
-  /// an initial quotation mark
+  /// `"Pi"` initial quotation marks,
+  /// e.g. U+201C "Left Double Quotation Mark" ( “ )
   PunctuationInitial
-  /// a final quotation mark
+  /// `"Pf"` final quotation marks,
+  /// e.g. U+201D "Right Double Quotation Mark" ( ” )
   PunctuationFinal
-  /// a punctuation mark of other type
+  /// `"Po"` punctuation marks of other type,
+  /// e.g. U+0021 "Exclamation Mark" ( ! )
   PunctuationOther
 
   // Symbols:
-  /// a symbol of mathematical use
+  /// `"Sm"` symbols of mathematical use,
+  /// e.g. U+002B "Plus Sign" ( + )
   SymbolMath
-  /// a currency sign
+  /// `"Sc"` currency signs,
+  /// e.g. U+0024 "Dollar Sign" ( $ )
   SymbolCurrency
-  /// a non-letterlike modifier symbol
+  /// `"Sk"` non-letterlike modifier symbol,
+  /// e.g. U+005E "Circumflex Accent" ( ^ )
   SymbolModifier
-  /// a symbol of other type
+  /// `"So"` symbol of other type,
+  /// e.g. U+00B0 "Degree Sing" ( ° )
   SymbolOther
 
   // Separators:
-  /// a space character (of various non-zero widths)
+  /// `"Zs"` space characters (of various non-zero widths),
+  /// e.g. U+0020 "Space" ( )
   SeparatorSpace
-  /// U+2028 LINE SEPARATOR only
+  /// `"Zl"` only U+2028 "Line Separator" (LSEP)
   SeparatorLine
-  /// U+2029 PARAGRAPH SEPARATOR only
+  /// `"Zp"` only U+2029 "Paragraph Separator" (PSEP)
   SeparatorParagraph
 
   // Others:
-  /// a C0 or C1 control code
+  /// `"Cc"` C0 or C1 control codes,
+  /// e.g. U+0007 "Alert" (BEL)
   Control
-  /// a format control character
+  /// `"Cf"` format control characters,
+  /// e.g. U+00AD "Soft Hyphen" (SHY)
   Format
-  /// a surrogate code point
+  /// `"Cs"` surrogate code points
   Surrogate
-  /// a private-use character
+  /// `"Co"` private-use characters
   PrivateUse
-  /// a reserved unassigned code point or a noncharacter
+  /// `"Cn"` reserved unassigned code points or noncharacters
   Unassigned
 }
 
