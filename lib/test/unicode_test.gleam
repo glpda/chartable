@@ -29,6 +29,12 @@ pub fn category_to_long_name_test() {
   assert "Math_Symbol" == category.to_long_name(category.SymbolMath)
 }
 
+pub fn category_is_assigned_test() {
+  assert category.is_assigned(category.LetterLowercase)
+  assert !category.is_assigned(category.Surrogate)
+  assert !category.is_assigned(category.Unassigned)
+}
+
 pub fn category_is_cased_letter_test() {
   assert category.is_cased_letter(category.LetterLowercase)
   assert !category.is_cased_letter(category.LetterOther)
@@ -72,6 +78,18 @@ pub fn category_is_separator_test() {
 pub fn category_is_other_test() {
   assert category.is_other(category.Control)
   assert !category.is_other(category.NumberDecimal)
+}
+
+pub fn category_is_graphic_test() {
+  assert category.is_graphic(category.LetterLowercase)
+  assert !category.is_graphic(category.Control)
+}
+
+pub fn category_is_format_test() {
+  assert category.is_format(category.Format)
+  assert category.is_format(category.SeparatorLine)
+  assert category.is_format(category.SeparatorParagraph)
+  assert !category.is_format(category.Control)
 }
 
 fn assert_category_consistency(cat) {

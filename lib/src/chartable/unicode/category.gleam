@@ -320,6 +320,21 @@ pub fn to_long_name(category: GeneralCategory) -> String {
 }
 
 /// Returns `True` if the [`GeneralCategory`](#GeneralCategory) provided
+/// is assigned to abstract characters (not `Surrogate` or `Unassigned`).
+///
+/// ## Examples
+///
+/// ```gleam
+/// assert category.is_assigned(category.LetterLowercase)
+/// assert !category.is_assigned(category.Surrogate)
+/// assert !category.is_assigned(category.Unassigned)
+/// ```
+///
+pub fn is_assigned(category: GeneralCategory) -> Bool {
+  category != Surrogate && category != Unassigned
+}
+
+/// Returns `True` if the [`GeneralCategory`](#GeneralCategory) provided
 /// is a cased letter category (uppercase, lowercase, or titlecase).
 ///
 /// ## Examples
@@ -467,4 +482,43 @@ pub fn is_other(category: GeneralCategory) -> Bool {
   || category == Surrogate
   || category == PrivateUse
   || category == Unassigned
+}
+
+/// Returns `True` if the [`GeneralCategory`](#GeneralCategory) provided
+/// is a "Graphic" Basic Type
+/// (letters, marks, numbers, punctuations, symbols, and spaces).
+///
+/// ## Examples
+///
+/// ```gleam
+/// assert category.is_graphic(category.LetterLowercase)
+/// assert !category.is_graphic(category.Control)
+/// ```
+///
+pub fn is_graphic(category: GeneralCategory) -> Bool {
+  is_letter(category)
+  || is_mark(category)
+  || is_number(category)
+  || is_punctuation(category)
+  || is_symbol(category)
+  || category == SeparatorSpace
+}
+
+/// Returns `True` if the [`GeneralCategory`](#GeneralCategory) provided
+/// is a "Format" Basic Type
+/// (invisible but affects neighboring characters).
+///
+/// ## Examples
+///
+/// ```gleam
+/// assert category.is_format(category.Format)
+/// assert category.is_format(category.SeparatorLine)
+/// assert category.is_format(category.SeparatorParagraph)
+/// assert !category.is_format(category.Control)
+/// ```
+///
+pub fn is_format(category: GeneralCategory) -> Bool {
+  category == Format
+  || category == SeparatorLine
+  || category == SeparatorParagraph
 }
