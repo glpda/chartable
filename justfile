@@ -6,6 +6,7 @@ lib-path := "lib/src/chartable"
 unidata := "https://www.unicode.org/Public/UNIDATA"
 ucd := "UCD.zip"
 unihan := "Unihan.zip"
+unicode-data := "unicode/UnicodeData.txt"
 
 whatwg := "https://html.spec.whatwg.org/"
 html-entities := "entities.json"
@@ -52,7 +53,8 @@ fetch-unidata: \
 (download unidata ucd) \
 (download unidata unihan) \
 (extract ucd "unicode") \
-(extract unihan "unicode")
+(extract unihan "unicode") \
+(make-const unicode-data "unicode/data")
 
 entities-filter := \
 	'with_entries(select(.key | startswith("&") and endswith(";"))' + \
