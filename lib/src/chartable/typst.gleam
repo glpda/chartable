@@ -123,7 +123,7 @@ fn parse_codex(txt: String) -> Result(Table, ParserError) {
   let comments = splitter.new(["//", "@"])
   let space = splitter.new([" "])
 
-  use state <- parse(input: start_parser(txt), output: table)
+  use state <- parse_codex_loop(input: start_parser(txt), output: table)
   let #(line, _, rest) = split(line_ends, state.txt)
   let #(line, _, _) = split(comments, line)
   let line = string.trim(line)
@@ -187,7 +187,7 @@ fn parse_codepoints(
   }
 }
 
-fn parse(
+fn parse_codex_loop(
   input state: ParserState,
   output table: Table,
   with parser: fn(ParserState) -> Result(ParserState, ParserError),
@@ -202,7 +202,7 @@ fn parse(
         Error(error) -> Error(error)
         Ok(state) -> {
           case state.pair {
-            None -> parse(input: state, output: table, with: parser)
+            None -> parse_codex_loop(input: state, output: table, with: parser)
             Some(#(codepoints, suffix)) ->
               case make_identifier(state.submodule, state.prefix, suffix) {
                 Error(_) -> Error(InvalidIdentifier(state.line))
@@ -210,7 +210,7 @@ fn parse(
                   case table.to_codepoints |> dict.has_key(identifier) {
                     True -> Error(DuplicateIdentifier(state.line))
                     False ->
-                      parse(
+                      parse_codex_loop(
                         input: state,
                         output: update_table(table, codepoints, identifier),
                         with: parser,
