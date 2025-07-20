@@ -1,6 +1,29 @@
+import chartable/unicode.{UnicodeData}
 import chartable/unicode/category
+import gleam/dict
 import gleam/list
+import gleam/result
 import gleam/string
+
+pub fn make_unicode_data_test() {
+  let unicode_data = unicode.make_unicode_data()
+
+  assert Ok(UnicodeData("LATIN CAPITAL LETTER A", category.LetterUppercase))
+    == string.utf_codepoint(0x0041)
+    |> result.try(dict.get(unicode_data, _))
+
+  assert Ok(UnicodeData("VULGAR FRACTION ONE HALF", category.NumberOther))
+    == string.utf_codepoint(0x00BD)
+    |> result.try(dict.get(unicode_data, _))
+
+  assert Ok(UnicodeData("STAR OPERATOR", category.SymbolMath))
+    == string.utf_codepoint(0x22C6)
+    |> result.try(dict.get(unicode_data, _))
+
+  assert Ok(UnicodeData("WHITE MEDIUM STAR", category.SymbolOther))
+    == string.utf_codepoint(0x2B50)
+    |> result.try(dict.get(unicode_data, _))
+}
 
 pub fn category_from_abbreviation_test() {
   assert Ok(category.LetterUppercase) == category.from_abbreviation("Lu")
