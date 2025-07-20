@@ -51,10 +51,10 @@ pub type GeneralCategory {
   /// e.g. U+2013 "En Dash" ( – )
   PunctuationDash
   /// `"Ps"` opening/starting punctuation marks (of a pair),
-  /// e.g. U+2329 "Left-Pointing Angle Bracket" ( 〈 )
+  /// e.g. U+007B "Left Curly Bracket" ( { )
   PunctuationOpen
   /// `"Pe"` closing/ending punctuation marks (of a pair),
-  /// e.g. U+232A "Right-Pointing Angle Bracket" ( 〉 )
+  /// e.g. U+007D "Right Curly Bracket" ( } )
   PunctuationClose
   /// `"Pi"` initial quotation marks,
   /// e.g. U+201C "Left Double Quotation Mark" ( “ )
