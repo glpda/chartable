@@ -44,7 +44,7 @@ pub fn category_from_long_name_test() {
     == category.from_long_name("Uppercase_Letter")
   assert Ok(category.Unassigned) == category.from_long_name("Unassigned")
   assert Ok(category.SymbolMath) == category.from_long_name("Math_Symbol")
-  assert Error(Nil) == category.from_abbreviation("Xyz")
+  assert category.from_long_name("Invalid_Category") == Error(Nil)
 }
 
 pub fn category_to_long_name_test() {
