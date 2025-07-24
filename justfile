@@ -1,12 +1,11 @@
 
-# dependencies: echo, gleam, jq, sed, unzip, wget
+# dependencies: echo, gleam, jq, sed, wget
 
 lib-path := "lib/src/chartable"
+data-path := "lib/data"
 
 unidata := "https://www.unicode.org/Public/UNIDATA"
-ucd := "UCD.zip"
-unihan := "Unihan.zip"
-unicode-data := "unicode/UnicodeData.txt"
+derived-name := "extracted/DerivedName.txt"
 
 whatwg := "https://html.spec.whatwg.org/"
 html-entities := "entities.json"
@@ -17,44 +16,41 @@ typst-sym := "sym.txt"
 typst-emoji := "emoji.txt"
 
 
-default: fetch-all
+default: codegen test-lib
 
 [group('test'), working-directory('lib')]
 test-lib:
 	-gleam test
 	-gleam run -m birdie review
 
-[group('fetch')]
+[group('fetch'), private]
 download url file:
+	mkdir -p `dirname tmp/{{file}}`
 	wget -q --output-document tmp/{{file}} {{url}}/{{file}}
 
-[group('fetch')]
-extract file target:
-	unzip -d tmp/{{target}} tmp/{{file}}
-# 7z x -o tmp/{{target}} tmp/{{file}}
-
-[group('fetch')]
+[group('fetch'), private]
 make-const source target const="txt":
 	echo 'pub const {{const}} = "' > {{lib-path}}/{{target}}.gleam
 	sed 's/\\/\\\\/g; s/"/\\"/g'  < tmp/{{source}} \
 	>> {{lib-path}}/{{target}}.gleam
 	echo '"' >> {{lib-path}}/{{target}}.gleam
 
-# [group('fetch')]
-# copy source target:
-# 	cp tmp/{{source}} {{lib-path}}/data/{{target}}
-# move instead of copy?
+[group('fetch'), private]
+add-data source target:
+	mkdir -p `dirname {{data-path}}/{{target}}`
+	mv tmp/{{source}} {{data-path}}/{{target}}
+
+[working-directory('lib')]
+codegen: fetch-all
+	gleam dev
 
 [group('fetch')]
 fetch-all: fetch-unidata fetch-html fetch-typst
 
 [group('fetch')]
 fetch-unidata: \
-(download unidata ucd) \
-(download unidata unihan) \
-(extract ucd "unicode") \
-(extract unihan "unicode") \
-(make-const unicode-data "unicode/data")
+(download unidata derived-name) \
+(add-data derived-name "unicode/names.txt")
 
 entities-filter := \
 	'with_entries(select(.key | startswith("&") and endswith(";"))' + \
@@ -62,7 +58,7 @@ entities-filter := \
 	' | .key |= rtrimstr(";") )' + \
 	' | map_values(.codepoints | implode)'
 
-[group('fetch')]
+[group('fetch'), private]
 clean-entities:
 	jq '{{entities-filter}}' \
 	tmp/{{html-entities}} > tmp/{{html-entities-clean}}

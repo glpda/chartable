@@ -70,9 +70,9 @@ See the License for the specific language governing permissions and
 limitations under the License.
 
 ================================================================================
-The list of names and properties in `lib/src/chartable/unicode/data.gleam`
-is extracted from the Unicode Character Database, the original can be found here:
-https://www.unicode.org/Public/UNIDATA/UnicodeData.txt
+The list of names and properties in `lib/data/unicode/*` and the generated files
+are extracted from the Unicode Character Database, the original can be found here:
+https://www.unicode.org/Public/UNIDATA/extracted/DerivedName.txt
 
 UNICODE LICENSE V3
 

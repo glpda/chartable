@@ -1,28 +1,29 @@
-import chartable/unicode.{UnicodeData}
+import chartable/unicode
 import chartable/unicode/category
-import gleam/dict
 import gleam/list
 import gleam/result
 import gleam/string
 
-pub fn make_unicode_data_test() {
-  let unicode_data = unicode.make_unicode_data()
+pub fn name_from_codepoint_test() {
+  assert string.utf_codepoint(0x0041)
+    |> result.try(unicode.name_from_codepoint)
+    == Ok("LATIN CAPITAL LETTER A")
+  assert string.utf_codepoint(0x03A2)
+    |> result.try(unicode.name_from_codepoint)
+    == Error(Nil)
+  assert string.utf_codepoint(0x22C6)
+    |> result.try(unicode.name_from_codepoint)
+    == Ok("STAR OPERATOR")
+  assert string.utf_codepoint(0x4E55)
+    |> result.try(unicode.name_from_codepoint)
+    == Ok("CJK UNIFIED IDEOGRAPH-4E55")
+}
 
-  assert Ok(UnicodeData("LATIN CAPITAL LETTER A", category.LetterUppercase))
-    == string.utf_codepoint(0x0041)
-    |> result.try(dict.get(unicode_data, _))
-
-  assert Ok(UnicodeData("VULGAR FRACTION ONE HALF", category.NumberOther))
-    == string.utf_codepoint(0x00BD)
-    |> result.try(dict.get(unicode_data, _))
-
-  assert Ok(UnicodeData("STAR OPERATOR", category.SymbolMath))
-    == string.utf_codepoint(0x22C6)
-    |> result.try(dict.get(unicode_data, _))
-
-  assert Ok(UnicodeData("WHITE MEDIUM STAR", category.SymbolOther))
-    == string.utf_codepoint(0x2B50)
-    |> result.try(dict.get(unicode_data, _))
+pub fn name_from_int_test() {
+  assert unicode.name_from_int(0x0041) == Ok("LATIN CAPITAL LETTER A")
+  assert unicode.name_from_int(0x03A2) == Error(Nil)
+  assert unicode.name_from_int(0x22C6) == Ok("STAR OPERATOR")
+  assert unicode.name_from_int(0x4E55) == Ok("CJK UNIFIED IDEOGRAPH-4E55")
 }
 
 pub fn category_from_abbreviation_test() {

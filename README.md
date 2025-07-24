@@ -23,11 +23,9 @@ Requirements:
 [gleam](https://gleam.run/),
 [jq](https://jqlang.org/),
 [just](https://just.systems/),
-unzip,
 [wget](https://www.gnu.org/software/wget/).
 
 ```sh
-mkdir tmp       # Temporary directory for downloaded files
-just fetch-all  # Dowload and preprocess all the data
-just test-lib   # Run the tests
+just codegen   # Dowload source data and generate library code
+just test-lib  # Run the library tests
 ```

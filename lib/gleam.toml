@@ -6,6 +6,7 @@ licences = ["Apache-2.0"]
 repository = { type = "github", user = "glpda", repo = "chartable" }
 # links = [{ title = "Website", href = "" }]
 
+target = "javascript"
 
 [dependencies]
 gleam_stdlib = ">= 0.44.0 and < 2.0.0"
@@ -19,3 +20,16 @@ birdie = ">= 1.3.1 and < 2.0.0"
 
 [javascript]
 runtime = "deno"
+
+[javascript.deno]
+allow_read = [
+    "./gleam.toml",
+    "./build",
+    "./test",
+    "./birdie_snapshots",
+    "./data",
+]
+allow_write = [
+    "./birdie_snapshots",
+    "./src/chartable/unicode/name_map.mjs",
+]
