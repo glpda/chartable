@@ -8,12 +8,15 @@ pub fn name_from_codepoint_test() {
   assert string.utf_codepoint(0x0041)
     |> result.try(unicode.name_from_codepoint)
     == Ok("LATIN CAPITAL LETTER A")
+
   assert string.utf_codepoint(0x03A2)
     |> result.try(unicode.name_from_codepoint)
     == Error(Nil)
+
   assert string.utf_codepoint(0x22C6)
     |> result.try(unicode.name_from_codepoint)
     == Ok("STAR OPERATOR")
+
   assert string.utf_codepoint(0x4E55)
     |> result.try(unicode.name_from_codepoint)
     == Ok("CJK UNIFIED IDEOGRAPH-4E55")
@@ -21,36 +24,49 @@ pub fn name_from_codepoint_test() {
 
 pub fn name_from_int_test() {
   assert unicode.name_from_int(0x0041) == Ok("LATIN CAPITAL LETTER A")
+
   assert unicode.name_from_int(0x03A2) == Error(Nil)
+
   assert unicode.name_from_int(0x22C6) == Ok("STAR OPERATOR")
+
   assert unicode.name_from_int(0x4E55) == Ok("CJK UNIFIED IDEOGRAPH-4E55")
 }
 
 pub fn category_from_abbreviation_test() {
-  assert Ok(category.LetterUppercase) == category.from_abbreviation("Lu")
-  assert Ok(category.Unassigned) == category.from_abbreviation("Cn")
-  assert Ok(category.SymbolMath) == category.from_abbreviation("Sm")
-  assert Error(Nil) == category.from_abbreviation("Xyz")
+  assert category.from_abbreviation("Lu") == Ok(category.LetterUppercase)
+
+  assert category.from_abbreviation("Cn") == Ok(category.Unassigned)
+
+  assert category.from_abbreviation("Sm") == Ok(category.SymbolMath)
+
+  assert category.from_abbreviation("Xyz") == Error(Nil)
 }
 
 pub fn category_to_abbreviation_test() {
-  assert "Lu" == category.to_abbreviation(category.LetterUppercase)
-  assert "Cn" == category.to_abbreviation(category.Unassigned)
-  assert "Sm" == category.to_abbreviation(category.SymbolMath)
+  assert category.to_abbreviation(category.LetterUppercase) == "Lu"
+
+  assert category.to_abbreviation(category.Unassigned) == "Cn"
+
+  assert category.to_abbreviation(category.SymbolMath) == "Sm"
 }
 
 pub fn category_from_long_name_test() {
-  assert Ok(category.LetterUppercase)
-    == category.from_long_name("Uppercase_Letter")
-  assert Ok(category.Unassigned) == category.from_long_name("Unassigned")
-  assert Ok(category.SymbolMath) == category.from_long_name("Math_Symbol")
+  assert category.from_long_name("Uppercase_Letter")
+    == Ok(category.LetterUppercase)
+
+  assert category.from_long_name("Unassigned") == Ok(category.Unassigned)
+
+  assert category.from_long_name("Math_Symbol") == Ok(category.SymbolMath)
+
   assert category.from_long_name("Invalid_Category") == Error(Nil)
 }
 
 pub fn category_to_long_name_test() {
-  assert "Uppercase_Letter" == category.to_long_name(category.LetterUppercase)
-  assert "Unassigned" == category.to_long_name(category.Unassigned)
-  assert "Math_Symbol" == category.to_long_name(category.SymbolMath)
+  assert category.to_long_name(category.LetterUppercase) == "Uppercase_Letter"
+
+  assert category.to_long_name(category.Unassigned) == "Unassigned"
+
+  assert category.to_long_name(category.SymbolMath) == "Math_Symbol"
 }
 
 pub fn category_is_assigned_test() {

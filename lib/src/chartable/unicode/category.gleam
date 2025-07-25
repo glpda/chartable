@@ -109,10 +109,13 @@ pub type GeneralCategory {
 /// ## Examples
 ///
 /// ```gleam
-/// assert Ok(category.LetterUppercase) == category.from_abbreviation("Lu")
-/// assert Ok(category.Unassigned) == category.from_abbreviation("Cn")
-/// assert Ok(category.SymbolMath) == category.from_abbreviation("Sm")
-/// assert Error(Nil) == category.from_abbreviation("Xyz")
+/// assert category.from_abbreviation("Lu") == Ok(category.LetterUppercase)
+///
+/// assert category.from_abbreviation("Cn") == Ok(category.Unassigned)
+///
+/// assert category.from_abbreviation("Sm") == Ok(category.SymbolMath)
+///
+/// assert category.from_abbreviation("Xyz") == Error(Nil)
 /// ```
 ///
 pub fn from_abbreviation(abbr: String) -> Result(GeneralCategory, Nil) {
@@ -164,9 +167,11 @@ pub fn from_abbreviation(abbr: String) -> Result(GeneralCategory, Nil) {
 /// ## Examples
 ///
 /// ```gleam
-/// assert "Lu" == category.to_abbreviation(category.LetterUppercase)
-/// assert "Cn" == category.to_abbreviation(category.Unassigned)
-/// assert "Sm" == category.to_abbreviation(category.SymbolMath)
+/// assert category.to_abbreviation(category.LetterUppercase) == "Lu"
+///
+/// assert category.to_abbreviation(category.Unassigned) == "Cn"
+///
+/// assert category.to_abbreviation(category.SymbolMath) == "Sm"
 /// ```
 ///
 pub fn to_abbreviation(category: GeneralCategory) -> String {
@@ -216,10 +221,13 @@ pub fn to_abbreviation(category: GeneralCategory) -> String {
 /// ## Examples
 ///
 /// ```gleam
-/// assert Ok(category.LetterUppercase)
-///   == category.from_long_name("Uppercase_Letter")
-/// assert Ok(category.Unassigned) == category.from_long_name("Unassigned")
-/// assert Ok(category.SymbolMath) == category.from_long_name("Math_Symbol")
+/// assert category.from_long_name("Uppercase_Letter")
+///   == Ok(category.LetterUppercase)
+///
+/// assert category.from_long_name("Unassigned") == Ok(category.Unassigned)
+///
+/// assert category.from_long_name("Math_Symbol") == Ok(category.SymbolMath)
+///
 /// assert category.from_long_name("Invalid_Category") == Error(Nil)
 /// ```
 ///
@@ -272,9 +280,11 @@ pub fn from_long_name(name: String) -> Result(GeneralCategory, Nil) {
 /// ## Examples
 ///
 /// ```gleam
-/// assert "Uppercase_Letter" == category.to_long_name(category.LetterUppercase)
-/// assert "Unassigned" == category.to_long_name(category.Unassigned)
-/// assert "Math_Symbol" == category.to_long_name(category.SymbolMath)
+/// assert category.to_long_name(category.LetterUppercase) == "Uppercase_Letter"
+///
+/// assert category.to_long_name(category.Unassigned) == "Unassigned"
+///
+/// assert category.to_long_name(category.SymbolMath) == "Math_Symbol"
 /// ```
 ///
 pub fn to_long_name(category: GeneralCategory) -> String {

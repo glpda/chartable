@@ -74,14 +74,12 @@ fn next_line(state state: ParserState, rest txt: String) -> ParserState {
 ///
 /// ```gleam
 /// let assert Ok(symtable) = typst.make_symtable()
-///
-/// assert Ok(["star.op"])
-///   == string.utf_codepoint(0x22C6)
+/// assert string.utf_codepoint(0x22C6)
 ///   |> result.try(dict.get(symtable.from_codepoint, _))
+///   == Ok(["star.op"])
 ///
-/// assert Ok(string.to_utf_codepoints("\u{22C6}"))
-///   == dict.get(symtable.to_codepoints, "star.op")
-///
+/// assert dict.get(symtable.to_codepoints, "star.op")
+///   == Ok(string.to_utf_codepoints("\u{22C6}"))
 /// ```
 ///
 pub fn make_symtable() -> Result(Table, ParserError) {
@@ -98,12 +96,12 @@ pub fn make_symtable() -> Result(Table, ParserError) {
 /// ```gleam
 /// let assert Ok(emojitable) = typst.make_emojitable()
 ///
-/// assert Ok(["star.glow"])
-///   == string.utf_codepoint(0x1F31F)
+/// assert string.utf_codepoint(0x1F31F)
 ///   |> result.try(dict.get(emojitable.from_codepoint, _))
+///   == Ok(["star.glow"])
 ///
-/// assert Ok(string.to_utf_codepoints("\u{1F31F}"))
-///   == dict.get(emojitable.to_codepoints, "star.glow")
+/// assert dict.get(emojitable.to_codepoints, "star.glow")
+///   == Ok(string.to_utf_codepoints("\u{1F31F}"))
 /// ```
 ///
 pub fn make_emojitable() -> Result(Table, ParserError) {
@@ -265,7 +263,7 @@ fn update_table(table: Table, codepoints: List(UtfCodepoint), notation: String) 
 /// ```gleam
 /// let en_dash = string.utf_codepoint(0x2013)  // Ok('–')
 ///
-/// assert en_dash == typst.markup_shorthand_to_codepoint("--")
+/// assert typst.markup_shorthand_to_codepoint("--") == en_dash
 /// ```
 ///
 pub fn markup_shorthand_to_codepoint(
@@ -296,7 +294,7 @@ pub fn markup_shorthand_to_codepoint(
 /// ```gleam
 /// let assert Ok(en_dash) = string.utf_codepoint(0x2013)  // '–'
 ///
-/// assert Ok("--") == typst.markup_shorthand_from_codepoint(en_dash)
+/// assert typst.markup_shorthand_from_codepoint(en_dash) == Ok("--")
 /// ```
 ///
 pub fn markup_shorthand_from_codepoint(
@@ -328,7 +326,7 @@ pub fn markup_shorthand_from_codepoint(
 /// ```gleam
 /// let arrow = string.utf_codepoint(0x2192)  // Ok('→')
 ///
-/// assert arrow == typst.math_shorthand_to_codepoint("->")
+/// assert typst.math_shorthand_to_codepoint("->") == arrow
 /// ```
 ///
 pub fn math_shorthand_to_codepoint(
@@ -432,7 +430,7 @@ pub fn math_shorthand_to_codepoint(
 /// ```gleam
 /// let assert Ok(arrow) = string.utf_codepoint(0x2192)  // '→'
 ///
-/// assert Ok("->") == typst.math_shorthand_from_codepoint(arrow)
+/// assert typst.math_shorthand_from_codepoint(arrow) == Ok("->")
 /// ```
 ///
 pub fn math_shorthand_from_codepoint(
@@ -535,26 +533,25 @@ pub fn math_shorthand_from_codepoint(
 ///
 /// ```gleam
 /// let assert Ok(symtable) = typst.make_symtable()
-///
-/// assert Ok(["upright(C)"])
-///   == string.utf_codepoint(0x0043)
+/// assert string.utf_codepoint(0x0043)
 ///   |> result.try(typst.math_alphanum_from_codepoint(_, symtable))
+///   == Ok(["upright(C)"])
 ///
-/// assert Ok(["C"])
-///   == string.utf_codepoint(0x1D436)
+/// assert string.utf_codepoint(0x1D436)
 ///   |> result.try(typst.math_alphanum_from_codepoint(_, symtable))
+///   == Ok(["C"])
 ///
-/// assert Error(Nil)
-///   == string.utf_codepoint(0x1D53A)
+/// assert string.utf_codepoint(0x1D53A)
 ///   |> result.try(typst.math_alphanum_from_codepoint(_, symtable))
+///   == Error(Nil)
 ///
-/// assert Ok(["bb(C)"])
-///   == string.utf_codepoint(0x2102)
+/// assert string.utf_codepoint(0x2102)
 ///   |> result.try(typst.math_alphanum_from_codepoint(_, symtable))
+///   == Ok(["bb(C)"])
 ///
-/// assert Ok(["bold(Gamma)"])
-///   == string.utf_codepoint(0x1D6AA)
+/// assert string.utf_codepoint(0x1D6AA)
 ///   |> result.try(typst.math_alphanum_from_codepoint(_, symtable))
+///   == Ok(["bold(Gamma)"])
 /// ```
 ///
 pub fn math_alphanum_from_codepoint(
@@ -632,30 +629,29 @@ fn apply_math_styles(string: String, styles: List(String)) -> String {
 ///
 /// ```gleam
 /// let assert Ok(tables) = typst.make_tables()
-///
-/// assert Ok(["#emoji.star.glow"])
-///   == string.utf_codepoint(0x1F31F)
+/// assert string.utf_codepoint(0x1F31F)
 ///   |> result.map(typst.notations_from_codepoint(_, tables))
+///   == Ok(["#emoji.star.glow"])
 ///
-/// assert Ok(["#sym.star.op"])
-///   == string.utf_codepoint(0x22C6)
+/// assert string.utf_codepoint(0x22C6)
 ///   |> result.map(typst.notations_from_codepoint(_, tables))
+///   == Ok(["#sym.star.op"])
 ///
-/// assert Ok(["#sym.dash.en", "--"])
-///   == string.utf_codepoint(0x2013)
+/// assert string.utf_codepoint(0x2013)
 ///   |> result.map(typst.notations_from_codepoint(_, tables))
+///   == Ok(["#sym.dash.en", "--"])
 ///
-/// assert Ok(["#sym.arrow.r", "$ -> $"])
-///   == string.utf_codepoint(0x2192)
+/// assert string.utf_codepoint(0x2192)
 ///   |> result.map(typst.notations_from_codepoint(_, tables))
+///   == Ok(["#sym.arrow.r", "$ -> $"])
 ///
-/// assert Ok(["#sym.Gamma", "$ Gamma $"])
-///   == string.utf_codepoint(0x0393)
+/// assert string.utf_codepoint(0x0393)
 ///   |> result.map(typst.notations_from_codepoint(_, tables))
+///   == Ok(["#sym.Gamma", "$ Gamma $"])
 ///
-/// assert Ok(["$ bold(Gamma) $"])
-///   == string.utf_codepoint(0x1D6AA)
+/// assert string.utf_codepoint(0x1D6AA)
 ///   |> result.map(typst.notations_from_codepoint(_, tables))
+///   == Ok(["$ bold(Gamma) $"])
 /// ```
 ///
 pub fn notations_from_codepoint(
@@ -698,15 +694,15 @@ pub fn notations_from_codepoint(
 /// ```gleam
 /// let assert Ok(tables) = typst.make_tables()
 ///
-/// assert Ok(string.to_utf_codepoints("\u{22C6}"))
-///   == typst.notation_to_codepoints("#sym.star.op", tables)
+/// assert typst.notation_to_codepoints("#sym.star.op", tables)
+///   == Ok(string.to_utf_codepoints("\u{22C6}"))
 ///
-/// assert Ok(string.to_utf_codepoints("\u{2B50}"))
-///   == typst.notation_to_codepoints("#emoji.star", tables)
+/// assert typst.notation_to_codepoints("#emoji.star", tables)
+///   == Ok(string.to_utf_codepoints("\u{2B50}"))
 ///
-/// assert Error(Nil) == typst.notation_to_codepoints("emoji.star", tables)
+/// assert typst.notation_to_codepoints("emoji.star", tables) == Error(Nil)
 ///
-/// assert Error(Nil) == typst.notation_to_codepoints("#emoji.staaar", tables)
+/// assert typst.notation_to_codepoints("#emoji.staaar", tables) == Error(Nil)
 /// ```
 ///
 pub fn notation_to_codepoints(
@@ -728,15 +724,13 @@ pub fn notation_to_codepoints(
 /// ## Examples
 ///
 /// ```gleam
-/// let assert Ok(tables) = typst.make_tables()
+/// assert typst.notation_to_string("#sym.star.op", tables) == Ok("\u{22C6}")
 ///
-/// assert Ok("\u{22C6}") == typst.notation_to_string("#sym.star.op", tables)
+/// assert typst.notation_to_string("#emoji.star", tables) == Ok("\u{2B50}")
 ///
-/// assert Ok("\u{2B50}") == typst.notation_to_string("#emoji.star", tables)
+/// assert typst.notation_to_string("emoji.star", tables) == Error(Nil)
 ///
-/// assert Error(Nil) == typst.notation_to_string("emoji.star", tables)
-///
-/// assert Error(Nil) == typst.notation_to_string("#emoji.staaar", tables)
+/// assert typst.notation_to_string("#emoji.staaar", tables) == Error(Nil)
 /// ```
 ///
 pub fn notation_to_string(
