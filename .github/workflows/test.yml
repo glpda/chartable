@@ -7,17 +7,18 @@ on:
   pull_request:
 
 jobs:
-  library:
+  library-tests:
     name: Library tests
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v4
-      - uses: erlef/setup-beam@v1
-        with:
-          otp-version: "27.1.2"
-          gleam-version: "1.11.0"
-          rebar3-version: "3"
-          # elixir-version: "1"
+      - uses: jdx/mise-action@v2
+      # - uses: erlef/setup-beam@v1
+      #   with:
+      #     otp-version: "27.1.2"
+      #     gleam-version: "1.11.0"
+      #     rebar3-version: "3"
+      #     elixir-version: "1"
       - name: Download gleam dependencies
         run: gleam deps download
         working-directory: lib
@@ -28,11 +29,12 @@ jobs:
         run: gleam format --check src test
         working-directory: lib
 
-  # application:
+  # application-test:
   #   name: Application tests
   #   runs-on: ubuntu-latest
   #   steps:
   #     - uses: actions/checkout@v4
+  #     - uses: jdx/mise-action@v2
   #     - uses: erlef/setup-beam@v1
   #       with:
   #         otp-version: "27.1.2"

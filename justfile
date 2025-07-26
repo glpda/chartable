@@ -1,6 +1,4 @@
 
-# dependencies: echo, gleam, jq, sed, wget
-
 lib-path := "lib/src/chartable"
 data-path := "lib/data"
 
