@@ -18,7 +18,7 @@ pub type GeneralCategory {
   /// e.g. U+02B0 "Modifier Letter Small H" ( ʰ )
   LetterModifier
   /// `"Lo"` other letters, including syllables and ideographs,
-  /// e.g. U+304B "Hiragana Letter Ka" ( か )
+  /// e.g. U+661F "CJK Ideograph for Star" ( 星 )
   LetterOther
 
   // Marks:

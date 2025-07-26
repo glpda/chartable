@@ -19,9 +19,9 @@ import gleam/string
 ///   |> result.try(unicode.name_from_codepoint)
 ///   == Ok("STAR OPERATOR")
 ///
-/// assert string.utf_codepoint(0x4E55)
+/// assert string.utf_codepoint(0x661F)
 ///   |> result.try(unicode.name_from_codepoint)
-///   == Ok("CJK UNIFIED IDEOGRAPH-4E55")
+///   == Ok("CJK UNIFIED IDEOGRAPH-661F")
 /// ```
 ///
 pub fn name_from_codepoint(cp: UtfCodepoint) -> Result(String, Nil) {
@@ -41,7 +41,7 @@ pub fn name_from_codepoint(cp: UtfCodepoint) -> Result(String, Nil) {
 ///
 /// assert unicode.name_from_int(0x22C6) == Ok("STAR OPERATOR")
 ///
-/// assert unicode.name_from_int(0x4E55) == Ok("CJK UNIFIED IDEOGRAPH-4E55")
+/// assert unicode.name_from_int(0x661F) == Ok("CJK UNIFIED IDEOGRAPH-661F")
 /// ```
 ///
 @external(javascript, "./unicode/name_map.mjs", "get_name")
