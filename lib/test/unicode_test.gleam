@@ -30,6 +30,90 @@ pub fn name_from_int_test() {
   assert unicode.name_from_int(0x22C6) == Ok("STAR OPERATOR")
 
   assert unicode.name_from_int(0x4E55) == Ok("CJK UNIFIED IDEOGRAPH-4E55")
+
+  assert unicode.name_from_int(-100) == Error(Nil)
+
+  assert unicode.name_from_int(0x110000) == Error(Nil)
+}
+
+pub fn category_from_codepoint_test() {
+  assert string.utf_codepoint(0x0041)
+    |> result.map(unicode.category_from_codepoint)
+    == Ok(category.LetterUppercase)
+
+  assert string.utf_codepoint(0x0032)
+    |> result.map(unicode.category_from_codepoint)
+    == Ok(category.NumberDecimal)
+
+  assert string.utf_codepoint(0x0024)
+    |> result.map(unicode.category_from_codepoint)
+    == Ok(category.SymbolCurrency)
+
+  assert string.utf_codepoint(0x0007)
+    |> result.map(unicode.category_from_codepoint)
+    == Ok(category.Control)
+}
+
+pub fn category_from_int_test() {
+  assert unicode.category_from_int(0x0041) == category.LetterUppercase
+
+  assert unicode.category_from_int(0x0061) == category.LetterLowercase
+
+  assert unicode.category_from_int(0x01F2) == category.LetterTitlecase
+
+  assert unicode.category_from_int(0x02B0) == category.LetterModifier
+
+  assert unicode.category_from_int(0x304B) == category.LetterOther
+
+  assert unicode.category_from_int(0x0301) == category.MarkNonspacing
+
+  assert unicode.category_from_int(0x0903) == category.MarkSpacing
+
+  assert unicode.category_from_int(0x20E0) == category.MarkEnclosing
+
+  assert unicode.category_from_int(0x0032) == category.NumberDecimal
+
+  assert unicode.category_from_int(0x2162) == category.NumberLetter
+
+  assert unicode.category_from_int(0x00BD) == category.NumberOther
+
+  assert unicode.category_from_int(0x2040) == category.PunctuationConnector
+
+  assert unicode.category_from_int(0x2013) == category.PunctuationDash
+
+  assert unicode.category_from_int(0x007B) == category.PunctuationOpen
+
+  assert unicode.category_from_int(0x007D) == category.PunctuationClose
+
+  assert unicode.category_from_int(0x201C) == category.PunctuationInitial
+
+  assert unicode.category_from_int(0x201D) == category.PunctuationFinal
+
+  assert unicode.category_from_int(0x0021) == category.PunctuationOther
+
+  assert unicode.category_from_int(0x002B) == category.SymbolMath
+
+  assert unicode.category_from_int(0x0024) == category.SymbolCurrency
+
+  assert unicode.category_from_int(0x005E) == category.SymbolModifier
+
+  assert unicode.category_from_int(0x00B0) == category.SymbolOther
+
+  assert unicode.category_from_int(0x0020) == category.SeparatorSpace
+
+  assert unicode.category_from_int(0x2028) == category.SeparatorLine
+
+  assert unicode.category_from_int(0x2029) == category.SeparatorParagraph
+
+  assert unicode.category_from_int(0x0007) == category.Control
+
+  assert unicode.category_from_int(0x00AD) == category.Format
+
+  assert unicode.category_from_int(0xD877) == category.Surrogate
+
+  assert unicode.category_from_int(0xE777) == category.PrivateUse
+
+  assert unicode.category_from_int(0x03A2) == category.Unassigned
 }
 
 pub fn category_from_abbreviation_test() {
