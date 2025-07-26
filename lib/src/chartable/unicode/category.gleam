@@ -43,7 +43,7 @@ pub type GeneralCategory {
   /// e.g. U+00BD "Vulgar Fraction One Half" ( ½ )
   NumberOther
 
-  // Punctuations: a⁀b b_a
+  // Punctuations:
   /// `"Pc"`, connecting punctuation marks,
   /// e.g. U+2040 "Character Tie" (◌⁀◌)
   PunctuationConnector
