@@ -72,7 +72,7 @@ limitations under the License.
 ================================================================================
 The list of names and properties in `lib/data/unicode/*` and the generated files
 are extracted from the Unicode Character Database, the original can be found here:
-https://www.unicode.org/Public/UNIDATA/extracted/DerivedName.txt
+https://www.unicode.org/Public/UCD/latest/ucd/extracted/DerivedName.txt
 
 UNICODE LICENSE V3
 

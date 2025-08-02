@@ -2,14 +2,14 @@
 lib-path := "lib/src/chartable"
 data-path := "lib/data"
 
-unidata := "https://www.unicode.org/Public/UNIDATA"
+unidata := "https://www.unicode.org/Public/UCD/latest/ucd"
 derived-name := "extracted/DerivedName.txt"
 
 whatwg := "https://html.spec.whatwg.org/"
 html-entities := "entities.json"
 html-entities-clean := "entities-clean.json"
 
-typst-codex := "https://raw.githubusercontent.com/typst/codex/refs/heads/main/src/modules/"
+typst-codex := "https://raw.githubusercontent.com/typst/codex/refs/heads/main/src/modules"
 typst-sym := "sym.txt"
 typst-emoji := "emoji.txt"
 
