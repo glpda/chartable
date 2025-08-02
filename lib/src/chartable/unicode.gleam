@@ -71,9 +71,7 @@ pub fn name_from_int(cp: Int) -> Result(String, Nil)
 /// ```
 ///
 @external(javascript, "./unicode/category_regexp.mjs", "get_category")
-pub fn category_from_codepoint(cp: UtfCodepoint) -> GeneralCategory {
-  string.utf_codepoint_to_int(cp) |> category_from_int()
-}
+pub fn category_from_codepoint(cp: UtfCodepoint) -> GeneralCategory
 
 /// Get the Unicode [`GeneralCategory`](unicode/category.html#GeneralCategory)
 /// property of a code point. Returns an `Unassigned` category if the integer
