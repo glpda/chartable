@@ -50,3 +50,13 @@ pub fn assert_table_consistency(from_codepoint, to_codepoints) -> Nil {
     })
   })
 }
+
+pub fn parse_codepoint(str: String) -> Result(UtfCodepoint, Nil) {
+  int.base_parse(str, 16) |> result.try(string.utf_codepoint)
+}
+
+pub fn codepoint_to_hex(cp: UtfCodepoint) -> String {
+  string.utf_codepoint_to_int(cp)
+  |> int.to_base16()
+  |> string.pad_start(to: 4, with: "0")
+}
