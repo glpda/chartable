@@ -49,9 +49,9 @@ OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE
 OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 
 ================================================================================
-The list of symbol's names in `lib/src/chartable/typst/emoji.txt` and in
-`lib/src/chartable/typst/sym.txt` is extracted from the Typst Codex, the
-originals can be found here:
+The list of symbol's names in `lib/data/typst/*` and the generated files
+`lib/src/chartable/typst/*.mjs` and `lib/birdie_snapshots/typst_*` are
+extracted from the Typst Codex, the originals can be found here:
 - https://github.com/typst/codex/blob/main/src/modules/emoji.txt
 - https://github.com/typst/codex/blob/main/src/modules/sym.txt
 

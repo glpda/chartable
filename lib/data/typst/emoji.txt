@@ -1,4 +1,3 @@
-pub const txt = "
 abacus 🧮
 abc 🔤
 abcd 🔡
@@ -1461,4 +1460,3 @@ zodiac
   .virgo ♍
 zombie 🧟
 zzz 💤
-"

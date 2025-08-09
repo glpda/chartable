@@ -71,8 +71,8 @@ fetch-html: \
 fetch-typst: \
 (download typst-codex typst-sym) \
 (download typst-codex typst-emoji) \
-(make-const typst-sym "typst/sym") \
-(make-const typst-emoji "typst/emoji")
+(add-data typst-sym "typst/sym.txt") \
+(add-data typst-emoji "typst/emoji.txt")
 
 
 # clear:

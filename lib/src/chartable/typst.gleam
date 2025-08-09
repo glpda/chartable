@@ -1,258 +1,100 @@
 //// Converts between Unicode code points and [typst notations](https://typst.app/docs/reference)
 
 import chartable/internal/math_alphanum.{Bold, Italic, Regular, Upright}
-import chartable/typst/emoji
-import chartable/typst/sym
-import gleam/dict.{type Dict}
-import gleam/int
 import gleam/list
-import gleam/option.{type Option, None, Some}
 import gleam/result
 import gleam/string
-import splitter.{split}
 
-/// Maps code points to typst codex identifiers.
-///
-/// Prefer [`notations_from_codepoint`](#notations_from_codepoint)
-/// over direclty working with table dictionaries.
-pub type FromCodepoint =
-  Dict(UtfCodepoint, List(String))
+@external(javascript, "./typst/symbol_map.mjs", "codepoint_to_notations")
+fn symbol_codepoint_to_notations(codepoint: Int) -> Result(List(String), Nil)
 
-/// Maps typst codex identifiers to code points.
-///
-/// Prefer [`notation_to_codepoints`](#notation_to_codepoints)
-/// over direclty working with table dictionaries.
-pub type ToCodepoints =
-  Dict(String, List(UtfCodepoint))
+@external(javascript, "./typst/symbol_map.mjs", "notation_to_codepoints")
+fn symbol_notation_to_codepoints(notation: String) -> Result(List(Int), Nil)
 
-/// Maps code points to typst codex identifiers and the other way around.
-pub type Table {
-  Table(from_codepoint: FromCodepoint, to_codepoints: ToCodepoints)
-}
+@external(javascript, "./typst/emoji_map.mjs", "codepoint_to_notations")
+fn emoji_codepoint_to_notations(codepoint: Int) -> Result(List(String), Nil)
 
-pub opaque type Tables {
-  Tables(emojitable: Table, symtable: Table)
-}
+@external(javascript, "./typst/emoji_map.mjs", "notation_to_codepoints")
+fn emoji_notation_to_codepoints(notation: String) -> Result(List(Int), Nil)
 
-/// The parser is only called on constant input fetched from
-/// [typst codex source code](https://github.com/typst/codex)
-/// and tested before release.
-/// It is therefore safe to assume parsing will not return an error
-/// and assert the result of `typst.make_*table()`
-pub type ParserError {
-  SubmoduleNotOpen(line: Int)
-  SubmoduleNotClosed(line: Int)
-  InvalidCodepoints(line: Int)
-  InvalidIdentifier(line: Int)
-  DuplicateIdentifier(line: Int)
-}
-
-type ParserState {
-  ParserState(
-    line: Int,
-    txt: String,
-    prefix: String,
-    submodule: String,
-    pair: Option(#(List(UtfCodepoint), String)),
-  )
-}
-
-fn start_parser(txt: String) -> ParserState {
-  ParserState(line: 0, txt:, prefix: "", submodule: "", pair: None)
-}
-
-fn next_line(state state: ParserState, rest txt: String) -> ParserState {
-  ParserState(..state, txt:, line: state.line + 1, pair: None)
-}
-
-/// Makes symbol table. Requires parsing `sym.txt` from typst codex:
-/// for better performance, call only once and keep the dictionary.
-/// Only handles names listed in
-/// [this module](https://typst.app/docs/reference/symbols/sym/).
+/// Converts a `UtfCodepoint` to a Typst symbol notation `String`
+/// (see [Typst docs](https://typst.app/docs/reference/symbols/sym/)).
 ///
 /// ## Examples
 ///
 /// ```gleam
-/// let assert Ok(symtable) = typst.make_symtable()
 /// assert string.utf_codepoint(0x22C6)
-///   |> result.try(dict.get(symtable.from_codepoint, _))
+///   |> result.try(typst.symbols_from_codepoint)
 ///   == Ok(["star.op"])
 ///
-/// assert dict.get(symtable.to_codepoints, "star.op")
-///   == Ok(string.to_utf_codepoints("\u{22C6}"))
+/// assert string.utf_codepoint(0x0024)
+///   |> result.try(typst.symbols_from_codepoint)
+///   == Ok(["dollar", "pataca", "peso"])
 /// ```
 ///
-pub fn make_symtable() -> Result(Table, ParserError) {
-  parse_codex(sym.txt)
+pub fn symbols_from_codepoint(
+  codepoint: UtfCodepoint,
+) -> Result(List(String), Nil) {
+  string.utf_codepoint_to_int(codepoint)
+  |> symbol_codepoint_to_notations()
 }
 
-/// Makes emoji table. Requires parsing `emoji.txt` from typst codex:
-/// for better performance, call only once and keep the dictionary.
-/// Only handles names listed in
-/// [this module](https://typst.app/docs/reference/symbols/emoji/).
+/// Converts a Typst symbol notation `String` to a `List` of `UtfCodepoint`s
+/// (see [Typst docs](https://typst.app/docs/reference/symbols/sym/)).
 ///
 /// ## Examples
 ///
 /// ```gleam
-/// let assert Ok(emojitable) = typst.make_emojitable()
+/// assert typst.symbol_to_codepoints("star.op")
+///   == Ok(string.to_utf_codepoints("\u{22C6}"))
+///
+/// assert typst.symbol_to_codepoints("dollar")
+///   == Ok(string.to_utf_codepoints("$"))
+/// ```
+///
+pub fn symbol_to_codepoints(notation: String) -> Result(List(UtfCodepoint), Nil) {
+  use codepoints <- result.try(symbol_notation_to_codepoints(notation))
+  result.all(list.map(codepoints, string.utf_codepoint))
+}
+
+/// Converts a `UtfCodepoint` to a Typst emoji notation `String`
+/// (see [Typst docs](https://typst.app/docs/reference/symbols/emoji/)).
+///
+/// ## Examples
+///
+/// ```gleam
+/// assert string.utf_codepoint(0x2B50)
+///   |> result.try(typst.emojis_from_codepoint)
+///   == Ok(["star"])
 ///
 /// assert string.utf_codepoint(0x1F31F)
-///   |> result.try(dict.get(emojitable.from_codepoint, _))
+///   |> result.try(typst.emojis_from_codepoint)
 ///   == Ok(["star.glow"])
+/// ```
 ///
-/// assert dict.get(emojitable.to_codepoints, "star.glow")
+pub fn emojis_from_codepoint(
+  codepoint: UtfCodepoint,
+) -> Result(List(String), Nil) {
+  string.utf_codepoint_to_int(codepoint)
+  |> emoji_codepoint_to_notations()
+}
+
+/// Converts a Typst emoji notation `String` to a `List` of `UtfCodepoint`s
+/// (see [Typst docs](https://typst.app/docs/reference/symbols/emoji/)).
+///
+/// ## Examples
+///
+/// ```gleam
+/// assert typst.emoji_to_codepoints("star")
+///   == Ok(string.to_utf_codepoints("⭐"))
+///
+/// assert typst.emoji_to_codepoints("star.glow")
 ///   == Ok(string.to_utf_codepoints("\u{1F31F}"))
 /// ```
 ///
-pub fn make_emojitable() -> Result(Table, ParserError) {
-  parse_codex(emoji.txt)
-}
-
-pub fn make_tables() -> Result(Tables, ParserError) {
-  use symtable <- result.try(make_symtable())
-  use emojitable <- result.try(make_emojitable())
-
-  Ok(Tables(emojitable:, symtable:))
-}
-
-fn parse_codex(txt: String) -> Result(Table, ParserError) {
-  let table = Table(dict.new(), dict.new())
-  let line_ends = splitter.new(["\n", "\r\n"])
-  let comments = splitter.new(["//", "@"])
-  let space = splitter.new([" "])
-
-  use state <- parse_codex_loop(input: start_parser(txt), output: table)
-  let #(line, _, rest) = split(line_ends, state.txt)
-  let #(line, _, _) = split(comments, line)
-  let line = string.trim(line)
-  case line {
-    "" -> Ok(next_line(state:, rest:))
-    "}" <> _ if state.submodule != "" ->
-      Ok(ParserState(..next_line(state:, rest:), submodule: ""))
-    "}" <> _ -> Error(SubmoduleNotOpen(state.line))
-    line -> {
-      let #(key, _, symbol) = split(space, line)
-      case key, symbol {
-        "", _ -> Ok(next_line(state:, rest:))
-        "." <> suffix, symbol ->
-          parse_codepoints(symbol, [])
-          |> result.replace_error(InvalidCodepoints(state.line))
-          |> result.map(fn(codepoints) {
-            ParserState(
-              ..next_line(state:, rest:),
-              pair: Some(#(codepoints, suffix)),
-            )
-          })
-        prefix, "" -> Ok(ParserState(..next_line(state:, rest:), prefix:))
-        submodule, "{" ->
-          Ok(ParserState(..next_line(state:, rest:), prefix: "", submodule:))
-        prefix, symbol ->
-          parse_codepoints(symbol, [])
-          |> result.replace_error(InvalidCodepoints(state.line))
-          |> result.map(fn(codepoints) {
-            ParserState(
-              ..next_line(state:, rest:),
-              prefix:,
-              pair: Some(#(codepoints, "")),
-            )
-          })
-      }
-    }
-  }
-}
-
-fn parse_codepoints(
-  string: String,
-  acc: List(UtfCodepoint),
-) -> Result(List(UtfCodepoint), Nil) {
-  case string {
-    "" ->
-      case acc {
-        [] -> Error(Nil)
-        _ -> Ok(list.reverse(acc))
-      }
-    "\\u{" <> rest -> {
-      use #(hex_code, rest) <- result.try(string.split_once(rest, on: "}"))
-      use number <- result.try(int.base_parse(hex_code, 16))
-      use codepoint <- result.try(string.utf_codepoint(number))
-      parse_codepoints(rest, [codepoint, ..acc])
-    }
-    string -> {
-      use #(grapheme, rest) <- result.try(string.pop_grapheme(string))
-      let acc = list.append(string.to_utf_codepoints(grapheme), acc)
-      parse_codepoints(rest, acc)
-    }
-  }
-}
-
-fn parse_codex_loop(
-  input state: ParserState,
-  output table: Table,
-  with parser: fn(ParserState) -> Result(ParserState, ParserError),
-) -> Result(Table, ParserError) {
-  // NOTE: could be more readable with `use` but tail call recursion would be
-  //       trickier than with nested `case`.
-  case state.txt {
-    "" if state.submodule != "" -> Error(SubmoduleNotClosed(state.line))
-    "" -> Ok(table)
-    _ -> {
-      case parser(state) {
-        Error(error) -> Error(error)
-        Ok(state) -> {
-          case state.pair {
-            None -> parse_codex_loop(input: state, output: table, with: parser)
-            Some(#(codepoints, suffix)) ->
-              case make_identifier(state.submodule, state.prefix, suffix) {
-                Error(_) -> Error(InvalidIdentifier(state.line))
-                Ok(identifier) -> {
-                  case table.to_codepoints |> dict.has_key(identifier) {
-                    True -> Error(DuplicateIdentifier(state.line))
-                    False ->
-                      parse_codex_loop(
-                        input: state,
-                        output: update_table(table, codepoints, identifier),
-                        with: parser,
-                      )
-                  }
-                }
-              }
-          }
-        }
-      }
-    }
-  }
-}
-
-fn make_identifier(submodule: String, prefix: String, suffix: String) {
-  // TODO: test if identifier is ascii letter only (prefix split on: ".").
-  // NOTE: validating input will slow down parsing and should not be needed
-  //       because we control the parsed input txt.
-  case submodule, prefix, suffix {
-    "", "", _ -> Error(Nil)
-    "", prefix, "" -> Ok(prefix)
-    "", prefix, suffix -> Ok(prefix <> "." <> suffix)
-    _, "", _ -> Error(Nil)
-    submodule, prefix, "" -> Ok(submodule <> "." <> prefix)
-    submodule, prefix, suffix -> Ok(submodule <> "." <> prefix <> "." <> suffix)
-  }
-}
-
-/// Updates table with a new codepoint-notation pair
-fn update_table(table: Table, codepoints: List(UtfCodepoint), notation: String) {
-  let from_codepoint = case codepoints {
-    [codepoint] ->
-      dict.upsert(codepoint, in: table.from_codepoint, with: fn(option) {
-        case option {
-          None -> [notation]
-          Some(list) -> [notation, ..list]
-        }
-      })
-    _ -> table.from_codepoint
-  }
-
-  let to_codepoints =
-    dict.insert(codepoints, into: table.to_codepoints, for: notation)
-  Table(from_codepoint:, to_codepoints:)
+pub fn emoji_to_codepoints(notation: String) -> Result(List(UtfCodepoint), Nil) {
+  use codepoints <- result.try(emoji_notation_to_codepoints(notation))
+  result.all(list.map(codepoints, string.utf_codepoint))
 }
 
 /// Converts a Typst markup mode shorthand `String` to a `UtfCodepoint`
@@ -532,35 +374,35 @@ pub fn math_shorthand_from_codepoint(
 /// ## Examples
 ///
 /// ```gleam
-/// let assert Ok(symtable) = typst.make_symtable()
 /// assert string.utf_codepoint(0x0043)
-///   |> result.try(typst.math_alphanum_from_codepoint(_, symtable))
+///   |> result.try(typst.math_alphanum_from_codepoint)
 ///   == Ok(["upright(C)"])
 ///
 /// assert string.utf_codepoint(0x1D436)
-///   |> result.try(typst.math_alphanum_from_codepoint(_, symtable))
+///   |> result.try(typst.math_alphanum_from_codepoint)
 ///   == Ok(["C"])
 ///
 /// assert string.utf_codepoint(0x1D53A)
-///   |> result.try(typst.math_alphanum_from_codepoint(_, symtable))
+///   |> result.try(typst.math_alphanum_from_codepoint)
 ///   == Error(Nil)
 ///
 /// assert string.utf_codepoint(0x2102)
-///   |> result.try(typst.math_alphanum_from_codepoint(_, symtable))
+///   |> result.try(typst.math_alphanum_from_codepoint)
 ///   == Ok(["bb(C)"])
 ///
 /// assert string.utf_codepoint(0x1D6AA)
-///   |> result.try(typst.math_alphanum_from_codepoint(_, symtable))
+///   |> result.try(typst.math_alphanum_from_codepoint)
 ///   == Ok(["bold(Gamma)"])
 /// ```
 ///
 pub fn math_alphanum_from_codepoint(
   codepoint: UtfCodepoint,
-  table table: Table,
 ) -> Result(List(String), Nil) {
   use alphanum <- result.try(math_alphanum.from_codepoint(codepoint))
-
-  let notations = case dict.get(table.from_codepoint, alphanum.letter) {
+  let notations =
+    string.utf_codepoint_to_int(alphanum.letter)
+    |> symbol_codepoint_to_notations()
+  let notations = case notations {
     Ok(notations) -> notations
     Error(_) -> [string.from_utf_codepoints([alphanum.letter])]
   }
@@ -623,67 +465,6 @@ fn apply_math_styles(string: String, styles: List(String)) -> String {
   }
 }
 
-/// Converts a `UtfCodepoint` to a `List` of Typst notations `String`.
-///
-/// ## Examples
-///
-/// ```gleam
-/// let assert Ok(tables) = typst.make_tables()
-/// assert string.utf_codepoint(0x1F31F)
-///   |> result.map(typst.notations_from_codepoint(_, tables))
-///   == Ok(["#emoji.star.glow"])
-///
-/// assert string.utf_codepoint(0x22C6)
-///   |> result.map(typst.notations_from_codepoint(_, tables))
-///   == Ok(["#sym.star.op"])
-///
-/// assert string.utf_codepoint(0x2013)
-///   |> result.map(typst.notations_from_codepoint(_, tables))
-///   == Ok(["#sym.dash.en", "--"])
-///
-/// assert string.utf_codepoint(0x2192)
-///   |> result.map(typst.notations_from_codepoint(_, tables))
-///   == Ok(["#sym.arrow.r", "$ -> $"])
-///
-/// assert string.utf_codepoint(0x0393)
-///   |> result.map(typst.notations_from_codepoint(_, tables))
-///   == Ok(["#sym.Gamma", "$ Gamma $"])
-///
-/// assert string.utf_codepoint(0x1D6AA)
-///   |> result.map(typst.notations_from_codepoint(_, tables))
-///   == Ok(["$ bold(Gamma) $"])
-/// ```
-///
-pub fn notations_from_codepoint(
-  codepoint: UtfCodepoint,
-  tables tables: Tables,
-) -> List(String) {
-  let sym_notations =
-    result.unwrap(dict.get(tables.symtable.from_codepoint, codepoint), or: [])
-    |> list.map(fn(notation) { "#sym." <> notation })
-  let emoji_notations =
-    result.unwrap(dict.get(tables.emojitable.from_codepoint, codepoint), or: [])
-    |> list.map(fn(notation) { "#emoji." <> notation })
-  let markup_shorthand =
-    markup_shorthand_from_codepoint(codepoint)
-    |> result.map(list.wrap)
-    |> result.unwrap([])
-  let math_shorthand =
-    math_shorthand_from_codepoint(codepoint)
-    |> result.map(list.wrap)
-    |> result.unwrap([])
-    |> list.map(display_math)
-  let math_alphanum_notations =
-    math_alphanum_from_codepoint(codepoint, tables.symtable)
-    |> result.unwrap([])
-    |> list.map(display_math)
-  sym_notations
-  |> list.append(emoji_notations)
-  |> list.append(markup_shorthand)
-  |> list.append(math_shorthand)
-  |> list.append(math_alphanum_notations)
-}
-
 /// Converts a Typst codex name `String` to a `UtfCodepoint`,
 /// only handles names listed in these two modules:
 /// [sym](https://typst.app/docs/reference/symbols/sym/),
@@ -692,26 +473,23 @@ pub fn notations_from_codepoint(
 /// ## Examples
 ///
 /// ```gleam
-/// let assert Ok(tables) = typst.make_tables()
-///
-/// assert typst.notation_to_codepoints("#sym.star.op", tables)
+/// assert typst.notation_to_codepoints("#sym.star.op")
 ///   == Ok(string.to_utf_codepoints("\u{22C6}"))
 ///
-/// assert typst.notation_to_codepoints("#emoji.star", tables)
+/// assert typst.notation_to_codepoints("#emoji.star")
 ///   == Ok(string.to_utf_codepoints("\u{2B50}"))
 ///
-/// assert typst.notation_to_codepoints("emoji.star", tables) == Error(Nil)
+/// assert typst.notation_to_codepoints("emoji.star") == Error(Nil)
 ///
-/// assert typst.notation_to_codepoints("#emoji.staaar", tables) == Error(Nil)
+/// assert typst.notation_to_codepoints("#emoji.staaar") == Error(Nil)
 /// ```
 ///
 pub fn notation_to_codepoints(
   notation: String,
-  tables tables: Tables,
 ) -> Result(List(UtfCodepoint), Nil) {
   case notation {
-    "#sym." <> name -> dict.get(tables.symtable.to_codepoints, name)
-    "#emoji." <> name -> dict.get(tables.emojitable.to_codepoints, name)
+    "#sym." <> name -> symbol_to_codepoints(name)
+    "#emoji." <> name -> emoji_to_codepoints(name)
     _ -> Error(Nil)
   }
 }
@@ -724,23 +502,78 @@ pub fn notation_to_codepoints(
 /// ## Examples
 ///
 /// ```gleam
-/// assert typst.notation_to_string("#sym.star.op", tables) == Ok("\u{22C6}")
+/// assert typst.notation_to_string("#sym.star.op") == Ok("\u{22C6}")
 ///
-/// assert typst.notation_to_string("#emoji.star", tables) == Ok("\u{2B50}")
+/// assert typst.notation_to_string("#emoji.star") == Ok("\u{2B50}")
 ///
-/// assert typst.notation_to_string("emoji.star", tables) == Error(Nil)
+/// assert typst.notation_to_string("emoji.star") == Error(Nil)
 ///
-/// assert typst.notation_to_string("#emoji.staaar", tables) == Error(Nil)
+/// assert typst.notation_to_string("#emoji.staaar") == Error(Nil)
 /// ```
 ///
-pub fn notation_to_string(
-  notation: String,
-  tables tables: Tables,
-) -> Result(String, Nil) {
-  notation_to_codepoints(notation, tables)
-  |> result.map(string.from_utf_codepoints)
+pub fn notation_to_string(notation: String) -> Result(String, Nil) {
+  notation_to_codepoints(notation) |> result.map(string.from_utf_codepoints)
 }
 
 fn display_math(string: String) -> String {
   "$ " <> string <> " $"
+}
+
+/// Converts a `UtfCodepoint` to a `List` of Typst notations `String`.
+///
+/// ## Examples
+///
+/// ```gleam
+/// assert string.utf_codepoint(0x1F31F)
+///   |> result.map(typst.notations_from_codepoint)
+///   == Ok(["#emoji.star.glow"])
+///
+/// assert string.utf_codepoint(0x22C6)
+///   |> result.map(typst.notations_from_codepoint)
+///   == Ok(["#sym.star.op"])
+///
+/// assert string.utf_codepoint(0x2013)
+///   |> result.map(typst.notations_from_codepoint)
+///   == Ok(["#sym.dash.en", "--"])
+///
+/// assert string.utf_codepoint(0x2192)
+///   |> result.map(typst.notations_from_codepoint)
+///   == Ok(["#sym.arrow.r", "$ -> $"])
+///
+/// assert string.utf_codepoint(0x0393)
+///   |> result.map(typst.notations_from_codepoint)
+///   == Ok(["#sym.Gamma", "$ Gamma $"])
+///
+/// assert string.utf_codepoint(0x1D6AA)
+///   |> result.map(typst.notations_from_codepoint)
+///   == Ok(["$ bold(Gamma) $"])
+/// ```
+///
+pub fn notations_from_codepoint(codepoint: UtfCodepoint) -> List(String) {
+  let sym_notations =
+    symbols_from_codepoint(codepoint)
+    |> result.unwrap(or: [])
+    |> list.map(fn(notation) { "#sym." <> notation })
+  let emoji_notations =
+    emojis_from_codepoint(codepoint)
+    |> result.unwrap(or: [])
+    |> list.map(fn(notation) { "#emoji." <> notation })
+  let markup_shorthand =
+    markup_shorthand_from_codepoint(codepoint)
+    |> result.map(list.wrap)
+    |> result.unwrap([])
+  let math_shorthand =
+    math_shorthand_from_codepoint(codepoint)
+    |> result.map(list.wrap)
+    |> result.unwrap([])
+    |> list.map(display_math)
+  let math_alphanum_notations =
+    math_alphanum_from_codepoint(codepoint)
+    |> result.unwrap([])
+    |> list.map(display_math)
+  sym_notations
+  |> list.append(emoji_notations)
+  |> list.append(markup_shorthand)
+  |> list.append(math_shorthand)
+  |> list.append(math_alphanum_notations)
 }

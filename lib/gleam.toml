@@ -32,4 +32,6 @@ allow_read = [
 allow_write = [
     "./birdie_snapshots",
     "./src/chartable/unicode/name_map.mjs",
+    "./src/chartable/typst/symbol_map.mjs",
+    "./src/chartable/typst/emoji_map.mjs",
 ]

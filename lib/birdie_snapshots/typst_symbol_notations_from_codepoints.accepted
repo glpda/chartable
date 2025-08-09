@@ -2,7 +2,7 @@
 version: 1.3.1
 title: Typst symbol notations from codepoints
 file: ./test/typst_test.gleam
-test_name: symtable_test
+test_name: symbol_codegen_test
 ---
 0020 ( ): space
 0021 (!): excl
@@ -565,9 +565,15 @@ test_name: symtable_test
 2309 (⌉): ceil.r
 230A (⌊): floor.l
 230B (⌋): floor.r
+231C (⌜): corner.l.t
+231D (⌝): corner.r.t
+231E (⌞): corner.l.b
+231F (⌟): corner.r.b
 2322 (⌢): frown
 2323 (⌣): smile
 237C (⍼): angzarr
+23B0 (⎰): mustache.l
+23B1 (⎱): mustache.r
 23B4 (⎴): bracket.t
 23B5 (⎵): bracket.b
 23DC (⏜): paren.t
@@ -689,6 +695,8 @@ test_name: symtable_test
 27C0 (⟀): angle.spatial
 27C1 (⟁): triangle.stroked.nested
 27C2 (⟂): perp
+27C5 (⟅): bag.l
+27C6 (⟆): bag.r
 27C7 (⟇): or.dot
 27CA (⟊): divides.struck
 27D0 (⟐): diamond.stroked.dot
@@ -709,6 +717,8 @@ test_name: symtable_test
 27EB (⟫): angle.r.double
 27EC (⟬): shell.l.double
 27ED (⟭): shell.r.double
+27EE (⟮): paren.l.flat
+27EF (⟯): paren.r.flat
 27F0 (⟰): arrow.t.quad
 27F1 (⟱): arrow.b.quad
 27F4 (⟴): plus.circle.arrow, plus.o.arrow
@@ -794,12 +804,16 @@ test_name: symtable_test
 2984 (⦄): brace.r.double
 2985 (⦅): paren.l.double
 2986 (⦆): paren.r.double
+298D (⦍): bracket.l.tick.t
+298E (⦎): bracket.r.tick.b
+298F (⦏): bracket.l.tick.b
+2990 (⦐): bracket.r.tick.t
 2991 (⦑): angle.l.dot
 2992 (⦒): angle.r.dot
 2999 (⦙): fence.dotted
 299B (⦛): angle.arc.rev
-299C (⦜): angle.right.sq
-299D (⦝): angle.right.dot
+299C (⦜): angle.right.sq, angle.right.square
+299D (⦝): angle.right.arc.dot
 299E (⦞): angle.s
 299F (⦟): angle.acute
 29A0 (⦠): angle.spheric.rev
@@ -815,6 +829,7 @@ test_name: symtable_test
 29B7 (⦷): parallel.circle, parallel.o
 29B8 (⦸): backslash.circle, backslash.o
 29B9 (⦹): perp.circle, perp.o
+29BC (⦼): div.slanted.o
 29BE (⦾): bullet.stroked.o
 29BF (⦿): bullet.o
 29C0 (⧀): lt.circle, lt.o
@@ -868,7 +883,12 @@ test_name: symtable_test
 2A19 (⨙): integral.inter, integral.sect
 2A1A (⨚): integral.union
 2A1D (⨝): join
+2A2D (⨭): plus.o.l
+2A2E (⨮): plus.o.r
 2A33 (⨳): smash
+2A34 (⨴): times.o.l
+2A35 (⨵): times.o.r
+2A36 (⨶): times.o.hat
 2A38 (⨸): div.circle, div.o
 2A39 (⨹): plus.triangle
 2A3A (⨺): minus.triangle

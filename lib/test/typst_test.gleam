@@ -1,47 +1,88 @@
 import birdie
 import chartable/internal
+import chartable/internal/typst_codegen
 import chartable/typst
 import gleam/dict
 import gleam/list
 import gleam/result
 import gleam/string
+import simplifile
 
-pub fn symtable_test() {
-  let assert Ok(symtable) = typst.make_symtable()
+fn assert_codegen_match_table(
+  table: internal.NotationTable,
+  prefix: String,
+) -> Nil {
+  dict.each(table.codepoint_to_notations, fn(codepoint, notations) {
+    assert typst.notations_from_codepoint(codepoint)
+      |> list.filter_map(fn(notation) {
+        string.split_once(notation, on: prefix)
+        |> result.map(fn(pair) { pair.1 })
+      })
+      == list.sort(notations, string.compare)
+  })
 
-  assert string.utf_codepoint(0x22C6)
-    |> result.try(dict.get(symtable.from_codepoint, _))
-    == Ok(["star.op"])
+  dict.each(table.notation_to_codepoints, fn(notation, codepoints) {
+    assert typst.notation_to_codepoints(prefix <> notation) == Ok(codepoints)
+  })
+}
 
-  assert dict.get(symtable.to_codepoints, "star.op")
-    == Ok(string.to_utf_codepoints("\u{22C6}"))
+pub fn symbol_codegen_test() {
+  let assert Ok(codex) = simplifile.read("data/typst/sym.txt")
+  let assert Ok(table) = typst_codegen.parse_codex(codex)
 
-  internal.assert_table_consistency(
-    symtable.from_codepoint,
-    symtable.to_codepoints,
-  )
+  internal.assert_notation_table_consistency(table)
 
-  internal.from_codepoint_table_to_string(symtable.from_codepoint)
+  assert_codegen_match_table(table, "#sym.")
+
+  internal.notation_table_to_string(table)
   |> birdie.snap(title: "Typst symbol notations from codepoints")
 }
 
-pub fn emojitable_test() {
-  let assert Ok(emojitable) = typst.make_emojitable()
+pub fn emoji_codegen_test() {
+  let assert Ok(codex) = simplifile.read("data/typst/emoji.txt")
+  let assert Ok(table) = typst_codegen.parse_codex(codex)
+
+  internal.assert_notation_table_consistency(table)
+
+  assert_codegen_match_table(table, "#emoji.")
+
+  internal.notation_table_to_string(table)
+  |> birdie.snap(title: "Typst emoji notations from codepoints")
+}
+
+pub fn symbols_from_codepoint_test() {
+  assert string.utf_codepoint(0x22C6)
+    |> result.try(typst.symbols_from_codepoint)
+    == Ok(["star.op"])
+
+  assert string.utf_codepoint(0x0024)
+    |> result.try(typst.symbols_from_codepoint)
+    == Ok(["dollar", "pataca", "peso"])
+}
+
+pub fn symbol_to_codepoints_test() {
+  assert typst.symbol_to_codepoints("star.op")
+    == Ok(string.to_utf_codepoints("\u{22C6}"))
+
+  assert typst.symbol_to_codepoints("dollar")
+    == Ok(string.to_utf_codepoints("$"))
+}
+
+pub fn emoji_from_codepoint_test() {
+  assert string.utf_codepoint(0x2B50)
+    |> result.try(typst.emojis_from_codepoint)
+    == Ok(["star"])
 
   assert string.utf_codepoint(0x1F31F)
-    |> result.try(dict.get(emojitable.from_codepoint, _))
+    |> result.try(typst.emojis_from_codepoint)
     == Ok(["star.glow"])
+}
 
-  assert dict.get(emojitable.to_codepoints, "star.glow")
+pub fn emoji_to_codepoints_test() {
+  assert typst.emoji_to_codepoints("star") == Ok(string.to_utf_codepoints("⭐"))
+
+  assert typst.emoji_to_codepoints("star.glow")
     == Ok(string.to_utf_codepoints("\u{1F31F}"))
-
-  internal.assert_table_consistency(
-    emojitable.from_codepoint,
-    emojitable.to_codepoints,
-  )
-
-  internal.from_codepoint_table_to_string(emojitable.from_codepoint)
-  |> birdie.snap(title: "Typst emoji notations from codepoints")
 }
 
 pub fn markup_shorthand_to_codepoint_test() {
@@ -68,7 +109,7 @@ pub fn math_shorthand_from_codepoint_test() {
   assert typst.math_shorthand_from_codepoint(arrow) == Ok("->")
 }
 
-fn make_math_alphanum_from_codepoint_dict(symtable) {
+fn make_math_alphanum_from_codepoint_dict() {
   let ascii_digits = list.range(from: 0x0030, to: 0x0039)
   let uppercase_latin_letters = list.range(from: 0x0041, to: 0x005A)
   let lowercase_latin_letters = list.range(from: 0x0061, to: 0x007A)
@@ -100,101 +141,90 @@ fn make_math_alphanum_from_codepoint_dict(symtable) {
   list.filter_map(codepoints, fn(number) {
     use codepoint <- result.try(string.utf_codepoint(number))
     let notations =
-      result.unwrap(
-        typst.math_alphanum_from_codepoint(codepoint, symtable),
-        or: [],
-      )
+      result.unwrap(typst.math_alphanum_from_codepoint(codepoint), or: [])
     Ok(#(codepoint, notations))
   })
   |> dict.from_list()
 }
 
 pub fn math_alphanum_from_codepoint_test() {
-  let assert Ok(symtable) = typst.make_symtable()
-
   assert string.utf_codepoint(0x0043)
-    |> result.try(typst.math_alphanum_from_codepoint(_, symtable))
+    |> result.try(typst.math_alphanum_from_codepoint)
     == Ok(["upright(C)"])
 
   assert string.utf_codepoint(0x1D436)
-    |> result.try(typst.math_alphanum_from_codepoint(_, symtable))
+    |> result.try(typst.math_alphanum_from_codepoint)
     == Ok(["C"])
 
   assert string.utf_codepoint(0x1D53A)
-    |> result.try(typst.math_alphanum_from_codepoint(_, symtable))
+    |> result.try(typst.math_alphanum_from_codepoint)
     == Error(Nil)
 
   assert string.utf_codepoint(0x2102)
-    |> result.try(typst.math_alphanum_from_codepoint(_, symtable))
+    |> result.try(typst.math_alphanum_from_codepoint)
     == Ok(["bb(C)"])
 
   assert string.utf_codepoint(0x1D6AA)
-    |> result.try(typst.math_alphanum_from_codepoint(_, symtable))
+    |> result.try(typst.math_alphanum_from_codepoint)
     == Ok(["bold(Gamma)"])
 
   assert string.utf_codepoint(0x1D6C4)
-    |> result.try(typst.math_alphanum_from_codepoint(_, symtable))
+    |> result.try(typst.math_alphanum_from_codepoint)
     == Ok(["bold(upright(gamma))"])
 
   assert string.utf_codepoint(0x1D4F1)
-    |> result.try(typst.math_alphanum_from_codepoint(_, symtable))
+    |> result.try(typst.math_alphanum_from_codepoint)
     == Ok(["bold(cal(h))"])
 
-  make_math_alphanum_from_codepoint_dict(symtable)
+  make_math_alphanum_from_codepoint_dict()
   |> internal.from_codepoint_table_to_string()
   |> birdie.snap(title: "Typst math alphanumeric notations from codepoints")
 }
 
 pub fn notations_from_codepoint_test() {
-  let assert Ok(tables) = typst.make_tables()
-
   assert string.utf_codepoint(0x1F31F)
-    |> result.map(typst.notations_from_codepoint(_, tables))
+    |> result.map(typst.notations_from_codepoint)
     == Ok(["#emoji.star.glow"])
 
   assert string.utf_codepoint(0x22C6)
-    |> result.map(typst.notations_from_codepoint(_, tables))
+    |> result.map(typst.notations_from_codepoint)
     == Ok(["#sym.star.op"])
 
   assert string.utf_codepoint(0x2013)
-    |> result.map(typst.notations_from_codepoint(_, tables))
+    |> result.map(typst.notations_from_codepoint)
     == Ok(["#sym.dash.en", "--"])
 
   assert string.utf_codepoint(0x2192)
-    |> result.map(typst.notations_from_codepoint(_, tables))
+    |> result.map(typst.notations_from_codepoint)
     == Ok(["#sym.arrow.r", "$ -> $"])
 
   assert string.utf_codepoint(0x0393)
-    |> result.map(typst.notations_from_codepoint(_, tables))
+    |> result.map(typst.notations_from_codepoint)
     == Ok(["#sym.Gamma", "$ Gamma $"])
 
   assert string.utf_codepoint(0x1D6AA)
-    |> result.map(typst.notations_from_codepoint(_, tables))
+    |> result.map(typst.notations_from_codepoint)
     == Ok(["$ bold(Gamma) $"])
 }
 
 pub fn notation_to_codepoints_test() {
-  let assert Ok(tables) = typst.make_tables()
-
-  assert typst.notation_to_codepoints("#sym.star.op", tables)
+  assert typst.notation_to_codepoints("#sym.star.op")
     == Ok(string.to_utf_codepoints("\u{22C6}"))
 
-  assert typst.notation_to_codepoints("#emoji.star", tables)
+  assert typst.notation_to_codepoints("#emoji.star")
     == Ok(string.to_utf_codepoints("\u{2B50}"))
 
-  assert typst.notation_to_codepoints("emoji.star", tables) == Error(Nil)
+  assert typst.notation_to_codepoints("emoji.star") == Error(Nil)
 
-  assert typst.notation_to_codepoints("#emoji.staaar", tables) == Error(Nil)
+  assert typst.notation_to_codepoints("#emoji.staaar") == Error(Nil)
 }
 
 pub fn notation_to_string_test() {
-  let assert Ok(tables) = typst.make_tables()
+  assert typst.notation_to_string("#sym.star.op") == Ok("\u{22C6}")
 
-  assert typst.notation_to_string("#sym.star.op", tables) == Ok("\u{22C6}")
+  assert typst.notation_to_string("#emoji.star") == Ok("\u{2B50}")
 
-  assert typst.notation_to_string("#emoji.star", tables) == Ok("\u{2B50}")
+  assert typst.notation_to_string("emoji.star") == Error(Nil)
 
-  assert typst.notation_to_string("emoji.star", tables) == Error(Nil)
-
-  assert typst.notation_to_string("#emoji.staaar", tables) == Error(Nil)
+  assert typst.notation_to_string("#emoji.staaar") == Error(Nil)
 }

@@ -1,46 +1,51 @@
-pub const txt = "
 // Control.
-wj \\u{2060}
-zwj \\u{200D}
-zwnj \\u{200C}
-zws \\u{200B}
-lrm \\u{200E}
-rlm \\u{200F}
+wj \u{2060}
+zwj \u{200D}
+zwnj \u{200C}
+zws \u{200B}
+lrm \u{200E}
+rlm \u{200F}
 
 // Spaces.
-space \\u{20}
-  .nobreak \\u{A0}
-  .nobreak.narrow \\u{202F}
-  .en \\u{2002}
-  .quad \\u{2003}
-  .third \\u{2004}
-  .quarter \\u{2005}
-  .sixth \\u{2006}
-  .med \\u{205F}
-  .fig \\u{2007}
-  .punct \\u{2008}
-  .thin \\u{2009}
-  .hair \\u{200A}
+space \u{20}
+  .nobreak \u{A0}
+  .nobreak.narrow \u{202F}
+  .en \u{2002}
+  .quad \u{2003}
+  .third \u{2004}
+  .quarter \u{2005}
+  .sixth \u{2006}
+  .med \u{205F}
+  .fig \u{2007}
+  .punct \u{2008}
+  .thin \u{2009}
+  .hair \u{200A}
 
 // Delimiters.
 paren
   .l (
+  .l.flat ⟮
   .l.double ⦅
   .r )
+  .r.flat ⟯
   .r.double ⦆
   .t ⏜
   .b ⏝
 brace
-  .l \\u{7B}
+  .l \u{7B}
   .l.double ⦃
-  .r \\u{7D}
+  .r \u{7D}
   .r.double ⦄
   .t ⏞
   .b ⏟
 bracket
   .l [
+  .l.tick.t ⦍
+  .l.tick.b ⦏
   .l.double ⟦
   .r ]
+  .r.tick.t ⦐
+  .r.tick.b ⦎
   .r.double ⟧
   .t ⎴
   .b ⎵
@@ -51,6 +56,12 @@ shell
   .r.double ⟭
   .t ⏠
   .b ⏡
+bag
+  .l ⟅
+  .r ⟆
+mustache
+  .l ⎰
+  .r ⎱
 bar
   .v |
   .v.double ‖
@@ -83,7 +94,9 @@ angle ∠
   .right ∟
   .right.rev ⯾
   .right.arc ⊾
-  .right.dot ⦝
+  .right.arc.dot ⦝
+  .right.square ⦜
+  @deprecated: `angle.right.sq` is deprecated, use `angle.right.square` instead
   .right.sq ⦜
   .s ⦞
   .spatial ⟀
@@ -98,6 +111,11 @@ ceil
 floor
   .l ⌊
   .r ⌋
+corner
+  .l.t ⌜
+  .l.b ⌞
+  .r.t ⌝
+  .r.b ⌟
 
 // Punctuation.
 amp &
@@ -109,13 +127,13 @@ ast
   .low ⁎
   .double ⁑
   .triple ⁂
-  @deprecated: `ast.small` is deprecated (CJK compatibility character), use ﹡ or `\\u{fe61}` instead
+  @deprecated: `ast.small` is deprecated (CJK compatibility character), use ﹡ or `\u{fe61}` instead
   .small ﹡
   @deprecated: `ast.circle` is deprecated, use `convolve.o` or `ast.op.o` instead
   .circle ⊛
   .square ⧆
 at @
-backslash \\
+backslash \
   .o ⦸
   @deprecated: `backslash.circle` is deprecated, use `backslash.o` instead
   .circle ⦸
@@ -151,7 +169,7 @@ dash
   .wave.double 〰
 dot
   .op ⋅
-  .basic \\u{2E}
+  .basic \u{2E}
   .c ·
   .o ⊙
   .o.big ⨀
@@ -161,8 +179,8 @@ dot
   .circle.big ⨀
   .square ⊡
   .double ¨
-  .triple \\u{20DB}
-  .quad \\u{20DC}
+  .triple \u{20DB}
+  .quad \u{20DC}
 excl !
   .double ‼
   .inv ¡
@@ -175,10 +193,10 @@ interrobang ‽
   .inv ⸘
 hash #
 hyph ‐
-  .minus \\u{2D}
-  .nobreak \\u{2011}
+  .minus \u{2D}
+  .nobreak \u{2011}
   .point ‧
-  .soft \\u{AD}
+  .soft \u{AD}
 numero №
 percent %
 permille ‰
@@ -226,7 +244,7 @@ diaer ¨
 grave `
 macron ¯
 quote
-  .double \"
+  .double "
   .single '
   .l.double “
   .l.single ‘
@@ -253,6 +271,8 @@ prime ′
 // Arithmetic.
 plus +
   .o ⊕
+  .o.l ⨭
+  .o.r ⨮
   .o.arrow ⟴
   .o.big ⨁
   @deprecated: `plus.circle` is deprecated, use `plus.o` instead
@@ -264,7 +284,7 @@ plus +
   .dot ∔
   .double ⧺
   .minus ±
-  @deprecated: `plus.small` is deprecated (CJK compatibility character), use ﹢ or `\\u{fe62}` instead
+  @deprecated: `plus.small` is deprecated (CJK compatibility character), use ﹢ or `\u{fe62}` instead
   .small ﹢
   .square ⊞
   .triangle ⨹
@@ -280,11 +300,15 @@ minus −
   .triangle ⨺
 div ÷
   .o ⨸
+  .slanted.o ⦼
   @deprecated: `div.circle` is deprecated, use `div.o` instead
   .circle ⨸
 times ×
   .big ⨉
   .o ⊗
+  .o.l ⨴
+  .o.r ⨵
+  .o.hat ⨶
   .o.big ⨂
   @deprecated: `times.circle` is deprecated, use `times.o` instead
   .circle ⊗
@@ -319,7 +343,7 @@ eq =
   .not ≠
   .prec ⋞
   .quest ≟
-  @deprecated: `eq.small` is deprecated (CJK compatibility character), use ﹦ or `\\u{fe66}` instead
+  @deprecated: `eq.small` is deprecated (CJK compatibility character), use ﹦ or `\u{fe66}` instead
   .small ﹦
   .succ ⋟
   .triple ≡
@@ -344,7 +368,7 @@ gt >
   .nequiv ≩
   .not ≯
   .ntilde ⋧
-  @deprecated: `gt.small` is deprecated (CJK compatibility character), use ﹥ or `\\u{fe65}` instead
+  @deprecated: `gt.small` is deprecated (CJK compatibility character), use ﹥ or `\u{fe65}` instead
   .small ﹥
   .tilde ≳
   .tilde.not ≵
@@ -373,7 +397,7 @@ lt <
   .nequiv ≨
   .not ≮
   .ntilde ⋦
-  @deprecated: `lt.small` is deprecated (CJK compatibility character), use ﹤ or `\\u{fe64}` instead
+  @deprecated: `lt.small` is deprecated (CJK compatibility character), use ﹤ or `\u{fe64}` instead
   .small ﹤
   .tilde ≲
   .tilde.not ≴
@@ -1109,7 +1133,7 @@ eta η
 gamma γ
 iota ι
   .inv ℩
-@deprecated: `kai` is deprecated, use ϗ or `\\u{3d7}` instead
+@deprecated: `kai` is deprecated, use ϗ or `\u{3d7}` instead
 kai ϗ
 kappa κ
   .alt ϰ
@@ -1144,7 +1168,7 @@ Epsilon Ε
 Eta Η
 Gamma Γ
 Iota Ι
-@deprecated: `Kai` is deprecated, use Ϗ or `\\u{3c5}` instead
+@deprecated: `Kai` is deprecated, use Ϗ or `\u{3c5}` instead
 Kai Ϗ
 Kappa Κ
 Lambda Λ
@@ -1260,4 +1284,3 @@ gender {
   neuter ⚲
   trans ⚧
 }
-"
