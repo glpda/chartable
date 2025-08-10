@@ -16,7 +16,7 @@ pub type CodepointRange {
 
 pub fn make_name_map(
   names names: String,
-  codegen_src codegen_src: String,
+  template template: String,
 ) -> String {
   let names = parse_unidata(names)
 
@@ -59,7 +59,7 @@ pub fn make_name_map(
     })
     |> string.concat()
 
-  string.replace(in: codegen_src, each: "/*{{if_ranges}}*/", with: if_ranges)
+  string.replace(in: template, each: "/*{{if_ranges}}*/", with: if_ranges)
   |> string.replace(each: "/*{{map_def}}*/", with: map_def)
 }
 

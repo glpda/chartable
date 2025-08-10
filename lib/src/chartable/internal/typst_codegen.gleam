@@ -27,7 +27,7 @@ pub type ParserState {
 
 pub fn make_map(
   table table: NotationTable,
-  codegen_source codegen_source: String,
+  template template: String,
   data_source data_source: String,
 ) -> String {
   let codepoint_to_notations =
@@ -62,7 +62,7 @@ pub fn make_map(
     })
     |> string.join(",\n")
 
-  string.replace(in: codegen_source, each: "{{data_source}}", with: data_source)
+  string.replace(in: template, each: "{{data_source}}", with: data_source)
   |> string.replace(
     each: "/*{{codepoint_to_notations}}*/",
     with: codepoint_to_notations,

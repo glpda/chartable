@@ -4,14 +4,15 @@ import simplifile
 
 pub fn main() {
   let assert Ok(names) = simplifile.read("data/unicode/names.txt")
-  let assert Ok(codegen_src) = simplifile.read("data/unicode/name_map.mjs")
+  let assert Ok(template) = simplifile.read("codegen_templates/name_map.mjs")
   let assert Ok(Nil) =
     simplifile.write(
       to: "src/chartable/unicode/name_map.mjs",
-      contents: unicode_codegen.make_name_map(names:, codegen_src:),
+      contents: unicode_codegen.make_name_map(names:, template:),
     )
 
-  let assert Ok(codegen_source) = simplifile.read("data/typst/codex_map.mjs")
+  let assert Ok(template) =
+    simplifile.read("codegen_templates/notation_map.mjs")
   let data_source =
     "https://github.com/typst/codex/blob/main/src/modules/sym.txt"
   let assert Ok(codex) = simplifile.read("data/typst/sym.txt")
@@ -19,7 +20,7 @@ pub fn main() {
   let assert Ok(Nil) =
     simplifile.write(
       to: "src/chartable/typst/symbol_map.mjs",
-      contents: typst_codegen.make_map(table:, codegen_source:, data_source:),
+      contents: typst_codegen.make_map(table:, template:, data_source:),
     )
   let data_source =
     "https://github.com/typst/codex/blob/main/src/modules/emoji.txt"
@@ -28,6 +29,6 @@ pub fn main() {
   let assert Ok(Nil) =
     simplifile.write(
       to: "src/chartable/typst/emoji_map.mjs",
-      contents: typst_codegen.make_map(table:, codegen_source:, data_source:),
+      contents: typst_codegen.make_map(table:, template:, data_source:),
     )
 }

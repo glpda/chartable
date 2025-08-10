@@ -28,6 +28,7 @@ allow_read = [
     "./test",
     "./birdie_snapshots",
     "./data",
+    "./codegen_templates",
 ]
 allow_write = [
     "./birdie_snapshots",
