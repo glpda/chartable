@@ -1,8 +1,44 @@
+import chartable/internal
+import chartable/internal/unicode_codegen
 import chartable/unicode
 import chartable/unicode/category
 import gleam/list
 import gleam/result
 import gleam/string
+import simplifile
+
+fn assert_codegen_match_unidata(
+  records: List(unicode_codegen.Record(fields)),
+  codegen_match_record: fn(UtfCodepoint, fields) -> Bool,
+) -> Nil {
+  use record <- list.each(records)
+  case record.codepoint_range {
+    unicode_codegen.CodepointRange(from: start, to: end) -> {
+      use cp <- list.each(list.range(
+        string.utf_codepoint_to_int(start),
+        string.utf_codepoint_to_int(end),
+      ))
+      let assert Ok(cp) = string.utf_codepoint(cp)
+      assert codegen_match_record(cp, record.fields)
+    }
+    unicode_codegen.SingleCodepoint(cp) -> {
+      assert codegen_match_record(cp, record.fields)
+    }
+  }
+}
+
+pub fn name_codegen_test() {
+  let assert Ok(names) = simplifile.read("data/unicode/names.txt")
+  let names = unicode_codegen.parse_unidata(names)
+
+  assert_codegen_match_unidata(names, fn(cp, fields) {
+    let assert [name, ..] = fields
+    assert name != ""
+    let hex = internal.codepoint_to_hex(cp)
+    let name = string.replace(in: name, each: "*", with: hex)
+    unicode.name_from_codepoint(cp) == Ok(name)
+  })
+}
 
 pub fn name_from_codepoint_test() {
   assert string.utf_codepoint(0x0041)

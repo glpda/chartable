@@ -15,11 +15,9 @@ pub type CodepointRange {
 }
 
 pub fn make_name_map(
-  names names: String,
+  names names: List(Record(List(String))),
   template template: String,
 ) -> String {
-  let names = parse_unidata(names)
-
   let if_ranges =
     list.filter_map(names, fn(record) {
       case record {

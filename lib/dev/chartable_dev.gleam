@@ -4,6 +4,7 @@ import simplifile
 
 pub fn main() {
   let assert Ok(names) = simplifile.read("data/unicode/names.txt")
+  let names = unicode_codegen.parse_unidata(names)
   let assert Ok(template) = simplifile.read("codegen_templates/name_map.mjs")
   let assert Ok(Nil) =
     simplifile.write(
