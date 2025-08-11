@@ -16,20 +16,20 @@ pub fn main() {
     simplifile.read("codegen_templates/notation_map.mjs")
   let data_source =
     "https://github.com/typst/codex/blob/main/src/modules/sym.txt"
-  let assert Ok(codex) = simplifile.read("data/typst/sym.txt")
-  let assert Ok(table) = typst_codegen.parse_codex(codex)
+  let assert Ok(sym) = simplifile.read("data/typst/sym.txt")
+  let assert Ok(codex) = typst_codegen.parse_codex(sym)
   let assert Ok(Nil) =
     simplifile.write(
       to: "src/chartable/typst/symbol_map.mjs",
-      contents: typst_codegen.make_map(table:, template:, data_source:),
+      contents: typst_codegen.make_map(codex:, template:, data_source:),
     )
   let data_source =
     "https://github.com/typst/codex/blob/main/src/modules/emoji.txt"
-  let assert Ok(codex) = simplifile.read("data/typst/emoji.txt")
-  let assert Ok(table) = typst_codegen.parse_codex(codex)
+  let assert Ok(emoji) = simplifile.read("data/typst/emoji.txt")
+  let assert Ok(codex) = typst_codegen.parse_codex(emoji)
   let assert Ok(Nil) =
     simplifile.write(
       to: "src/chartable/typst/emoji_map.mjs",
-      contents: typst_codegen.make_map(table:, template:, data_source:),
+      contents: typst_codegen.make_map(codex:, template:, data_source:),
     )
 }

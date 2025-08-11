@@ -1,5 +1,5 @@
 import birdie
-import chartable/internal
+import chartable/internal/notation_table.{type NotationTable}
 import chartable/internal/typst_codegen
 import chartable/typst
 import gleam/dict
@@ -8,10 +8,7 @@ import gleam/result
 import gleam/string
 import simplifile
 
-fn assert_codegen_match_table(
-  table: internal.NotationTable,
-  prefix: String,
-) -> Nil {
+fn assert_codegen_match_table(table: NotationTable, prefix: String) -> Nil {
   dict.each(table.codepoint_to_notations, fn(codepoint, notations) {
     assert typst.notations_from_codepoint(codepoint)
       |> list.filter_map(fn(notation) {
@@ -27,26 +24,26 @@ fn assert_codegen_match_table(
 }
 
 pub fn symbol_codegen_test() {
-  let assert Ok(codex) = simplifile.read("data/typst/sym.txt")
-  let assert Ok(table) = typst_codegen.parse_codex(codex)
+  let assert Ok(sym) = simplifile.read("data/typst/sym.txt")
+  let assert Ok(table) = typst_codegen.parse_codex(sym)
 
-  internal.assert_notation_table_consistency(table)
+  notation_table.assert_consistency(table)
 
   assert_codegen_match_table(table, "#sym.")
 
-  internal.notation_table_to_string(table)
+  notation_table.to_string(table)
   |> birdie.snap(title: "Typst symbol notations from codepoints")
 }
 
 pub fn emoji_codegen_test() {
-  let assert Ok(codex) = simplifile.read("data/typst/emoji.txt")
-  let assert Ok(table) = typst_codegen.parse_codex(codex)
+  let assert Ok(emoji) = simplifile.read("data/typst/emoji.txt")
+  let assert Ok(table) = typst_codegen.parse_codex(emoji)
 
-  internal.assert_notation_table_consistency(table)
+  notation_table.assert_consistency(table)
 
   assert_codegen_match_table(table, "#emoji.")
 
-  internal.notation_table_to_string(table)
+  notation_table.to_string(table)
   |> birdie.snap(title: "Typst emoji notations from codepoints")
 }
 
@@ -109,7 +106,7 @@ pub fn math_shorthand_from_codepoint_test() {
   assert typst.math_shorthand_from_codepoint(arrow) == Ok("->")
 }
 
-fn make_math_alphanum_from_codepoint_dict() {
+fn make_math_alphanum_notation_table() {
   let ascii_digits = list.range(from: 0x0030, to: 0x0039)
   let uppercase_latin_letters = list.range(from: 0x0041, to: 0x005A)
   let lowercase_latin_letters = list.range(from: 0x0061, to: 0x007A)
@@ -145,6 +142,7 @@ fn make_math_alphanum_from_codepoint_dict() {
     Ok(#(codepoint, notations))
   })
   |> dict.from_list()
+  |> notation_table.complement_codepoint_to_notations()
 }
 
 pub fn math_alphanum_from_codepoint_test() {
@@ -176,8 +174,8 @@ pub fn math_alphanum_from_codepoint_test() {
     |> result.try(typst.math_alphanum_from_codepoint)
     == Ok(["bold(cal(h))"])
 
-  make_math_alphanum_from_codepoint_dict()
-  |> internal.from_codepoint_table_to_string()
+  make_math_alphanum_notation_table()
+  |> notation_table.to_string()
   |> birdie.snap(title: "Typst math alphanumeric notations from codepoints")
 }
 

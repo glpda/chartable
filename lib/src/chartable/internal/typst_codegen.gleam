@@ -1,6 +1,6 @@
-import chartable/internal.{type NotationTable, NotationTable}
+import chartable/internal
+import chartable/internal/notation_table.{type NotationTable, NotationTable}
 import gleam/dict
-import gleam/int
 import gleam/list
 import gleam/option.{type Option, None, Some}
 import gleam/result
@@ -26,51 +26,11 @@ pub type ParserState {
 }
 
 pub fn make_map(
-  table table: NotationTable,
+  codex table: NotationTable,
   template template: String,
   data_source data_source: String,
 ) -> String {
-  let codepoint_to_notations =
-    dict.to_list(table.codepoint_to_notations)
-    |> list.sort(fn(lhs, rhs) {
-      int.compare(
-        string.utf_codepoint_to_int(lhs.0),
-        string.utf_codepoint_to_int(rhs.0),
-      )
-    })
-    |> list.map(fn(key_value) {
-      let #(cp, notations) = key_value
-      let cp = internal.codepoint_to_hex(cp)
-      let notations =
-        list.sort(notations, string.compare)
-        |> list.map(fn(notation) { "\"" <> notation <> "\"" })
-        |> string.join(with: ", ")
-
-      "[0x" <> cp <> ", [" <> notations <> "]]"
-    })
-    |> string.join(",\n")
-
-  let notation_to_codepoints =
-    dict.to_list(table.notation_to_codepoints)
-    |> list.sort(fn(lhs, rhs) { string.compare(lhs.0, rhs.0) })
-    |> list.map(fn(key_value) {
-      let #(notation, codepoints) = key_value
-      let codepoints =
-        list.map(codepoints, fn(cp) { "0x" <> internal.codepoint_to_hex(cp) })
-        |> string.join(", ")
-      "[\"" <> notation <> "\", [" <> codepoints <> "]]"
-    })
-    |> string.join(",\n")
-
-  string.replace(in: template, each: "{{data_source}}", with: data_source)
-  |> string.replace(
-    each: "/*{{codepoint_to_notations}}*/",
-    with: codepoint_to_notations,
-  )
-  |> string.replace(
-    each: "/*{{notation_to_codepoints}}*/",
-    with: notation_to_codepoints,
-  )
+  notation_table.make_javascript_map(table:, template:, data_source:)
 }
 
 fn next_line(state state: ParserState, rest txt: String) -> ParserState {
