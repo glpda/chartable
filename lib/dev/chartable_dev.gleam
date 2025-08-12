@@ -1,3 +1,4 @@
+import chartable/internal/html_codegen
 import chartable/internal/typst_codegen
 import chartable/internal/unicode_codegen
 import simplifile
@@ -31,5 +32,13 @@ pub fn main() {
     simplifile.write(
       to: "src/chartable/typst/emoji_map.mjs",
       contents: typst_codegen.make_map(codex:, template:, data_source:),
+    )
+  let data_source = "https://html.spec.whatwg.org/entities.json"
+  let assert Ok(json) = simplifile.read("data/html/entities.json")
+  let assert Ok(entities) = html_codegen.parse_entities_json(json)
+  let assert Ok(Nil) =
+    simplifile.write(
+      to: "src/chartable/html/entity_map.mjs",
+      contents: html_codegen.make_map(entities:, template:, data_source:),
     )
 }

@@ -15,8 +15,9 @@ limitations under the License.
 Licenses for third party components used by this project can be found below.
 
 ================================================================================
-The json list of html entities in `lib/src/chartable/html/entities.gleam` is
-extracted from the WHATWG HTML Standard, the original can be found here:
+The json list of html entities in `lib/data/html/entities.json` and the
+generated file `lib/src/chartable/html/entity_map.mjs` are extracted from the
+WHATWG HTML Standard, the original can be found here:
 https://html.spec.whatwg.org/entities.json
 
 Copyright © WHATWG (Apple, Google, Mozilla, Microsoft)

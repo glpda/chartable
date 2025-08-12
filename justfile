@@ -27,13 +27,6 @@ download url file:
 	wget -q --output-document tmp/{{file}} {{url}}/{{file}}
 
 [group('fetch'), private]
-make-const source target const="txt":
-	echo 'pub const {{const}} = "' > {{lib-path}}/{{target}}.gleam
-	sed 's/\\/\\\\/g; s/"/\\"/g'  < tmp/{{source}} \
-	>> {{lib-path}}/{{target}}.gleam
-	echo '"' >> {{lib-path}}/{{target}}.gleam
-
-[group('fetch'), private]
 add-data source target:
 	mkdir -p `dirname {{data-path}}/{{target}}`
 	mv tmp/{{source}} {{data-path}}/{{target}}
@@ -65,7 +58,7 @@ clean-entities:
 fetch-html: \
 (download whatwg html-entities) \
 (clean-entities) \
-(make-const html-entities-clean "html/entities" "json")
+(add-data html-entities-clean "html/entities.json")
 
 [group('fetch')]
 fetch-typst: \

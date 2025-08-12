@@ -1,73 +1,75 @@
 import birdie
 import chartable/html
-import chartable/internal
+import chartable/internal/html_codegen
+import chartable/internal/notation_table.{type NotationTable}
 import gleam/dict
 import gleam/list
-import gleam/result
 import gleam/string
+import simplifile
 
-pub fn entities_test() {
-  let assert Ok(entity_table) = html.make_entity_table()
+fn assert_codegen_match_table(table: NotationTable) -> Nil {
+  dict.each(table.codepoint_to_notations, fn(codepoint, notations) {
+    assert html.entities_from_codepoint(codepoint)
+      |> list.filter(fn(notation) { !string.starts_with(notation, "&#") })
+      == list.sort(notations, string.compare)
+      |> list.map(fn(notation) { "&" <> notation <> ";" })
+  })
 
-  assert string.utf_codepoint(0x22C6)
-    |> result.try(dict.get(entity_table.from_codepoint, _))
-    |> result.map(list.sort(_, string.compare))
-    == Ok(["Star", "sstarf"])
+  dict.each(table.notation_to_codepoints, fn(notation, codepoints) {
+    assert html.entity_to_codepoints("&" <> notation <> ";") == Ok(codepoints)
+  })
+}
 
-  assert dict.get(entity_table.to_codepoints, "Star")
-    == Ok(string.to_utf_codepoints("\u{22C6}"))
+pub fn entity_codegen_test() {
+  let assert Ok(json) = simplifile.read("data/html/entities.json")
+  let assert Ok(table) = html_codegen.parse_entities_json(json)
 
-  internal.assert_table_consistency(
-    entity_table.from_codepoint,
-    entity_table.to_codepoints,
-  )
+  notation_table.assert_consistency(table)
 
-  internal.from_codepoint_table_to_string(entity_table.from_codepoint)
+  assert_codegen_match_table(table)
+
+  notation_table.to_string(table)
   |> birdie.snap(title: "HTML entities from codepoints")
 }
 
 pub fn entity_to_codepoints_test() {
-  let assert Ok(entity_table) = html.make_entity_table()
   // Ok(['⋆']):
   let star = Ok(string.to_utf_codepoints("\u{22C6}"))
 
-  assert html.entity_to_codepoints("&Star;", entity_table) == star
+  assert html.entity_to_codepoints("&Star;") == star
 
-  assert html.entity_to_codepoints("&#x22C6;", entity_table) == star
+  assert html.entity_to_codepoints("&#x22C6;") == star
 
-  assert html.entity_to_codepoints("&#8902;", entity_table) == star
+  assert html.entity_to_codepoints("&#8902;") == star
 
-  assert html.entity_to_codepoints("&Staaar;", entity_table) == Error(Nil)
+  assert html.entity_to_codepoints("&Staaar;") == Error(Nil)
 
-  assert html.entity_to_codepoints("Star", entity_table) == Error(Nil)
+  assert html.entity_to_codepoints("Star") == Error(Nil)
 }
 
 pub fn entity_to_string_test() {
-  let assert Ok(entity_table) = html.make_entity_table()
+  assert html.entity_to_string("&Star;") == Ok("⋆")
 
-  assert html.entity_to_string("&Star;", entity_table) == Ok("⋆")
+  assert html.entity_to_string("&#x22C6;") == Ok("\u{22C6}")
 
-  assert html.entity_to_string("&#x22C6;", entity_table) == Ok("\u{22C6}")
+  assert html.entity_to_string("&#8902;") == Ok("\u{22C6}")
 
-  assert html.entity_to_string("&#8902;", entity_table) == Ok("\u{22C6}")
+  assert html.entity_to_string("&Staaar;") == Error(Nil)
 
-  assert html.entity_to_string("&Staaar;", entity_table) == Error(Nil)
-
-  assert html.entity_to_string("Star", entity_table) == Error(Nil)
+  assert html.entity_to_string("Star") == Error(Nil)
 }
 
 pub fn entity_from_codepoint_test() {
-  let assert Ok(entity_table) = html.make_entity_table()
   // '⋆':
   let assert Ok(star_symbol) = string.utf_codepoint(0x22C6)
   // '⭐':
   let assert Ok(star_emoji) = string.utf_codepoint(0x2B50)
 
-  assert html.entities_from_codepoint(star_symbol, entity_table)
+  assert html.entities_from_codepoint(star_symbol)
     |> list.sort(string.compare)
     == ["&#8902;", "&#x22C6;", "&Star;", "&sstarf;"]
 
-  assert html.entities_from_codepoint(star_emoji, entity_table)
+  assert html.entities_from_codepoint(star_emoji)
     |> list.sort(string.compare)
     == ["&#11088;", "&#x2B50;"]
 }
