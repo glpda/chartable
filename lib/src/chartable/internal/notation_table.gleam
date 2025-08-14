@@ -1,122 +1,124 @@
 import chartable/internal
 import gleam/dict.{type Dict}
 import gleam/dynamic/decode
-import gleam/int
 import gleam/json
 import gleam/list
 import gleam/option.{None, Some}
 import gleam/result
 import gleam/string
 
-/// A pair of dictionaries mapping `String` notations to `UtfCodepoint`s,
-/// a `UtfCodepoint` can have multiple `String` notations and a `String`
-/// notations can map to a graphene cluster `List(UtfCodepoint)`.
+/// A pair of dictionaries mapping `String` notations (escape sequences) to
+/// [grapheme](https://en.wikipedia.org/wiki/Grapheme) cluster,
+/// a grapheme can have multiple `String` notations.
 pub type NotationTable {
-  // NOTE maybe `String` would be better than `List(UtfCodepoint)`
   NotationTable(
-    codepoint_to_notations: Dict(UtfCodepoint, List(String)),
-    notation_to_codepoints: Dict(String, List(UtfCodepoint)),
+    grapheme_to_notations: Dict(String, List(String)),
+    notation_to_grapheme: Dict(String, String),
   )
 }
 
-/// Asserts notation table consistency (`codepoint_to_notations` match
-/// `notation_to_codepoints`), ignores notations mapping to multiple codepoints
-/// wich are not included in the `codepoint_to_notations` table.
+/// Asserts notation table consistency (`grapheme_to_notations` match
+/// `notation_to_grapheme`), ignores notations mapping to multiple codepoints
+/// wich are not included in the `grapheme_to_notations` table.
 pub fn assert_consistency(table: NotationTable) -> Nil {
-  dict.each(table.codepoint_to_notations, fn(codepoint, notations) {
+  dict.each(table.grapheme_to_notations, fn(grapheme, notations) {
     assert list.all(notations, fn(notation) {
-      dict.get(table.notation_to_codepoints, notation) == Ok([codepoint])
+      dict.get(table.notation_to_grapheme, notation) == Ok(grapheme)
     })
   })
-  dict.each(table.notation_to_codepoints, fn(notation, codepoints) {
-    case codepoints {
-      [codepoint] -> {
-        assert dict.get(table.codepoint_to_notations, codepoint)
-          |> result.unwrap(or: [])
-          |> list.contains(notation)
-      }
-      _ -> Nil
-    }
+  dict.each(table.notation_to_grapheme, fn(notation, grapheme) {
+    assert dict.get(table.grapheme_to_notations, grapheme)
+      |> result.unwrap(or: [])
+      |> list.contains(notation)
   })
 }
 
-/// Converts the `codepoint_to_notations` dictionary of a `NotationTable`
+/// Converts the `grapheme_to_notations` dictionary of a `NotationTable`
 /// to a `String` for snapshot testing.
 ///
 /// Sort the input to ensure deterministic output.
 pub fn to_string(table: NotationTable) -> String {
-  dict.to_list(table.codepoint_to_notations)
-  |> list.sort(fn(lhs, rhs) {
-    int.compare(
-      string.utf_codepoint_to_int(lhs.0),
-      string.utf_codepoint_to_int(rhs.0),
-    )
-  })
+  dict.to_list(table.grapheme_to_notations)
+  |> list.sort(fn(lhs, rhs) { string.compare(lhs.0, rhs.0) })
   |> list.map(fn(key_value) {
-    let #(codepoint, notations) = key_value
-    let num =
-      string.utf_codepoint_to_int(codepoint)
-      |> int.to_base16()
-      |> string.pad_start(to: 4, with: "0")
+    let #(grapheme, notations) = key_value
+    let codepoints =
+      string.to_utf_codepoints(grapheme)
+      |> list.map(internal.codepoint_to_hex)
+      |> string.join("-")
     let escapes =
       list.sort(notations, string.compare) |> string.join(with: ", ")
 
-    num <> " (" <> string.from_utf_codepoints([codepoint]) <> "): " <> escapes
+    codepoints <> " (" <> grapheme <> "): " <> escapes
   })
   |> string.join(with: "\n")
 }
 
-/// Builds a `NotationTable` from a `codepoint_to_notations` dictionary.
-pub fn complement_codepoint_to_notations(dict: Dict(UtfCodepoint, List(String))) {
-  dict.fold(
-    over: dict,
-    from: dict.new(),
-    with: fn(notation_to_codepoints, codepoint, notations) {
-      list.fold(
-        over: notations,
-        from: notation_to_codepoints,
-        with: fn(notation_to_codepoints, notation) {
-          dict.insert(into: notation_to_codepoints, for: notation, insert: [
-            codepoint,
-          ])
-        },
-      )
-    },
-  )
-  |> NotationTable(codepoint_to_notations: dict)
+pub fn update(
+  table: NotationTable,
+  grapheme grapheme: String,
+  notation notation: String,
+) -> NotationTable {
+  let grapheme_to_notations =
+    dict.upsert(grapheme, in: table.grapheme_to_notations, with: fn(option) {
+      case option {
+        None -> [notation]
+        Some(list) -> [notation, ..list]
+      }
+    })
+
+  let notation_to_grapheme =
+    dict.insert(grapheme, into: table.notation_to_grapheme, for: notation)
+
+  NotationTable(grapheme_to_notations:, notation_to_grapheme:)
 }
 
-/// Builds a `NotationTable` from a `notation_to_codepoints` dictionary.
-pub fn complement_notation_to_codepoint(
-  dict: Dict(String, List(UtfCodepoint)),
+/// Builds a `NotationTable` from a `grapheme_to_notations` dictionary.
+pub fn complement_grapheme_to_notations(
+  dict: Dict(String, List(String)),
 ) -> NotationTable {
   dict.fold(
     over: dict,
     from: dict.new(),
-    with: fn(codepoint_to_notations, notation, codepoints) {
-      case codepoints {
-        [codepoint] ->
-          dict.upsert(codepoint, in: codepoint_to_notations, with: fn(option) {
-            case option {
-              None -> [notation]
-              Some(list) -> [notation, ..list]
-            }
-          })
-        _ -> codepoint_to_notations
-      }
+    with: fn(notation_to_grapheme, grapheme, notations) {
+      list.fold(
+        over: notations,
+        from: notation_to_grapheme,
+        with: fn(notation_to_grapheme, notation) {
+          dict.insert(grapheme, into: notation_to_grapheme, for: notation)
+        },
+      )
     },
   )
-  |> NotationTable(notation_to_codepoints: dict)
+  |> NotationTable(grapheme_to_notations: dict)
 }
 
-pub fn parse_notation_to_codepoints_json(
+/// Builds a `NotationTable` from a `notation_to_grapheme` dictionary.
+pub fn complement_notation_to_grapheme(
+  dict: Dict(String, String),
+) -> NotationTable {
+  dict.fold(
+    over: dict,
+    from: dict.new(),
+    with: fn(grapheme_to_notations, notation, grapheme) {
+      dict.upsert(grapheme, in: grapheme_to_notations, with: fn(option) {
+        case option {
+          None -> [notation]
+          Some(list) -> [notation, ..list]
+        }
+      })
+    },
+  )
+  |> NotationTable(notation_to_grapheme: dict)
+}
+
+pub fn parse_notation_to_grapheme_json(
   json: String,
 ) -> Result(NotationTable, json.DecodeError) {
-  let codepoints_decoder = decode.string |> decode.map(string.to_utf_codepoints)
-  let decoder = decode.dict(decode.string, codepoints_decoder)
+  let decoder = decode.dict(decode.string, decode.string)
 
   json.parse(from: json, using: decoder)
-  |> result.map(complement_notation_to_codepoint)
+  |> result.map(complement_notation_to_grapheme)
 }
 
 pub fn make_javascript_map(
@@ -124,45 +126,44 @@ pub fn make_javascript_map(
   template template: String,
   data_source data_source: String,
 ) -> String {
-  let codepoint_to_notations =
-    dict.to_list(table.codepoint_to_notations)
-    |> list.sort(fn(lhs, rhs) {
-      int.compare(
-        string.utf_codepoint_to_int(lhs.0),
-        string.utf_codepoint_to_int(rhs.0),
-      )
-    })
+  let grapheme_to_notations =
+    dict.to_list(table.grapheme_to_notations)
+    |> list.sort(fn(lhs, rhs) { string.compare(lhs.0, rhs.0) })
     |> list.map(fn(key_value) {
-      let #(cp, notations) = key_value
-      let cp = internal.codepoint_to_hex(cp)
+      let #(grapheme, notations) = key_value
+      let codepoints = grapheme_to_codepoints(grapheme)
       let notations =
         list.sort(notations, string.compare)
         |> list.map(fn(notation) { "\"" <> notation <> "\"" })
         |> string.join(with: ", ")
 
-      "[0x" <> cp <> ", [" <> notations <> "]]"
+      "[\"" <> codepoints <> "\", [" <> notations <> "]]"
     })
     |> string.join(",\n")
 
-  let notation_to_codepoints =
-    dict.to_list(table.notation_to_codepoints)
+  let notation_to_grapheme =
+    dict.to_list(table.notation_to_grapheme)
     |> list.sort(fn(lhs, rhs) { string.compare(lhs.0, rhs.0) })
     |> list.map(fn(key_value) {
-      let #(notation, codepoints) = key_value
-      let codepoints =
-        list.map(codepoints, fn(cp) { "0x" <> internal.codepoint_to_hex(cp) })
-        |> string.join(", ")
-      "[\"" <> notation <> "\", [" <> codepoints <> "]]"
+      let #(notation, grapheme) = key_value
+      let codepoints = grapheme_to_codepoints(grapheme)
+      "[\"" <> notation <> "\", \"" <> codepoints <> "\"]"
     })
     |> string.join(",\n")
 
   string.replace(in: template, each: "{{data_source}}", with: data_source)
   |> string.replace(
-    each: "/*{{codepoint_to_notations}}*/",
-    with: codepoint_to_notations,
+    each: "/*{{grapheme_to_notations}}*/",
+    with: grapheme_to_notations,
   )
   |> string.replace(
-    each: "/*{{notation_to_codepoints}}*/",
-    with: notation_to_codepoints,
+    each: "/*{{notation_to_grapheme}}*/",
+    with: notation_to_grapheme,
   )
+}
+
+fn grapheme_to_codepoints(grapheme: String) -> String {
+  string.to_utf_codepoints(grapheme)
+  |> list.map(fn(cp) { "\\u{" <> internal.codepoint_to_hex(cp) <> "}" })
+  |> string.concat()
 }

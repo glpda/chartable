@@ -1,6 +1,6 @@
 import chartable/internal/notation_table.{type NotationTable}
 
-pub const parse_entities_json = notation_table.parse_notation_to_codepoints_json
+pub const parse_entities_json = notation_table.parse_notation_to_grapheme_json
 
 pub fn make_map(
   entities table: NotationTable,

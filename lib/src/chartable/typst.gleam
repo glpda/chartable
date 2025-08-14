@@ -5,17 +5,34 @@ import gleam/list
 import gleam/result
 import gleam/string
 
-@external(javascript, "./typst/symbol_map.mjs", "codepoint_to_notations")
-fn symbol_codepoint_to_notations(codepoint: Int) -> Result(List(String), Nil)
+@external(javascript, "./typst/symbol_map.mjs", "grapheme_to_notations")
+fn symbol_grapheme_to_notations(grapheme: String) -> List(String)
 
-@external(javascript, "./typst/symbol_map.mjs", "notation_to_codepoints")
-fn symbol_notation_to_codepoints(notation: String) -> Result(List(Int), Nil)
+@external(javascript, "./typst/symbol_map.mjs", "notation_to_grapheme")
+fn symbol_notation_to_grapheme(notation: String) -> Result(String, Nil)
 
-@external(javascript, "./typst/emoji_map.mjs", "codepoint_to_notations")
-fn emoji_codepoint_to_notations(codepoint: Int) -> Result(List(String), Nil)
+@external(javascript, "./typst/emoji_map.mjs", "grapheme_to_notations")
+fn emoji_grapheme_to_notations(grapheme: String) -> List(String)
 
-@external(javascript, "./typst/emoji_map.mjs", "notation_to_codepoints")
-fn emoji_notation_to_codepoints(notation: String) -> Result(List(Int), Nil)
+@external(javascript, "./typst/emoji_map.mjs", "notation_to_grapheme")
+fn emoji_notation_to_grapheme(notation: String) -> Result(String, Nil)
+
+/// Converts a grapheme `String` to a Typst symbol notation `String`
+/// (see [Typst docs](https://typst.app/docs/reference/symbols/sym/)).
+///
+/// ## Examples
+///
+/// ```gleam
+/// assert typst.symbols_from_grapheme("⋆") == ["#sym.star.op"]
+///
+/// assert typst.symbols_from_grapheme("$")
+///   == ["#sym.dollar", "#sym.pataca", "#sym.peso"]
+/// ```
+///
+pub fn symbols_from_grapheme(grapheme: String) -> List(String) {
+  symbol_grapheme_to_notations(grapheme)
+  |> list.map(string.append(_, to: "#sym."))
+}
 
 /// Converts a `UtfCodepoint` to a Typst symbol notation `String`
 /// (see [Typst docs](https://typst.app/docs/reference/symbols/sym/)).
@@ -24,37 +41,33 @@ fn emoji_notation_to_codepoints(notation: String) -> Result(List(Int), Nil)
 ///
 /// ```gleam
 /// assert string.utf_codepoint(0x22C6)
-///   |> result.try(typst.symbols_from_codepoint)
-///   == Ok(["star.op"])
+///   |> result.map(typst.symbols_from_codepoint)
+///   == Ok(["#sym.star.op"])
 ///
 /// assert string.utf_codepoint(0x0024)
-///   |> result.try(typst.symbols_from_codepoint)
-///   == Ok(["dollar", "pataca", "peso"])
+///   |> result.map(typst.symbols_from_codepoint)
+///   == Ok(["#sym.dollar", "#sym.pataca", "#sym.peso"])
 /// ```
 ///
-pub fn symbols_from_codepoint(
-  codepoint: UtfCodepoint,
-) -> Result(List(String), Nil) {
-  string.utf_codepoint_to_int(codepoint)
-  |> symbol_codepoint_to_notations()
+pub fn symbols_from_codepoint(codepoint: UtfCodepoint) -> List(String) {
+  string.from_utf_codepoints([codepoint])
+  |> symbols_from_grapheme()
 }
 
-/// Converts a Typst symbol notation `String` to a `List` of `UtfCodepoint`s
-/// (see [Typst docs](https://typst.app/docs/reference/symbols/sym/)).
+/// Converts a grapheme `String` to a Typst emoji notation `String`
+/// (see [Typst docs](https://typst.app/docs/reference/symbols/emoji/)).
 ///
 /// ## Examples
 ///
 /// ```gleam
-/// assert typst.symbol_to_codepoints("star.op")
-///   == Ok(string.to_utf_codepoints("\u{22C6}"))
+/// assert typst.emojis_from_grapheme("⭐") == ["#emoji.star"]
 ///
-/// assert typst.symbol_to_codepoints("dollar")
-///   == Ok(string.to_utf_codepoints("$"))
+/// assert typst.emojis_from_grapheme("🌟") == ["#emoji.star.glow"]
 /// ```
 ///
-pub fn symbol_to_codepoints(notation: String) -> Result(List(UtfCodepoint), Nil) {
-  use codepoints <- result.try(symbol_notation_to_codepoints(notation))
-  result.all(list.map(codepoints, string.utf_codepoint))
+pub fn emojis_from_grapheme(grapheme: String) -> List(String) {
+  emoji_grapheme_to_notations(grapheme)
+  |> list.map(string.append(_, to: "#emoji."))
 }
 
 /// Converts a `UtfCodepoint` to a Typst emoji notation `String`
@@ -64,37 +77,17 @@ pub fn symbol_to_codepoints(notation: String) -> Result(List(UtfCodepoint), Nil)
 ///
 /// ```gleam
 /// assert string.utf_codepoint(0x2B50)
-///   |> result.try(typst.emojis_from_codepoint)
-///   == Ok(["star"])
+///   |> result.map(typst.emojis_from_codepoint)
+///   == Ok(["#emoji.star"])
 ///
 /// assert string.utf_codepoint(0x1F31F)
-///   |> result.try(typst.emojis_from_codepoint)
-///   == Ok(["star.glow"])
+///   |> result.map(typst.emojis_from_codepoint)
+///   == Ok(["#emoji.star.glow"])
 /// ```
 ///
-pub fn emojis_from_codepoint(
-  codepoint: UtfCodepoint,
-) -> Result(List(String), Nil) {
-  string.utf_codepoint_to_int(codepoint)
-  |> emoji_codepoint_to_notations()
-}
-
-/// Converts a Typst emoji notation `String` to a `List` of `UtfCodepoint`s
-/// (see [Typst docs](https://typst.app/docs/reference/symbols/emoji/)).
-///
-/// ## Examples
-///
-/// ```gleam
-/// assert typst.emoji_to_codepoints("star")
-///   == Ok(string.to_utf_codepoints("⭐"))
-///
-/// assert typst.emoji_to_codepoints("star.glow")
-///   == Ok(string.to_utf_codepoints("\u{1F31F}"))
-/// ```
-///
-pub fn emoji_to_codepoints(notation: String) -> Result(List(UtfCodepoint), Nil) {
-  use codepoints <- result.try(emoji_notation_to_codepoints(notation))
-  result.all(list.map(codepoints, string.utf_codepoint))
+pub fn emojis_from_codepoint(codepoint: UtfCodepoint) -> List(String) {
+  string.from_utf_codepoints([codepoint])
+  |> emojis_from_grapheme()
 }
 
 /// Converts a Typst markup mode shorthand `String` to a `UtfCodepoint`
@@ -103,9 +96,8 @@ pub fn emoji_to_codepoints(notation: String) -> Result(List(UtfCodepoint), Nil) 
 /// ## Examples
 ///
 /// ```gleam
-/// let en_dash = string.utf_codepoint(0x2013)  // Ok('–')
-///
-/// assert typst.markup_shorthand_to_codepoint("--") == en_dash
+/// assert typst.markup_shorthand_to_codepoint("--")
+///   == string.utf_codepoint(0x2013)
 /// ```
 ///
 pub fn markup_shorthand_to_codepoint(
@@ -126,6 +118,20 @@ pub fn markup_shorthand_to_codepoint(
     "~" -> string.utf_codepoint(0x00A0)
     _ -> Error(Nil)
   }
+}
+
+/// Converts a Typst markup mode shorthand `String` to a grapheme `String`
+/// (see [Typst docs](https://typst.app/docs/reference/symbols/#shorthands)).
+///
+/// ## Examples
+///
+/// ```gleam
+/// assert typst.markup_shorthand_to_grapheme("--") == Ok("–")
+/// ```
+///
+pub fn markup_shorthand_to_grapheme(shorthand: String) -> Result(String, Nil) {
+  markup_shorthand_to_codepoint(shorthand)
+  |> result.map(fn(codepoint) { string.from_utf_codepoints([codepoint]) })
 }
 
 /// Converts a `UtfCodepoint` to a Typst markup mode shorthand `String`
@@ -159,6 +165,22 @@ pub fn markup_shorthand_from_codepoint(
   }
 }
 
+/// Converts a grapheme `String` to a Typst markup mode shorthand `String`
+/// (see [Typst docs](https://typst.app/docs/reference/symbols/#shorthands)).
+///
+/// ## Examples
+///
+/// ```gleam
+/// assert typst.markup_shorthand_from_grapheme("–") == Ok("--")
+/// ```
+///
+pub fn markup_shorthand_from_grapheme(grapheme: String) -> Result(String, Nil) {
+  case string.to_utf_codepoints(grapheme) {
+    [codepoint] -> markup_shorthand_from_codepoint(codepoint)
+    _ -> Error(Nil)
+  }
+}
+
 /// Converts a Typst math mode shorthand `String` to a `UtfCodepoint`:
 /// - [Math Shorthands](https://typst.app/docs/reference/symbols/#shorthands)
 /// - [Math Primes](https://typst.app/docs/reference/math/primes/)
@@ -166,9 +188,7 @@ pub fn markup_shorthand_from_codepoint(
 /// ## Examples
 ///
 /// ```gleam
-/// let arrow = string.utf_codepoint(0x2192)  // Ok('→')
-///
-/// assert typst.math_shorthand_to_codepoint("->") == arrow
+/// assert typst.math_shorthand_to_codepoint("->") == string.utf_codepoint(0x2192)
 /// ```
 ///
 pub fn math_shorthand_to_codepoint(
@@ -261,6 +281,22 @@ pub fn math_shorthand_to_codepoint(
     "''''" -> string.utf_codepoint(0x2057)
     _ -> Error(Nil)
   }
+}
+
+/// Converts a Typst math mode shorthand `String` to a grapheme `String`:
+/// - [Math Shorthands](https://typst.app/docs/reference/symbols/#shorthands)
+/// - [Math Primes](https://typst.app/docs/reference/math/primes/)
+///
+/// ## Examples
+///
+/// ```gleam
+/// assert typst.math_shorthand_to_grapheme("->") == Ok("→")
+///
+/// ```
+///
+pub fn math_shorthand_to_grapheme(shorthand: String) -> Result(String, Nil) {
+  math_shorthand_to_codepoint(shorthand)
+  |> result.map(fn(codepoint) { string.from_utf_codepoints([codepoint]) })
 }
 
 /// Converts a `UtfCodepoint` to a Typst math mode shorthand `String`:
@@ -367,6 +403,27 @@ pub fn math_shorthand_from_codepoint(
   }
 }
 
+/// Converts a grapheme `String` to a Typst math mode shorthand `String`:
+/// - [Math Shorthands](https://typst.app/docs/reference/symbols/#shorthands)
+/// - [Math Primes](https://typst.app/docs/reference/math/primes/)
+///
+/// ## Examples
+///
+/// ```gleam
+/// assert typst.math_shorthand_from_grapheme("→") == Ok("->")
+/// ```
+///
+pub fn math_shorthand_from_grapheme(grapheme: String) -> Result(String, Nil) {
+  case string.to_utf_codepoints(grapheme) {
+    [codepoint] -> math_shorthand_from_codepoint(codepoint)
+    _ -> Error(Nil)
+  }
+}
+
+// pub fn math_alphanum_from_grapheme(grapheme: String) {
+//   TODO
+// }
+
 /// Converts a `UtfCodepoint` to a Typst math alphanumeric symbol:
 /// - [Math Styles](https://typst.app/docs/reference/math/styles)
 /// - [Math Variants](https://typst.app/docs/reference/math/variants)
@@ -399,12 +456,10 @@ pub fn math_alphanum_from_codepoint(
   codepoint: UtfCodepoint,
 ) -> Result(List(String), Nil) {
   use alphanum <- result.try(math_alphanum.from_codepoint(codepoint))
-  let notations =
-    string.utf_codepoint_to_int(alphanum.letter)
-    |> symbol_codepoint_to_notations()
-  let notations = case notations {
-    Ok(notations) -> notations
-    Error(_) -> [string.from_utf_codepoints([alphanum.letter])]
+  let grapheme = string.from_utf_codepoints([alphanum.letter])
+  let notations = case symbol_grapheme_to_notations(grapheme) {
+    [] -> [grapheme]
+    notations -> notations
   }
 
   // NOTE: "italic" default for roman letters and greek _lowercase_ letters
@@ -447,9 +502,10 @@ fn greek_slope(
   slope: math_alphanum.Slope,
   styles: List(String),
 ) -> List(String) {
-  let str = string.from_utf_codepoints([letter])
+  let grapheme = string.from_utf_codepoints([letter])
   let is_lowercase =
-    str == string.lowercase(str) && str != string.uppercase(str)
+    grapheme == string.lowercase(grapheme)
+    && grapheme != string.uppercase(grapheme)
   case slope {
     Italic if is_lowercase -> styles
     Italic -> ["italic", ..styles]
@@ -465,7 +521,7 @@ fn apply_math_styles(string: String, styles: List(String)) -> String {
   }
 }
 
-/// Converts a Typst codex name `String` to a `UtfCodepoint`,
+/// Converts a Typst codex name `String` to a grapheme `String`,
 /// only handles names listed in these two modules:
 /// [sym](https://typst.app/docs/reference/symbols/sym/),
 /// and [emoji](https://typst.app/docs/reference/symbols/emoji/).
@@ -473,107 +529,72 @@ fn apply_math_styles(string: String, styles: List(String)) -> String {
 /// ## Examples
 ///
 /// ```gleam
-/// assert typst.notation_to_codepoints("#sym.star.op")
-///   == Ok(string.to_utf_codepoints("\u{22C6}"))
+/// assert typst.notation_to_grapheme("#sym.star.op") == Ok("\u{22C6}")
 ///
-/// assert typst.notation_to_codepoints("#emoji.star")
-///   == Ok(string.to_utf_codepoints("\u{2B50}"))
+/// assert typst.notation_to_grapheme("#emoji.star") == Ok("\u{2B50}")
 ///
-/// assert typst.notation_to_codepoints("emoji.star") == Error(Nil)
+/// assert typst.notation_to_grapheme("emoji.star") == Error(Nil)
 ///
-/// assert typst.notation_to_codepoints("#emoji.staaar") == Error(Nil)
+/// assert typst.notation_to_grapheme("#emoji.staaar") == Error(Nil)
 /// ```
 ///
-pub fn notation_to_codepoints(
-  notation: String,
-) -> Result(List(UtfCodepoint), Nil) {
+pub fn notation_to_grapheme(notation: String) -> Result(String, Nil) {
   case notation {
-    "#sym." <> name -> symbol_to_codepoints(name)
-    "#emoji." <> name -> emoji_to_codepoints(name)
+    "#sym." <> name -> symbol_notation_to_grapheme(name)
+    "#emoji." <> name -> emoji_notation_to_grapheme(name)
     _ -> Error(Nil)
   }
-}
-
-/// Converts a Typst codex name `String` to the refered `String`,
-/// only handles names listed in these two modules:
-/// [sym](https://typst.app/docs/reference/symbols/sym/),
-/// and [emoji](https://typst.app/docs/reference/symbols/emoji/).
-///
-/// ## Examples
-///
-/// ```gleam
-/// assert typst.notation_to_string("#sym.star.op") == Ok("\u{22C6}")
-///
-/// assert typst.notation_to_string("#emoji.star") == Ok("\u{2B50}")
-///
-/// assert typst.notation_to_string("emoji.star") == Error(Nil)
-///
-/// assert typst.notation_to_string("#emoji.staaar") == Error(Nil)
-/// ```
-///
-pub fn notation_to_string(notation: String) -> Result(String, Nil) {
-  notation_to_codepoints(notation) |> result.map(string.from_utf_codepoints)
 }
 
 fn display_math(string: String) -> String {
   "$ " <> string <> " $"
 }
 
-/// Converts a `UtfCodepoint` to a `List` of Typst notations `String`.
+/// Converts a grapheme `String` to a `List` of Typst notations `String`.
 ///
 /// ## Examples
 ///
 /// ```gleam
-/// assert string.utf_codepoint(0x1F31F)
-///   |> result.map(typst.notations_from_codepoint)
-///   == Ok(["#emoji.star.glow"])
+/// assert typst.notations_from_grapheme("\u{1F31F}") == ["#emoji.star.glow"]
 ///
-/// assert string.utf_codepoint(0x22C6)
-///   |> result.map(typst.notations_from_codepoint)
-///   == Ok(["#sym.star.op"])
+/// assert typst.notations_from_grapheme("\u{22C6}") == ["#sym.star.op"]
 ///
-/// assert string.utf_codepoint(0x2013)
-///   |> result.map(typst.notations_from_codepoint)
-///   == Ok(["#sym.dash.en", "--"])
+/// assert typst.notations_from_grapheme("\u{2013}") == ["#sym.dash.en", "--"]
 ///
-/// assert string.utf_codepoint(0x2192)
-///   |> result.map(typst.notations_from_codepoint)
-///   == Ok(["#sym.arrow.r", "$ -> $"])
+/// assert typst.notations_from_grapheme("\u{2192}") == ["#sym.arrow.r", "$ -> $"]
 ///
-/// assert string.utf_codepoint(0x0393)
-///   |> result.map(typst.notations_from_codepoint)
-///   == Ok(["#sym.Gamma", "$ Gamma $"])
+/// assert typst.notations_from_grapheme("\u{0393}")
+///   == ["#sym.Gamma", "$ Gamma $"]
 ///
-/// assert string.utf_codepoint(0x1D6AA)
-///   |> result.map(typst.notations_from_codepoint)
-///   == Ok(["$ bold(Gamma) $"])
+/// assert typst.notations_from_grapheme("\u{1D6AA}") == ["$ bold(Gamma) $"]
 /// ```
 ///
-pub fn notations_from_codepoint(codepoint: UtfCodepoint) -> List(String) {
-  let sym_notations =
-    symbols_from_codepoint(codepoint)
-    |> result.unwrap(or: [])
-    |> list.map(fn(notation) { "#sym." <> notation })
-  let emoji_notations =
-    emojis_from_codepoint(codepoint)
-    |> result.unwrap(or: [])
-    |> list.map(fn(notation) { "#emoji." <> notation })
-  let markup_shorthand =
-    markup_shorthand_from_codepoint(codepoint)
-    |> result.map(list.wrap)
-    |> result.unwrap([])
-  let math_shorthand =
-    math_shorthand_from_codepoint(codepoint)
-    |> result.map(list.wrap)
-    |> result.unwrap([])
-    |> list.map(display_math)
-  let math_alphanum_notations =
-    math_alphanum_from_codepoint(codepoint)
-    |> result.unwrap([])
-    |> list.map(display_math)
+pub fn notations_from_grapheme(grapheme: String) -> List(String) {
+  let sym_notations = symbols_from_grapheme(grapheme)
+  let emoji_notations = emojis_from_grapheme(grapheme)
+
   sym_notations
   |> list.append(emoji_notations)
-  |> list.append(markup_shorthand)
-  |> list.append(math_shorthand)
-  |> list.append(math_alphanum_notations)
+  |> list.append(case string.to_utf_codepoints(grapheme) {
+    [codepoint] -> {
+      let markup_shorthand =
+        markup_shorthand_from_codepoint(codepoint)
+        |> result.map(list.wrap)
+        |> result.unwrap([])
+      let math_shorthand =
+        math_shorthand_from_codepoint(codepoint)
+        |> result.map(list.wrap)
+        |> result.unwrap([])
+        |> list.map(display_math)
+      let math_alphanum_notations =
+        math_alphanum_from_codepoint(codepoint)
+        |> result.unwrap([])
+        |> list.map(display_math)
+
+      markup_shorthand
+      |> list.append(math_shorthand)
+      |> list.append(math_alphanum_notations)
+    }
+    _ -> []
+  })
 }

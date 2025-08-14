@@ -1,5 +1,5 @@
 ---
-version: 1.3.1
+version: 1.3.2
 title: Typst symbol notations from codepoints
 file: ./test/typst_test.gleam
 test_name: symbol_codegen_test
@@ -1015,11 +1015,6 @@ test_name: symbol_codegen_test
 2E4B (⹋): dagger.triple
 301C (〜): dash.wave
 3030 (〰): dash.wave.double
-FE61 (﹡): ast.small
-FE62 (﹢): plus.small
-FE64 (﹤): lt.small
-FE65 (﹥): gt.small
-FE66 (﹦): eq.small
 1D129 (𝄩): rest.multiple.measure
 1D12A (𝄪): sharp.double
 1D12B (𝄫): flat.double
@@ -1077,3 +1072,8 @@ FE66 (﹦): eq.small
 1F5F9 (🗹): ballot.check.heavy
 1F6C6 (🛆): triangle.stroked.rounded
 1F728 (🜨): earth
+FE61 (﹡): ast.small
+FE62 (﹢): plus.small
+FE64 (﹤): lt.small
+FE65 (﹥): gt.small
+FE66 (﹦): eq.small

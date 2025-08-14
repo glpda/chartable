@@ -1,5 +1,5 @@
 ---
-version: 1.3.1
+version: 1.3.2
 title: HTML entities from codepoints
 file: ./test/html_test.gleam
 test_name: entity_codegen_test
@@ -24,8 +24,11 @@ test_name: entity_codegen_test
 003A (:): colon
 003B (;): semi
 003C (<): LT, lt
+003C-20D2 (<⃒): nvlt
 003D (=): equals
+003D-20E5 (=⃥): bne
 003E (>): GT, gt
+003E-20D2 (>⃒): nvgt
 003F (?): quest
 0040 (@): commat
 005B ([): lbrack, lsqb
@@ -34,6 +37,7 @@ test_name: entity_codegen_test
 005E (^): Hat
 005F (_): UnderBar, lowbar
 0060 (`): DiacriticalGrave, grave
+0066-006A (fj): fjlig
 007B ({): lbrace, lcub
 007C (|): VerticalLine, verbar, vert
 007D (}): rbrace, rcub
@@ -461,6 +465,7 @@ test_name: entity_codegen_test
 204F (⁏): bsemi
 2057 (⁗): qprime
 205F ( ): MediumSpace
+205F-200A (  ): ThickSpace
 2060 (⁠): NoBreak
 2061 (⁡): ApplyFunction, af
 2062 (⁢): InvisibleTimes, it
@@ -535,6 +540,7 @@ test_name: entity_codegen_test
 219A (↚): nlarr, nleftarrow
 219B (↛): nrarr, nrightarrow
 219D (↝): rarrw, rightsquigarrow
+219D-0338 (↝̸): nrarrw
 219E (↞): Larr, twoheadleftarrow
 219F (↟): Uarr
 21A0 (↠): Rarr, twoheadrightarrow
@@ -602,6 +608,7 @@ test_name: entity_codegen_test
 2200 (∀): ForAll, forall
 2201 (∁): comp, complement
 2202 (∂): PartialD, part
+2202-0338 (∂̸): npart
 2203 (∃): Exists, exist
 2204 (∄): NotExists, nexist, nexists
 2205 (∅): empty, emptyset, emptyv, varnothing
@@ -624,6 +631,7 @@ test_name: entity_codegen_test
 221E (∞): infin
 221F (∟): angrt
 2220 (∠): ang, angle
+2220-20D2 (∠⃒): nang
 2221 (∡): angmsd, measuredangle
 2222 (∢): angsph
 2223 (∣): VerticalBar, mid, shortmid, smid
@@ -633,7 +641,9 @@ test_name: entity_codegen_test
 2227 (∧): and, wedge
 2228 (∨): or, vee
 2229 (∩): cap
+2229-FE00 (∩︀): caps
 222A (∪): cup
+222A-FE00 (∪︀): cups
 222B (∫): Integral, int
 222C (∬): Int
 222D (∭): iiint, tint
@@ -651,12 +661,16 @@ test_name: entity_codegen_test
 223A (∺): mDDot
 223B (∻): homtht
 223C (∼): Tilde, sim, thicksim, thksim
+223C-20D2 (∼⃒): nvsim
 223D (∽): backsim, bsim
+223D-0331 (∽̱): race
 223E (∾): ac, mstpos
+223E-0333 (∾̳): acE
 223F (∿): acd
 2240 (≀): VerticalTilde, wr, wreath
 2241 (≁): NotTilde, nsim
 2242 (≂): EqualTilde, eqsim, esim
+2242-0338 (≂̸): NotEqualTilde, nesim
 2243 (≃): TildeEqual, sime, simeq
 2244 (≄): NotTildeEqual, nsime, nsimeq
 2245 (≅): TildeFullEqual, cong
@@ -666,11 +680,16 @@ test_name: entity_codegen_test
 2249 (≉): NotTildeTilde, nap, napprox
 224A (≊): ape, approxeq
 224B (≋): apid
+224B-0338 (≋̸): napid
 224C (≌): backcong, bcong
 224D (≍): CupCap, asympeq
+224D-20D2 (≍⃒): nvap
 224E (≎): Bumpeq, HumpDownHump, bump
+224E-0338 (≎̸): NotHumpDownHump, nbump
 224F (≏): HumpEqual, bumpe, bumpeq
+224F-0338 (≏̸): NotHumpEqual, nbumpe
 2250 (≐): DotEqual, doteq, esdot
+2250-0338 (≐̸): nedot
 2251 (≑): doteqdot, eDot
 2252 (≒): efDot, fallingdotseq
 2253 (≓): erDot, risingdotseq
@@ -684,15 +703,26 @@ test_name: entity_codegen_test
 225F (≟): equest, questeq
 2260 (≠): NotEqual, ne
 2261 (≡): Congruent, equiv
+2261-20E5 (≡⃥): bnequiv
 2262 (≢): NotCongruent, nequiv
 2264 (≤): le, leq
+2264-20D2 (≤⃒): nvle
 2265 (≥): GreaterEqual, ge, geq
+2265-20D2 (≥⃒): nvge
 2266 (≦): LessFullEqual, lE, leqq
+2266-0338 (≦̸): nlE, nleqq
 2267 (≧): GreaterFullEqual, gE, geqq
+2267-0338 (≧̸): NotGreaterFullEqual, ngE, ngeqq
 2268 (≨): lnE, lneqq
+2268-FE00 (≨︀): lvertneqq, lvnE
 2269 (≩): gnE, gneqq
+2269-FE00 (≩︀): gvertneqq, gvnE
 226A (≪): Lt, NestedLessLess, ll
+226A-0338 (≪̸): NotLessLess, nLtv
+226A-20D2 (≪⃒): nLt
 226B (≫): Gt, NestedGreaterGreater, gg
+226B-0338 (≫̸): NotGreaterGreater, nGtv
+226B-20D2 (≫⃒): nGt
 226C (≬): between, twixt
 226D (≭): NotCupCap
 226E (≮): NotLess, nless, nlt
@@ -713,10 +743,13 @@ test_name: entity_codegen_test
 227D (≽): SucceedsSlantEqual, sccue, succcurlyeq
 227E (≾): PrecedesTilde, precsim, prsim
 227F (≿): SucceedsTilde, scsim, succsim
+227F-0338 (≿̸): NotSucceedsTilde
 2280 (⊀): NotPrecedes, npr, nprec
 2281 (⊁): NotSucceeds, nsc, nsucc
 2282 (⊂): sub, subset
+2282-20D2 (⊂⃒): NotSubset, nsubset, vnsub
 2283 (⊃): Superset, sup, supset
+2283-20D2 (⊃⃒): NotSuperset, nsupset, vnsup
 2284 (⊄): nsub
 2285 (⊅): nsup
 2286 (⊆): SubsetEqual, sube, subseteq
@@ -724,15 +757,21 @@ test_name: entity_codegen_test
 2288 (⊈): NotSubsetEqual, nsube, nsubseteq
 2289 (⊉): NotSupersetEqual, nsupe, nsupseteq
 228A (⊊): subne, subsetneq
+228A-FE00 (⊊︀): varsubsetneq, vsubne
 228B (⊋): supne, supsetneq
+228B-FE00 (⊋︀): varsupsetneq, vsupne
 228D (⊍): cupdot
 228E (⊎): UnionPlus, uplus
 228F (⊏): SquareSubset, sqsub, sqsubset
+228F-0338 (⊏̸): NotSquareSubset
 2290 (⊐): SquareSuperset, sqsup, sqsupset
+2290-0338 (⊐̸): NotSquareSuperset
 2291 (⊑): SquareSubsetEqual, sqsube, sqsubseteq
 2292 (⊒): SquareSupersetEqual, sqsupe, sqsupseteq
 2293 (⊓): SquareIntersection, sqcap
+2293-FE00 (⊓︀): sqcaps
 2294 (⊔): SquareUnion, sqcup
+2294-FE00 (⊔︀): sqcups
 2295 (⊕): CirclePlus, oplus
 2296 (⊖): CircleMinus, ominus
 2297 (⊗): CircleTimes, otimes
@@ -762,7 +801,9 @@ test_name: entity_codegen_test
 22B2 (⊲): LeftTriangle, vartriangleleft, vltri
 22B3 (⊳): RightTriangle, vartriangleright, vrtri
 22B4 (⊴): LeftTriangleEqual, ltrie, trianglelefteq
+22B4-20D2 (⊴⃒): nvltrie
 22B5 (⊵): RightTriangleEqual, rtrie, trianglerighteq
+22B5-20D2 (⊵⃒): nvrtrie
 22B6 (⊶): origof
 22B7 (⊷): imof
 22B8 (⊸): multimap, mumap
@@ -797,9 +838,13 @@ test_name: entity_codegen_test
 22D6 (⋖): lessdot, ltdot
 22D7 (⋗): gtdot, gtrdot
 22D8 (⋘): Ll
+22D8-0338 (⋘̸): nLl
 22D9 (⋙): Gg, ggg
+22D9-0338 (⋙̸): nGg
 22DA (⋚): LessEqualGreater, leg, lesseqgtr
+22DA-FE00 (⋚︀): lesg
 22DB (⋛): GreaterEqualLess, gel, gtreqless
+22DB-FE00 (⋛︀): gesl
 22DE (⋞): cuepr, curlyeqprec
 22DF (⋟): cuesc, curlyeqsucc
 22E0 (⋠): NotPrecedesSlantEqual, nprcue
@@ -822,9 +867,11 @@ test_name: entity_codegen_test
 22F3 (⋳): isinsv
 22F4 (⋴): isins
 22F5 (⋵): isindot
+22F5-0338 (⋵̸): notindot
 22F6 (⋶): notinvc
 22F7 (⋷): notinvb
 22F9 (⋹): isinE
+22F9-0338 (⋹̸): notinE
 22FA (⋺): nisd
 22FB (⋻): xnis
 22FC (⋼): nis
@@ -1009,6 +1056,7 @@ test_name: entity_codegen_test
 2929 (⤩): seswar, tosa
 292A (⤪): swnwar
 2933 (⤳): rarrc
+2933-0338 (⤳̸): nrarrc
 2935 (⤵): cudarrr
 2936 (⤶): ldca
 2937 (⤷): rdca
@@ -1121,7 +1169,9 @@ test_name: entity_codegen_test
 29CD (⧍): trisb
 29CE (⧎): rtriltri
 29CF (⧏): LeftTriangleBar
+29CF-0338 (⧏̸): NotLeftTriangleBar
 29D0 (⧐): RightTriangleBar
+29D0-0338 (⧐̸): NotRightTriangleBar
 29DC (⧜): iinfin
 29DD (⧝): infintie
 29DE (⧞): nvinfin
@@ -1198,9 +1248,11 @@ test_name: entity_codegen_test
 2A66 (⩦): sdote
 2A6A (⩪): simdot
 2A6D (⩭): congdot
+2A6D-0338 (⩭̸): ncongdot
 2A6E (⩮): easter
 2A6F (⩯): apacir
 2A70 (⩰): apE
+2A70-0338 (⩰̸): napE
 2A71 (⩱): eplus
 2A72 (⩲): pluse
 2A73 (⩳): Esim
@@ -1213,7 +1265,9 @@ test_name: entity_codegen_test
 2A7B (⩻): ltquest
 2A7C (⩼): gtquest
 2A7D (⩽): LessSlantEqual, leqslant, les
+2A7D-0338 (⩽̸): NotLessSlantEqual, nleqslant, nles
 2A7E (⩾): GreaterSlantEqual, geqslant, ges
+2A7E-0338 (⩾̸): NotGreaterSlantEqual, ngeqslant, nges
 2A7F (⩿): lesdot
 2A80 (⪀): gesdot
 2A81 (⪁): lesdoto
@@ -1247,7 +1301,9 @@ test_name: entity_codegen_test
 2A9F (⪟): simlE
 2AA0 (⪠): simgE
 2AA1 (⪡): LessLess
+2AA1-0338 (⪡̸): NotNestedLessLess
 2AA2 (⪢): GreaterGreater
+2AA2-0338 (⪢̸): NotNestedGreaterGreater
 2AA4 (⪤): glj
 2AA5 (⪥): gla
 2AA6 (⪦): ltcc
@@ -1257,10 +1313,14 @@ test_name: entity_codegen_test
 2AAA (⪪): smt
 2AAB (⪫): lat
 2AAC (⪬): smte
+2AAC-FE00 (⪬︀): smtes
 2AAD (⪭): late
+2AAD-FE00 (⪭︀): lates
 2AAE (⪮): bumpE
 2AAF (⪯): PrecedesEqual, pre, preceq
+2AAF-0338 (⪯̸): NotPrecedesEqual, npre, npreceq
 2AB0 (⪰): SucceedsEqual, sce, succeq
+2AB0-0338 (⪰̸): NotSucceedsEqual, nsce, nsucceq
 2AB3 (⪳): prE
 2AB4 (⪴): scE
 2AB5 (⪵): precneqq, prnE
@@ -1280,11 +1340,15 @@ test_name: entity_codegen_test
 2AC3 (⫃): subedot
 2AC4 (⫄): supedot
 2AC5 (⫅): subE, subseteqq
+2AC5-0338 (⫅̸): nsubE, nsubseteqq
 2AC6 (⫆): supE, supseteqq
+2AC6-0338 (⫆̸): nsupE, nsupseteqq
 2AC7 (⫇): subsim
 2AC8 (⫈): supsim
 2ACB (⫋): subnE, subsetneqq
+2ACB-FE00 (⫋︀): varsubsetneqq, vsubnE
 2ACC (⫌): supnE, supsetneqq
+2ACC-FE00 (⫌︀): varsupsetneqq, vsupnE
 2ACF (⫏): csub
 2AD0 (⫐): csup
 2AD1 (⫑): csube
@@ -1313,11 +1377,7 @@ test_name: entity_codegen_test
 2AF2 (⫲): nhpar
 2AF3 (⫳): parsim
 2AFD (⫽): parsl
-FB00 (ﬀ): fflig
-FB01 (ﬁ): filig
-FB02 (ﬂ): fllig
-FB03 (ﬃ): ffilig
-FB04 (ﬄ): ffllig
+2AFD-20E5 (⫽⃥): nparsl
 1D49C (𝒜): Ascr
 1D49E (𝒞): Cscr
 1D49F (𝒟): Dscr
@@ -1451,3 +1511,8 @@ FB04 (ﬄ): ffllig
 1D569 (𝕩): xopf
 1D56A (𝕪): yopf
 1D56B (𝕫): zopf
+FB00 (ﬀ): fflig
+FB01 (ﬁ): filig
+FB02 (ﬂ): fllig
+FB03 (ﬃ): ffilig
+FB04 (ﬄ): ffllig

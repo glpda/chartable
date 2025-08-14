@@ -1,8 +1,6 @@
 import chartable/internal
 import chartable/internal/notation_table.{type NotationTable, NotationTable}
 import gleam/dict
-import gleam/list
-import gleam/option.{type Option, None, Some}
 import gleam/result
 import gleam/string
 import splitter
@@ -15,14 +13,21 @@ pub type ParserError {
   DuplicateIdentifier(line: Int)
 }
 
-pub type ParserState {
+type ParserState {
   ParserState(
     line: Int,
     txt: String,
     prefix: String,
     submodule: String,
-    pair: Option(#(List(UtfCodepoint), String)),
+    pair: Pair,
   )
+}
+
+/// Helper type providing labels for key-value pairs to not mix grapheme and
+/// notation `String`s.
+type Pair {
+  Pair(grapheme: String, notation: String)
+  None
 }
 
 pub fn make_map(
@@ -59,25 +64,25 @@ pub fn parse_codex(txt: String) -> Result(NotationTable, ParserError) {
       case key, symbol {
         "", _ -> Ok(next_line(state:, rest:))
         "." <> suffix, symbol ->
-          parse_codepoints(symbol, [])
+          parse_grapheme(symbol)
           |> result.replace_error(InvalidCodepoints(state.line))
-          |> result.map(fn(codepoints) {
+          |> result.map(fn(grapheme) {
             ParserState(
               ..next_line(state:, rest:),
-              pair: Some(#(codepoints, suffix)),
+              pair: Pair(grapheme:, notation: suffix),
             )
           })
         prefix, "" -> Ok(ParserState(..next_line(state:, rest:), prefix:))
         submodule, "{" ->
           Ok(ParserState(..next_line(state:, rest:), prefix: "", submodule:))
         prefix, symbol ->
-          parse_codepoints(symbol, [])
+          parse_grapheme(symbol)
           |> result.replace_error(InvalidCodepoints(state.line))
-          |> result.map(fn(codepoints) {
+          |> result.map(fn(grapheme) {
             ParserState(
               ..next_line(state:, rest:),
               prefix:,
-              pair: Some(#(codepoints, "")),
+              pair: Pair(grapheme:, notation: ""),
             )
           })
       }
@@ -85,25 +90,25 @@ pub fn parse_codex(txt: String) -> Result(NotationTable, ParserError) {
   }
 }
 
-fn parse_codepoints(
-  string: String,
-  acc: List(UtfCodepoint),
-) -> Result(List(UtfCodepoint), Nil) {
-  case string {
+fn parse_grapheme(str: String) -> Result(String, Nil) {
+  parse_grapheme_loop(str, "")
+}
+
+fn parse_grapheme_loop(str: String, acc: String) -> Result(String, Nil) {
+  case str {
     "" ->
       case acc {
-        [] -> Error(Nil)
-        _ -> Ok(list.reverse(acc))
+        "" -> Error(Nil)
+        _ -> Ok(acc)
       }
     "\\u{" <> rest -> {
       use #(hex_code, rest) <- result.try(string.split_once(rest, on: "}"))
       use codepoint <- result.try(internal.parse_codepoint(hex_code))
-      parse_codepoints(rest, [codepoint, ..acc])
+      parse_grapheme_loop(rest, acc <> string.from_utf_codepoints([codepoint]))
     }
     string -> {
       use #(grapheme, rest) <- result.try(string.pop_grapheme(string))
-      let acc = list.append(string.to_utf_codepoints(grapheme), acc)
-      parse_codepoints(rest, acc)
+      parse_grapheme_loop(rest, acc <> grapheme)
     }
   }
 }
@@ -124,18 +129,20 @@ fn parse_codex_loop(
         Ok(state) -> {
           case state.pair {
             None -> parse_codex_loop(input: state, output: table, with: parser)
-            Some(#(codepoints, suffix)) ->
+            Pair(grapheme:, notation: suffix) ->
               case make_identifier(state.submodule, state.prefix, suffix) {
                 Error(_) -> Error(InvalidIdentifier(state.line))
-                Ok(identifier) -> {
-                  case
-                    table.notation_to_codepoints |> dict.has_key(identifier)
-                  {
+                Ok(notation) -> {
+                  case table.notation_to_grapheme |> dict.has_key(notation) {
                     True -> Error(DuplicateIdentifier(state.line))
                     False ->
                       parse_codex_loop(
                         input: state,
-                        output: update_table(table, codepoints, identifier),
+                        output: notation_table.update(
+                          table,
+                          grapheme:,
+                          notation:,
+                        ),
                         with: parser,
                       )
                   }
@@ -160,25 +167,4 @@ fn make_identifier(submodule: String, prefix: String, suffix: String) {
     submodule, prefix, "" -> Ok(submodule <> "." <> prefix)
     submodule, prefix, suffix -> Ok(submodule <> "." <> prefix <> "." <> suffix)
   }
-}
-
-fn update_table(
-  table: NotationTable,
-  codepoints: List(UtfCodepoint),
-  notation: String,
-) {
-  let codepoint_to_notations = case codepoints {
-    [codepoint] ->
-      dict.upsert(codepoint, in: table.codepoint_to_notations, with: fn(option) {
-        case option {
-          None -> [notation]
-          Some(list) -> [notation, ..list]
-        }
-      })
-    _ -> table.codepoint_to_notations
-  }
-
-  let notation_to_codepoints =
-    dict.insert(codepoints, into: table.notation_to_codepoints, for: notation)
-  NotationTable(codepoint_to_notations:, notation_to_codepoints:)
 }
