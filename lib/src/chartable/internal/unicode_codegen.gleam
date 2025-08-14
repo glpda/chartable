@@ -24,22 +24,26 @@ pub fn make_name_map(
         Record(CodepointRange(from: start, to: end), [name, ..]) if name != "" -> {
           let start = internal.codepoint_to_hex(start)
           let end = internal.codepoint_to_hex(end)
+          let indentation = "    "
           // if ((0x3400 <= cp) && (cp <= 0x4DBF)) {
-          //   return new Ok("CJK UNIFIED IDEOGRAPH-" + display_codepoint(cp) + "");
-          // } else
+          //   return new Ok("CJK UNIFIED IDEOGRAPH-" + display_codepoint(cp));
+          // }
           let if_in_range =
             "if ((0x" <> start <> " <= cp) && (cp <= 0x" <> end <> ")) {\n"
-          let display_codepoint = "\" + display_codepoint(cp) + \""
           let name =
-            string.replace(in: name, each: "*", with: display_codepoint)
-          let return_name = "    return new Ok(\"" <> name <> "\");\n"
-          Ok(if_in_range <> return_name <> "  } else ")
+            string.split(name, on: "*")
+            |> list.map(fn(str) { "\"" <> str <> "\"" })
+            |> list.intersperse(with: "display_codepoint(cp)")
+            |> list.filter(fn(str) { str != "\"\"" })
+            |> string.join(" + ")
+          let return_name = "  return new Ok(" <> name <> ");\n"
+          Ok(if_in_range <> indentation <> return_name <> indentation <> "}")
         }
         Record(CodepointRange(..), _) -> Error(Nil)
         Record(SingleCodepoint(_), _) -> Error(Nil)
       }
     })
-    |> string.concat()
+    |> string.join(" else ")
 
   let map_def =
     list.filter_map(names, fn(record) {
@@ -49,13 +53,13 @@ pub fn make_name_map(
           // TODO assert name is (uppercase letter + space + dash)
           let name = string.replace(in: name, each: "*", with: cp)
           // [0x0020, "SPACE"],
-          Ok("[0x" <> cp <> ", \"" <> name <> "\"],\n")
+          Ok("[0x" <> cp <> ", \"" <> name <> "\"]")
         }
         Record(SingleCodepoint(_), _) -> Error(Nil)
         Record(CodepointRange(..), _) -> Error(Nil)
       }
     })
-    |> string.concat()
+    |> string.join(",\n")
 
   string.replace(in: template, each: "/*{{if_ranges}}*/", with: if_ranges)
   |> string.replace(each: "/*{{map_def}}*/", with: map_def)
