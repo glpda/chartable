@@ -1,5 +1,5 @@
 import chartable/internal
-import chartable/internal/notation_table.{type NotationTable, NotationTable}
+import codegen/notation_table.{type NotationTable, NotationTable}
 import gleam/dict
 import gleam/result
 import gleam/string

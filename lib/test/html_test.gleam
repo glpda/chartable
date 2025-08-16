@@ -1,7 +1,7 @@
 import birdie
 import chartable/html
-import chartable/internal/html_codegen
-import chartable/internal/notation_table.{type NotationTable}
+import codegen/html as html_codegen
+import codegen/notation_table.{type NotationTable}
 import gleam/dict
 import gleam/list
 import gleam/result
@@ -34,8 +34,7 @@ pub fn entity_codegen_test() {
 }
 
 pub fn named_character_references_test() {
-  assert html.named_character_references("⋆")
-    == ["&Star;", "&sstarf;"]
+  assert html.named_character_references("⋆") == ["&Star;", "&sstarf;"]
 
   assert html.named_character_references("⭐") == []
 }

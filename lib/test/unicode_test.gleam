@@ -1,7 +1,7 @@
 import chartable/internal
-import chartable/internal/unicode_codegen
 import chartable/unicode
 import chartable/unicode/category
+import codegen/unicode as unicode_codegen
 import gleam/list
 import gleam/result
 import gleam/string

@@ -1,4 +1,4 @@
-import chartable/internal/notation_table.{type NotationTable}
+import codegen/notation_table.{type NotationTable}
 
 pub const parse_entities_json = notation_table.parse_notation_to_grapheme_json
 

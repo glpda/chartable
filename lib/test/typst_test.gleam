@@ -1,7 +1,7 @@
 import birdie
-import chartable/internal/notation_table.{type NotationTable}
-import chartable/internal/typst_codegen
 import chartable/typst
+import codegen/notation_table.{type NotationTable}
+import codegen/typst as typst_codegen
 import gleam/dict
 import gleam/list
 import gleam/result
