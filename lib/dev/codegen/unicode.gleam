@@ -1,7 +1,9 @@
 import chartable/internal
+import chartable/unicode/category.{type GeneralCategory}
 import gleam/bool
 import gleam/list
 import gleam/option.{type Option, None, Some}
+import gleam/result
 import gleam/string
 import splitter
 
@@ -12,16 +14,30 @@ pub type Record(fields) {
 pub type CodepointRange {
   CodepointRange(from: UtfCodepoint, to: UtfCodepoint)
   SingleCodepoint(UtfCodepoint)
+  AllSurrogates
+  HighSurrogates
+  HighStandardSurrogates
+  HighPrivateUseSurrogates
+  LowSurrogates
+}
+
+pub type ParserError {
+  InvalidCodepointRange(line: Int)
+  InvalidFields(line: Int)
+}
+
+type ParserState(fields) {
+  ParserState(line: Int, txt: String, record: Option(Record(fields)))
 }
 
 pub fn make_name_map(
-  names names: List(Record(List(String))),
+  names names: List(Record(String)),
   template template: String,
 ) -> String {
   let if_ranges =
     list.filter_map(names, fn(record) {
       case record {
-        Record(CodepointRange(from: start, to: end), [name, ..]) if name != "" -> {
+        Record(CodepointRange(from: start, to: end), name) if name != "" -> {
           let start = internal.codepoint_to_hex(start)
           let end = internal.codepoint_to_hex(end)
           let indentation = "    "
@@ -39,8 +55,7 @@ pub fn make_name_map(
           let return_name = "  return new Ok(" <> name <> ");\n"
           Ok(if_in_range <> indentation <> return_name <> indentation <> "}")
         }
-        Record(CodepointRange(..), _) -> Error(Nil)
-        Record(SingleCodepoint(_), _) -> Error(Nil)
+        _ -> Error(Nil)
       }
     })
     |> string.join(" else ")
@@ -48,15 +63,14 @@ pub fn make_name_map(
   let map_def =
     list.filter_map(names, fn(record) {
       case record {
-        Record(SingleCodepoint(cp), [name, ..]) if name != "" -> {
+        Record(SingleCodepoint(cp), name) if name != "" -> {
           let cp = internal.codepoint_to_hex(cp)
           // TODO assert name is (uppercase letter + space + dash)
           let name = string.replace(in: name, each: "*", with: cp)
           // [0x0020, "SPACE"],
           Ok("[0x" <> cp <> ", \"" <> name <> "\"]")
         }
-        Record(SingleCodepoint(_), _) -> Error(Nil)
-        Record(CodepointRange(..), _) -> Error(Nil)
+        _ -> Error(Nil)
       }
     })
     |> string.join(",\n")
@@ -65,51 +79,125 @@ pub fn make_name_map(
   |> string.replace(each: "/*{{map_def}}*/", with: map_def)
 }
 
-pub fn parse_unidata(txt: String) -> List(Record(List(String))) {
+pub fn parse_unidata(
+  txt: String,
+  with fields_parser: fn(List(String)) -> Result(fields, Nil),
+) -> Result(List(Record(fields)), ParserError) {
   let line_end = splitter.new(["\n"])
   let comment = splitter.new(["#"])
   let separator = splitter.new([";"])
-  let records = []
 
-  use txt <- parse_unidata_loop(input: txt, output: records)
-  let #(line, _, rest) = splitter.split(line_end, txt)
+  let initialize_parser = ParserState(line: 0, txt:, record: None)
+  use state <- parse_unidata_loop(input: initialize_parser, output: [])
+  let #(line, _, rest) = splitter.split(line_end, state.txt)
   let #(line, _, _) = splitter.split(comment, line)
-  use <- bool.guard(when: string.is_empty(line), return: #(None, rest))
+  use <- bool.guard(
+    when: string.is_empty(line),
+    return: Ok(ParserState(line: state.line + 1, txt: rest, record: None)),
+  )
   let #(first_field, _, other_fields) = splitter.split(separator, line)
-  let codepoint_range = parse_codepoint_range(first_field)
-  let fields = string.split(other_fields, on: ";") |> list.map(string.trim)
-  #(Some(Record(codepoint_range:, fields:)), rest)
+  use codepoint_range <- result.try(result.replace_error(
+    parse_codepoint_range(string.trim(first_field)),
+    InvalidCodepointRange(state.line),
+  ))
+  let fields =
+    string.split(other_fields, on: ";")
+    |> list.map(string.trim)
+    |> fields_parser()
+  case fields {
+    Ok(fields) ->
+      Ok(ParserState(
+        Some(Record(codepoint_range:, fields:)),
+        line: state.line + 1,
+        txt: rest,
+      ))
+    Error(_) -> Error(InvalidFields(state.line))
+  }
 }
 
 fn parse_unidata_loop(
-  input str: String,
+  input state: ParserState(fields),
   output records: List(Record(fields)),
-  with line_parser: fn(String) -> #(Option(Record(fields)), String),
-) {
-  case str {
-    "" -> list.reverse(records)
+  with line_parser: fn(ParserState(fields)) ->
+    Result(ParserState(fields), ParserError),
+) -> Result(List(Record(fields)), ParserError) {
+  case state.txt {
+    "" -> Ok(list.reverse(records))
     _ ->
-      case line_parser(str) {
-        #(Some(record), rest) -> {
-          let output = [record, ..records]
-          parse_unidata_loop(rest, output:, with: line_parser)
+      case line_parser(state) {
+        Ok(state) -> {
+          case state.record {
+            Some(record) -> {
+              let output = [record, ..records]
+              parse_unidata_loop(state, output:, with: line_parser)
+            }
+            None ->
+              parse_unidata_loop(state, output: records, with: line_parser)
+          }
         }
-        #(None, rest) ->
-          parse_unidata_loop(rest, output: records, with: line_parser)
+        Error(parser_error) -> Error(parser_error)
       }
   }
 }
 
-fn parse_codepoint_range(str: String) -> CodepointRange {
+fn parse_codepoint_range(str: String) -> Result(CodepointRange, Nil) {
   case string.split_once(str, on: "..") {
     Ok(#(start, end)) -> {
-      let assert Ok(start) = string.trim(start) |> internal.parse_codepoint()
-      let assert Ok(end) = string.trim(end) |> internal.parse_codepoint()
-      CodepointRange(from: start, to: end)
+      let start = internal.parse_codepoint(start)
+      let end = internal.parse_codepoint(end)
+      case start, end, str {
+        Ok(start), Ok(end), _ -> Ok(CodepointRange(from: start, to: end))
+        _, _, "D800..DFFF" -> Ok(AllSurrogates)
+        _, _, "D800..DBFF" -> Ok(HighSurrogates)
+        _, _, "D800..DB7F" -> Ok(HighStandardSurrogates)
+        _, _, "DB80..DBFF" -> Ok(HighPrivateUseSurrogates)
+        _, _, "DC00..DFFF" -> Ok(LowSurrogates)
+        _, _, _ -> Error(Nil)
+      }
     }
     Error(_) -> {
-      let assert Ok(codepoint) = string.trim(str) |> internal.parse_codepoint()
-      SingleCodepoint(codepoint)
+      internal.parse_codepoint(str)
+      |> result.map(SingleCodepoint)
     }
+  }
+}
+
+pub fn parse_names(txt: String) -> Result(List(Record(String)), ParserError) {
+  use fields <- parse_unidata(txt)
+  case fields {
+    [name, ..] -> Ok(name)
+    [] -> Error(Nil)
+  }
+}
+
+pub fn parse_categories(
+  txt: String,
+) -> Result(List(Record(GeneralCategory)), ParserError) {
+  use fields <- parse_unidata(txt)
+  case fields {
+    [cat, ..] -> category.from_abbreviation(cat)
+    [] -> Error(Nil)
+  }
+}
+
+pub fn assert_match_unidata(
+  records: List(Record(fields)),
+  codegen_match_record: fn(UtfCodepoint, fields) -> Bool,
+) -> Nil {
+  use record <- list.each(records)
+  case record.codepoint_range {
+    CodepointRange(from: start, to: end) -> {
+      use cp <- list.each(list.range(
+        string.utf_codepoint_to_int(start),
+        string.utf_codepoint_to_int(end),
+      ))
+      let assert Ok(cp) = string.utf_codepoint(cp)
+      assert codegen_match_record(cp, record.fields)
+    }
+    SingleCodepoint(cp) -> {
+      assert codegen_match_record(cp, record.fields)
+    }
+    // NOTE handle surrogates manually in dedicated test assertions
+    _ -> Nil
   }
 }

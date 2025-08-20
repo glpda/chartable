@@ -4,8 +4,8 @@ import codegen/unicode
 import simplifile
 
 pub fn main() {
-  let assert Ok(names) = simplifile.read("data/unicode/names.txt")
-  let names = unicode.parse_unidata(names)
+  let assert Ok(txt) = simplifile.read("data/unicode/names.txt")
+  let assert Ok(names) = unicode.parse_names(txt)
   let assert Ok(template) = simplifile.read("codegen_templates/name_map.mjs")
   let assert Ok(Nil) =
     simplifile.write(

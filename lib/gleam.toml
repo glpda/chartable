@@ -28,6 +28,7 @@ allow_read = [
     "./build",
     "./test",
     "./birdie_snapshots",
+    "./dev",
     "./data",
     "./codegen_templates",
 ]

@@ -7,32 +7,11 @@ import gleam/result
 import gleam/string
 import simplifile
 
-fn assert_codegen_match_unidata(
-  records: List(unicode_codegen.Record(fields)),
-  codegen_match_record: fn(UtfCodepoint, fields) -> Bool,
-) -> Nil {
-  use record <- list.each(records)
-  case record.codepoint_range {
-    unicode_codegen.CodepointRange(from: start, to: end) -> {
-      use cp <- list.each(list.range(
-        string.utf_codepoint_to_int(start),
-        string.utf_codepoint_to_int(end),
-      ))
-      let assert Ok(cp) = string.utf_codepoint(cp)
-      assert codegen_match_record(cp, record.fields)
-    }
-    unicode_codegen.SingleCodepoint(cp) -> {
-      assert codegen_match_record(cp, record.fields)
-    }
-  }
-}
-
 pub fn name_codegen_test() {
-  let assert Ok(names) = simplifile.read("data/unicode/names.txt")
-  let names = unicode_codegen.parse_unidata(names)
+  let assert Ok(txt) = simplifile.read("data/unicode/names.txt")
+  let assert Ok(names) = unicode_codegen.parse_names(txt)
 
-  assert_codegen_match_unidata(names, fn(cp, fields) {
-    let assert [name, ..] = fields
+  unicode_codegen.assert_match_unidata(names, fn(cp, name) {
     assert name != ""
     let hex = internal.codepoint_to_hex(cp)
     let name = string.replace(in: name, each: "*", with: hex)
@@ -99,7 +78,7 @@ pub fn category_from_int_test() {
 
   assert unicode.category_from_int(0x02B0) == category.LetterModifier
 
-  assert unicode.category_from_int(0x304B) == category.LetterOther
+  assert unicode.category_from_int(0x661F) == category.LetterOther
 
   assert unicode.category_from_int(0x0301) == category.MarkNonspacing
 
@@ -328,4 +307,13 @@ pub fn category_consistency_test() {
     category.Unassigned,
   ]
   list.each(categories, assert_category_consistency)
+}
+
+pub fn category_ffi_test() {
+  let assert Ok(txt) = simplifile.read("data/unicode/categories.txt")
+  let assert Ok(categories) = unicode_codegen.parse_categories(txt)
+
+  unicode_codegen.assert_match_unidata(categories, fn(cp, category) {
+    unicode.category_from_codepoint(cp) == category
+  })
 }
