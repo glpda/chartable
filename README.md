@@ -20,10 +20,15 @@ Inspirations (a prior art list):
 ## Development
 
 Requirements:
-[gleam](https://gleam.run/),
+[gleam](https://gleam.run/) (+ javascript runtime),
 [jq](https://jqlang.org/),
 [just](https://just.systems/),
 [wget](https://www.gnu.org/software/wget/).
+
+You can install these tools using a version manager like
+[asdf](https://asdf-vm.com/guide/getting-started.html) or
+[mise](https://mise.jdx.dev/getting-started.html), which can read from
+`.tool-versions`.
 
 ```sh
 just codegen   # Dowload source data and generate library code
