@@ -104,6 +104,47 @@ pub type GeneralCategory {
   Unassigned
 }
 
+/// A list of all General Categories.
+pub const list = [
+  // Letters:
+  LetterUppercase,
+  LetterLowercase,
+  LetterTitlecase,
+  LetterModifier,
+  LetterOther,
+  // Marks:
+  MarkNonspacing,
+  MarkSpacing,
+  MarkEnclosing,
+  // Numbers:
+  NumberDecimal,
+  NumberLetter,
+  NumberOther,
+  // Punctuations:
+  PunctuationConnector,
+  PunctuationDash,
+  PunctuationOpen,
+  PunctuationClose,
+  PunctuationInitial,
+  PunctuationFinal,
+  PunctuationOther,
+  // Symbols:
+  SymbolMath,
+  SymbolCurrency,
+  SymbolModifier,
+  SymbolOther,
+  // Separators:
+  SeparatorSpace,
+  SeparatorLine,
+  SeparatorParagraph,
+  // Others:
+  Control,
+  Format,
+  Surrogate,
+  PrivateUse,
+  Unassigned,
+]
+
 /// Converts an abbreviation `String` to a [`GeneralCategory`](#GeneralCategory).
 ///
 /// ## Examples

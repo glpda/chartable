@@ -315,46 +315,7 @@ fn assert_category_consistency(cat) {
 }
 
 pub fn category_consistency_test() {
-  let categories = [
-    // Letters:
-    category.LetterUppercase,
-    category.LetterLowercase,
-    category.LetterTitlecase,
-    category.LetterModifier,
-    category.LetterOther,
-    // Marks:
-    category.MarkNonspacing,
-    category.MarkSpacing,
-    category.MarkEnclosing,
-    // Numbers:
-    category.NumberDecimal,
-    category.NumberLetter,
-    category.NumberOther,
-    // Punctuations:
-    category.PunctuationConnector,
-    category.PunctuationDash,
-    category.PunctuationOpen,
-    category.PunctuationClose,
-    category.PunctuationInitial,
-    category.PunctuationFinal,
-    category.PunctuationOther,
-    // Symbols:
-    category.SymbolMath,
-    category.SymbolCurrency,
-    category.SymbolModifier,
-    category.SymbolOther,
-    // Separators:
-    category.SeparatorSpace,
-    category.SeparatorLine,
-    category.SeparatorParagraph,
-    // Others:
-    category.Control,
-    category.Format,
-    category.Surrogate,
-    category.PrivateUse,
-    category.Unassigned,
-  ]
-  list.each(categories, assert_category_consistency)
+  list.each(category.list, assert_category_consistency)
 }
 //
 // pub fn category_ffi_test() {
