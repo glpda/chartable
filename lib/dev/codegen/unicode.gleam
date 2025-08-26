@@ -1,14 +1,15 @@
 import chartable/internal
 import chartable/unicode/category.{type GeneralCategory}
 import gleam/bool
+import gleam/int
 import gleam/list
 import gleam/option.{type Option, None, Some}
 import gleam/result
 import gleam/string
 import splitter
 
-pub type Record(fields) {
-  Record(codepoint_range: CodepointRange, fields: fields)
+pub type Record(data) {
+  Record(codepoint_range: CodepointRange, data: data)
 }
 
 pub type CodepointRange {
@@ -21,13 +22,22 @@ pub type CodepointRange {
   LowSurrogates
 }
 
-pub type ParserError {
-  InvalidCodepointRange(line: Int)
-  InvalidFields(line: Int)
-}
-
-type ParserState(fields) {
-  ParserState(line: Int, txt: String, record: Option(Record(fields)))
+pub fn codepoint_range_to_pair(codepoint_range: CodepointRange) -> #(Int, Int) {
+  case codepoint_range {
+    CodepointRange(from: start, to: end) -> #(
+      string.utf_codepoint_to_int(start),
+      string.utf_codepoint_to_int(end),
+    )
+    SingleCodepoint(cp) -> {
+      let cp = string.utf_codepoint_to_int(cp)
+      #(cp, cp)
+    }
+    AllSurrogates -> #(0xD800, 0xDFFF)
+    HighSurrogates -> #(0xDB80, 0xDBFF)
+    HighStandardSurrogates -> #(0xD800, 0xDB7F)
+    HighPrivateUseSurrogates -> #(0xDB80, 0xDBFF)
+    LowSurrogates -> #(0xDC00, 0xDFFF)
+  }
 }
 
 pub fn make_name_map(
@@ -79,10 +89,39 @@ pub fn make_name_map(
   |> string.replace(each: "/*{{map_def}}*/", with: map_def)
 }
 
-pub fn parse_unidata(
+pub fn make_block_map(
+  blocks blocks: List(Record(String)),
+  template template: String,
+) -> String {
+  let blocks =
+    list.map(blocks, fn(record) {
+      let #(start, end) = codepoint_range_to_pair(record.codepoint_range)
+      let start = int.to_base16(start) |> string.pad_start(to: 4, with: "0")
+      let end = int.to_base16(end) |> string.pad_start(to: 4, with: "0")
+      let block_name = record.data
+      // [[0x0000, 0x007F], "Basic Latin"]
+      "[[0x" <> start <> ", 0x" <> end <> "], \"" <> block_name <> "\"]"
+    })
+    |> string.join(with: ",\n")
+  string.replace(in: template, each: "/*{{blocks}}*/", with: blocks)
+}
+
+// =============================================================================
+// BEGIN UNIDATA PARSERS
+
+type ParserState(data) {
+  ParserState(line: Int, txt: String, record: Option(Record(data)))
+}
+
+pub type ParserError {
+  InvalidCodepointRange(line: Int)
+  InvalidFields(line: Int)
+}
+
+fn parse_unidata(
   txt: String,
-  with fields_parser: fn(List(String)) -> Result(fields, Nil),
-) -> Result(List(Record(fields)), ParserError) {
+  with fields_parser: fn(List(String)) -> Result(data, Nil),
+) -> Result(List(Record(data)), ParserError) {
   let line_end = splitter.new(["\n"])
   let comment = splitter.new(["#"])
   let separator = splitter.new([";"])
@@ -105,9 +144,9 @@ pub fn parse_unidata(
     |> list.map(string.trim)
     |> fields_parser()
   case fields {
-    Ok(fields) ->
+    Ok(data) ->
       Ok(ParserState(
-        Some(Record(codepoint_range:, fields:)),
+        Some(Record(codepoint_range:, data:)),
         line: state.line + 1,
         txt: rest,
       ))
@@ -116,11 +155,11 @@ pub fn parse_unidata(
 }
 
 fn parse_unidata_loop(
-  input state: ParserState(fields),
-  output records: List(Record(fields)),
-  with line_parser: fn(ParserState(fields)) ->
-    Result(ParserState(fields), ParserError),
-) -> Result(List(Record(fields)), ParserError) {
+  input state: ParserState(data),
+  output records: List(Record(data)),
+  with line_parser: fn(ParserState(data)) ->
+    Result(ParserState(data), ParserError),
+) -> Result(List(Record(data)), ParserError) {
   case state.txt {
     "" -> Ok(list.reverse(records))
     _ ->
@@ -163,8 +202,8 @@ fn parse_codepoint_range(str: String) -> Result(CodepointRange, Nil) {
 }
 
 pub fn parse_names(txt: String) -> Result(List(Record(String)), ParserError) {
-  use fields <- parse_unidata(txt)
-  case fields {
+  use data <- parse_unidata(txt)
+  case data {
     [name, ..] -> Ok(name)
     [] -> Error(Nil)
   }
@@ -173,16 +212,26 @@ pub fn parse_names(txt: String) -> Result(List(Record(String)), ParserError) {
 pub fn parse_categories(
   txt: String,
 ) -> Result(List(Record(GeneralCategory)), ParserError) {
-  use fields <- parse_unidata(txt)
-  case fields {
+  use data <- parse_unidata(txt)
+  case data {
     [cat, ..] -> category.from_abbreviation(cat)
     [] -> Error(Nil)
   }
 }
 
+pub fn parse_blocks(txt: String) -> Result(List(Record(String)), ParserError) {
+  use data <- parse_unidata(txt)
+  case data {
+    [block_name, ..] -> Ok(block_name)
+    [] -> Error(Nil)
+  }
+}
+
+// END
+
 pub fn assert_match_unidata(
-  records: List(Record(fields)),
-  codegen_match_record: fn(UtfCodepoint, fields) -> Bool,
+  records: List(Record(data)),
+  codegen_match_record: fn(UtfCodepoint, data) -> Bool,
 ) -> Nil {
   use record <- list.each(records)
   case record.codepoint_range {
@@ -192,10 +241,10 @@ pub fn assert_match_unidata(
         string.utf_codepoint_to_int(end),
       ))
       let assert Ok(cp) = string.utf_codepoint(cp)
-      assert codegen_match_record(cp, record.fields)
+      assert codegen_match_record(cp, record.data)
     }
     SingleCodepoint(cp) -> {
-      assert codegen_match_record(cp, record.fields)
+      assert codegen_match_record(cp, record.data)
     }
     // NOTE handle surrogates manually in dedicated test assertions
     _ -> Nil

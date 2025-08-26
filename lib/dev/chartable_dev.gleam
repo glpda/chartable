@@ -12,6 +12,14 @@ pub fn main() {
       to: "src/chartable/unicode/name_map.mjs",
       contents: unicode.make_name_map(names:, template:),
     )
+  let assert Ok(txt) = simplifile.read("data/unicode/blocks.txt")
+  let assert Ok(blocks) = unicode.parse_blocks(txt)
+  let assert Ok(template) = simplifile.read("codegen_templates/block_map.mjs")
+  let assert Ok(Nil) =
+    simplifile.write(
+      to: "src/chartable/unicode/block_map.mjs",
+      contents: unicode.make_block_map(blocks:, template:),
+    )
 
   let assert Ok(template) =
     simplifile.read("codegen_templates/notation_map.mjs")

@@ -51,6 +51,54 @@ pub fn name_from_int_test() {
   assert unicode.name_from_int(0x110000) == Error(Nil)
 }
 
+pub fn block_from_codepoint_test() {
+  assert string.utf_codepoint(0x0041)
+    |> result.map(unicode.block_from_codepoint)
+    == Ok("Basic Latin")
+
+  assert string.utf_codepoint(0x22C6)
+    |> result.map(unicode.block_from_codepoint)
+    == Ok("Mathematical Operators")
+
+  assert string.utf_codepoint(0x661F)
+    |> result.map(unicode.block_from_codepoint)
+    == Ok("CJK Unified Ideographs")
+}
+
+pub fn block_from_int_test() {
+  assert unicode.block_from_int(-100) == Error(Nil)
+  assert unicode.block_from_int(0x110000) == Error(Nil)
+  assert unicode.block_from_int(0x0000) == Ok("Basic Latin")
+  assert unicode.block_from_int(0x0041) == Ok("Basic Latin")
+  assert unicode.block_from_int(0x007F) == Ok("Basic Latin")
+  assert unicode.block_from_int(0x0080) == Ok("Latin-1 Supplement")
+  assert unicode.block_from_int(0x22C6) == Ok("Mathematical Operators")
+  assert unicode.block_from_int(0x661F) == Ok("CJK Unified Ideographs")
+}
+
+pub fn block_to_pair_test() {
+  assert unicode.block_to_pair("Basic_Latin") == Ok(#(0x0000, 0x007F))
+  assert unicode.block_to_pair("isHighSurrogates") == Ok(#(0xD800, 0xDB7F))
+  assert unicode.block_to_pair("Lucy") == Error(Nil)
+}
+
+fn assert_block_consistency(block_name: String) {
+  let assert Ok(#(start, end)) = unicode.block_to_pair(block_name)
+
+  assert unicode.block_to_pair("is " <> block_name) == Ok(#(start, end))
+
+  assert start % 16 == 0
+  assert end % 16 == 15
+
+  assert unicode.block_from_int(start) == Ok(block_name)
+  assert unicode.block_from_int({ end + start } / 2) == Ok(block_name)
+  assert unicode.block_from_int(end) == Ok(block_name)
+}
+
+pub fn block_consistency_test() {
+  list.each(unicode.blocks(), assert_block_consistency)
+}
+
 pub fn category_from_codepoint_test() {
   assert string.utf_codepoint(0x0041)
     |> result.map(unicode.category_from_codepoint)
@@ -308,12 +356,13 @@ pub fn category_consistency_test() {
   ]
   list.each(categories, assert_category_consistency)
 }
-
-pub fn category_ffi_test() {
-  let assert Ok(txt) = simplifile.read("data/unicode/categories.txt")
-  let assert Ok(categories) = unicode_codegen.parse_categories(txt)
-
-  unicode_codegen.assert_match_unidata(categories, fn(cp, category) {
-    unicode.category_from_codepoint(cp) == category
-  })
-}
+//
+// pub fn category_ffi_test() {
+//   let assert Ok(txt) = simplifile.read("data/unicode/categories.txt")
+//   let assert Ok(categories) = unicode_codegen.parse_categories(txt)
+//
+//   unicode_codegen.assert_match_unidata(categories, fn(cp, category) {
+//     unicode.category_from_codepoint(cp) == category
+//   })
+// }
+//

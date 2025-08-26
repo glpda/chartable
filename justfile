@@ -5,6 +5,7 @@ data-path := "lib/data"
 unidata := "https://www.unicode.org/Public/UCD/latest/ucd"
 derived-name := "extracted/DerivedName.txt"
 categories := "extracted/DerivedGeneralCategory.txt"
+blocks := "Blocks.txt"
 
 whatwg := "https://html.spec.whatwg.org/"
 html-entities := "entities.json"
@@ -44,7 +45,9 @@ fetch-unidata: \
 (download unidata derived-name) \
 (add-data derived-name "unicode/names.txt") \
 (download unidata categories) \
-(add-data categories "unicode/categories.txt")
+(add-data categories "unicode/categories.txt") \
+(download unidata blocks) \
+(add-data blocks "unicode/blocks.txt")
 
 entities-filter := \
 	'with_entries(select(.key | startswith("&") and endswith(";"))' + \
