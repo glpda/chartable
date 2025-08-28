@@ -1,8 +1,24 @@
 import chartable/internal
+import gleam/string
 import gleeunit
 
 pub fn main() {
   gleeunit.main()
+}
+
+pub fn parse_codepoint_test() {
+  assert internal.parse_codepoint("0000") == string.utf_codepoint(0x0000)
+  assert internal.parse_codepoint("0041") == string.utf_codepoint(0x0041)
+  assert internal.parse_codepoint("2B50") == string.utf_codepoint(0x2B50)
+  assert internal.parse_codepoint("661F") == string.utf_codepoint(0x661F)
+  assert internal.parse_codepoint("120000") == Error(Nil)
+}
+
+pub fn int_to_hex_test() {
+  assert internal.int_to_hex(0x0000) == "0000"
+  assert internal.int_to_hex(0x0041) == "0041"
+  assert internal.int_to_hex(0x2B50) == "2B50"
+  assert internal.int_to_hex(0x661F) == "661F"
 }
 
 pub fn property_matching_test() {

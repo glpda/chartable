@@ -9,11 +9,13 @@ pub fn parse_codepoint(str: String) -> Result(UtfCodepoint, Nil) {
 }
 
 /// Converts a `UtfCodepoint` to an hexadecimal representation `String` padded
-/// with zeros to have a minimum length of 4.
+/// with zeroes to have a minimum length of 4.
 pub fn codepoint_to_hex(cp: UtfCodepoint) -> String {
   int_to_hex(string.utf_codepoint_to_int(cp))
 }
 
+/// Converts an `Int` to an hexadecimal representation `String` padded with
+/// zeroes to have a minimum length of 4.
 pub fn int_to_hex(cp: Int) -> String {
   string.pad_start(int.to_base16(cp), to: 4, with: "0")
 }
