@@ -228,7 +228,7 @@ pub fn category_is_number_test() {
   assert !category.is_number(category.LetterLowercase)
 }
 
-pub fn is_punctuation_test() {
+pub fn category_is_punctuation_test() {
   assert category.is_punctuation(category.PunctuationOther)
   assert !category.is_punctuation(category.NumberDecimal)
 }
