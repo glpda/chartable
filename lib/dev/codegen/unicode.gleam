@@ -1,7 +1,6 @@
 import chartable/internal
 import chartable/unicode/category.{type GeneralCategory}
 import gleam/bool
-import gleam/int
 import gleam/list
 import gleam/option.{type Option, None, Some}
 import gleam/result
@@ -52,14 +51,14 @@ pub fn make_name_map(
           let end = internal.codepoint_to_hex(end)
           let indentation = "    "
           // if ((0x3400 <= cp) && (cp <= 0x4DBF)) {
-          //   return new Ok("CJK UNIFIED IDEOGRAPH-" + display_codepoint(cp));
+          //   return new Ok("CJK UNIFIED IDEOGRAPH-" + int_to_hex(cp));
           // }
           let if_in_range =
             "if ((0x" <> start <> " <= cp) && (cp <= 0x" <> end <> ")) {\n"
           let name =
             string.split(name, on: "*")
             |> list.map(fn(str) { "\"" <> str <> "\"" })
-            |> list.intersperse(with: "display_codepoint(cp)")
+            |> list.intersperse(with: "int_to_hex(cp)")
             |> list.filter(fn(str) { str != "\"\"" })
             |> string.join(" + ")
           let return_name = "  return new Ok(" <> name <> ");\n"
@@ -96,8 +95,8 @@ pub fn make_block_map(
   let blocks =
     list.map(blocks, fn(record) {
       let #(start, end) = codepoint_range_to_pair(record.codepoint_range)
-      let start = int.to_base16(start) |> string.pad_start(to: 4, with: "0")
-      let end = int.to_base16(end) |> string.pad_start(to: 4, with: "0")
+      let start = internal.int_to_hex(start)
+      let end = internal.int_to_hex(end)
       let block_name = record.data
       // [[0x0000, 0x007F], "Basic Latin"]
       "[[0x" <> start <> ", 0x" <> end <> "], \"" <> block_name <> "\"]"
