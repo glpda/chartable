@@ -8,7 +8,6 @@ import gleam/string
 
 pub fn symbols_from_grapheme_test() {
   assert typst.symbols_from_grapheme("⋆") == ["#sym.star.op"]
-
   assert typst.symbols_from_grapheme("$")
     == ["#sym.dollar", "#sym.pataca", "#sym.peso"]
 }
@@ -17,7 +16,6 @@ pub fn symbols_from_codepoint_test() {
   assert string.utf_codepoint(0x22C6)
     |> result.map(typst.symbols_from_codepoint)
     == Ok(["#sym.star.op"])
-
   assert string.utf_codepoint(0x0024)
     |> result.map(typst.symbols_from_codepoint)
     == Ok(["#sym.dollar", "#sym.pataca", "#sym.peso"])
@@ -25,7 +23,6 @@ pub fn symbols_from_codepoint_test() {
 
 pub fn emojis_from_grapheme_test() {
   assert typst.emojis_from_grapheme("⭐") == ["#emoji.star"]
-
   assert typst.emojis_from_grapheme("🌟") == ["#emoji.star.glow"]
 }
 
@@ -33,7 +30,6 @@ pub fn emojis_from_codepoint_test() {
   assert string.utf_codepoint(0x2B50)
     |> result.map(typst.emojis_from_codepoint)
     == Ok(["#emoji.star"])
-
   assert string.utf_codepoint(0x1F31F)
     |> result.map(typst.emojis_from_codepoint)
     == Ok(["#emoji.star.glow"])
@@ -50,7 +46,6 @@ pub fn markup_shorthand_to_grapheme_test() {
 
 pub fn markup_shorthand_from_codepoint_test() {
   let assert Ok(en_dash) = string.utf_codepoint(0x2013)
-
   assert typst.markup_shorthand_from_codepoint(en_dash) == Ok("--")
 }
 
@@ -68,7 +63,6 @@ pub fn math_shorthand_to_grapheme_test() {
 
 pub fn math_shorthand_from_codepoint_test() {
   let assert Ok(arrow) = string.utf_codepoint(0x2192)
-
   assert typst.math_shorthand_from_codepoint(arrow) == Ok("->")
 }
 
@@ -120,27 +114,21 @@ pub fn math_alphanum_from_codepoint_test() {
   assert string.utf_codepoint(0x0043)
     |> result.try(typst.math_alphanum_from_codepoint)
     == Ok(["upright(C)"])
-
   assert string.utf_codepoint(0x1D436)
     |> result.try(typst.math_alphanum_from_codepoint)
     == Ok(["C"])
-
   assert string.utf_codepoint(0x1D53A)
     |> result.try(typst.math_alphanum_from_codepoint)
     == Error(Nil)
-
   assert string.utf_codepoint(0x2102)
     |> result.try(typst.math_alphanum_from_codepoint)
     == Ok(["bb(C)"])
-
   assert string.utf_codepoint(0x1D6AA)
     |> result.try(typst.math_alphanum_from_codepoint)
     == Ok(["bold(Gamma)"])
-
   assert string.utf_codepoint(0x1D6C4)
     |> result.try(typst.math_alphanum_from_codepoint)
     == Ok(["bold(upright(gamma))"])
-
   assert string.utf_codepoint(0x1D4F1)
     |> result.try(typst.math_alphanum_from_codepoint)
     == Ok(["bold(cal(h))"])
@@ -152,25 +140,17 @@ pub fn math_alphanum_from_codepoint_test() {
 
 pub fn notations_from_grapheme_test() {
   assert typst.notations_from_grapheme("\u{1F31F}") == ["#emoji.star.glow"]
-
   assert typst.notations_from_grapheme("\u{22C6}") == ["#sym.star.op"]
-
   assert typst.notations_from_grapheme("\u{2013}") == ["#sym.dash.en", "--"]
-
   assert typst.notations_from_grapheme("\u{2192}") == ["#sym.arrow.r", "$ -> $"]
-
   assert typst.notations_from_grapheme("\u{0393}")
     == ["#sym.Gamma", "$ Gamma $"]
-
   assert typst.notations_from_grapheme("\u{1D6AA}") == ["$ bold(Gamma) $"]
 }
 
 pub fn notation_to_grapheme_test() {
   assert typst.notation_to_grapheme("#sym.star.op") == Ok("\u{22C6}")
-
   assert typst.notation_to_grapheme("#emoji.star") == Ok("\u{2B50}")
-
   assert typst.notation_to_grapheme("emoji.star") == Error(Nil)
-
   assert typst.notation_to_grapheme("#emoji.staaar") == Error(Nil)
 }

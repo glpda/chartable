@@ -11,6 +11,9 @@ import gleam/dict
 import gleam/string
 import simplifile
 
+// =============================================================================
+// BEGIN Unicode Tests
+
 pub fn unicode_name_test() {
   let assert Ok(txt) = simplifile.read("data/unicode/names.txt")
   let assert Ok(names) = unicode_codegen.parse_names(txt)
@@ -41,6 +44,11 @@ pub fn unicode_category_test() {
   })
 }
 
+// END
+
+// =============================================================================
+// BEGIN Typst Notation Tests
+
 pub fn typst_symbol_test() {
   let assert Ok(sym) = simplifile.read("data/typst/sym.txt")
   let assert Ok(table) = typst_codegen.parse_codex(sym)
@@ -69,6 +77,11 @@ pub fn typst_emoji_test() {
   |> birdie.snap(title: "Typst emoji notations from codepoints")
 }
 
+// END
+
+// =============================================================================
+// BEGIN HTML Notation Tests
+
 pub fn html_entity_test() {
   let assert Ok(json) = simplifile.read("data/html/entities.json")
   let assert Ok(table) = html_codegen.parse_entities_json(json)
@@ -83,3 +96,4 @@ pub fn html_entity_test() {
   notation_table.to_string(table)
   |> birdie.snap(title: "HTML entities from codepoints")
 }
+// END

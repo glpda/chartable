@@ -4,19 +4,19 @@ import gleam/list
 import gleam/result
 import gleam/string
 
+// =============================================================================
+// BEGIN Unicode Name Tests
+
 pub fn name_from_codepoint_test() {
   assert string.utf_codepoint(0x0041)
     |> result.try(unicode.name_from_codepoint)
     == Ok("LATIN CAPITAL LETTER A")
-
   assert string.utf_codepoint(0x03A2)
     |> result.try(unicode.name_from_codepoint)
     == Error(Nil)
-
   assert string.utf_codepoint(0x22C6)
     |> result.try(unicode.name_from_codepoint)
     == Ok("STAR OPERATOR")
-
   assert string.utf_codepoint(0x661F)
     |> result.try(unicode.name_from_codepoint)
     == Ok("CJK UNIFIED IDEOGRAPH-661F")
@@ -24,27 +24,25 @@ pub fn name_from_codepoint_test() {
 
 pub fn name_from_int_test() {
   assert unicode.name_from_int(0x0041) == Ok("LATIN CAPITAL LETTER A")
-
   assert unicode.name_from_int(0x03A2) == Error(Nil)
-
   assert unicode.name_from_int(0x22C6) == Ok("STAR OPERATOR")
-
   assert unicode.name_from_int(0x661F) == Ok("CJK UNIFIED IDEOGRAPH-661F")
-
   assert unicode.name_from_int(-100) == Error(Nil)
-
   assert unicode.name_from_int(0x110000) == Error(Nil)
 }
+
+// END
+
+// =============================================================================
+// BEGIN Unicode Blocks Tests
 
 pub fn block_from_codepoint_test() {
   assert string.utf_codepoint(0x0041)
     |> result.map(unicode.block_from_codepoint)
     == Ok("Basic Latin")
-
   assert string.utf_codepoint(0x22C6)
     |> result.map(unicode.block_from_codepoint)
     == Ok("Mathematical Operators")
-
   assert string.utf_codepoint(0x661F)
     |> result.map(unicode.block_from_codepoint)
     == Ok("CJK Unified Ideographs")
@@ -85,19 +83,21 @@ pub fn block_consistency_test() {
   list.each(unicode.blocks(), assert_block_consistency)
 }
 
+// END
+
+// =============================================================================
+// BEGIN General Category Tests
+
 pub fn category_from_codepoint_test() {
   assert string.utf_codepoint(0x0041)
     |> result.map(unicode.category_from_codepoint)
     == Ok(category.LetterUppercase)
-
   assert string.utf_codepoint(0x0032)
     |> result.map(unicode.category_from_codepoint)
     == Ok(category.NumberDecimal)
-
   assert string.utf_codepoint(0x0024)
     |> result.map(unicode.category_from_codepoint)
     == Ok(category.SymbolCurrency)
-
   assert string.utf_codepoint(0x0007)
     |> result.map(unicode.category_from_codepoint)
     == Ok(category.Control)
@@ -105,100 +105,61 @@ pub fn category_from_codepoint_test() {
 
 pub fn category_from_int_test() {
   assert unicode.category_from_int(0x0041) == category.LetterUppercase
-
   assert unicode.category_from_int(0x0061) == category.LetterLowercase
-
   assert unicode.category_from_int(0x01F2) == category.LetterTitlecase
-
   assert unicode.category_from_int(0x02B0) == category.LetterModifier
-
   assert unicode.category_from_int(0x661F) == category.LetterOther
-
   assert unicode.category_from_int(0x0301) == category.MarkNonspacing
-
   assert unicode.category_from_int(0x0903) == category.MarkSpacing
-
   assert unicode.category_from_int(0x20E0) == category.MarkEnclosing
-
   assert unicode.category_from_int(0x0032) == category.NumberDecimal
-
   assert unicode.category_from_int(0x2162) == category.NumberLetter
-
   assert unicode.category_from_int(0x00BD) == category.NumberOther
-
   assert unicode.category_from_int(0x2040) == category.PunctuationConnector
-
   assert unicode.category_from_int(0x2013) == category.PunctuationDash
-
   assert unicode.category_from_int(0x007B) == category.PunctuationOpen
-
   assert unicode.category_from_int(0x007D) == category.PunctuationClose
-
   assert unicode.category_from_int(0x201C) == category.PunctuationInitial
-
   assert unicode.category_from_int(0x201D) == category.PunctuationFinal
-
   assert unicode.category_from_int(0x0021) == category.PunctuationOther
-
   assert unicode.category_from_int(0x002B) == category.SymbolMath
-
   assert unicode.category_from_int(0x0024) == category.SymbolCurrency
-
   assert unicode.category_from_int(0x005E) == category.SymbolModifier
-
   assert unicode.category_from_int(0x00B0) == category.SymbolOther
-
   assert unicode.category_from_int(0x0020) == category.SeparatorSpace
-
   assert unicode.category_from_int(0x2028) == category.SeparatorLine
-
   assert unicode.category_from_int(0x2029) == category.SeparatorParagraph
-
   assert unicode.category_from_int(0x0007) == category.Control
-
   assert unicode.category_from_int(0x00AD) == category.Format
-
   assert unicode.category_from_int(0xD877) == category.Surrogate
-
   assert unicode.category_from_int(0xE777) == category.PrivateUse
-
   assert unicode.category_from_int(0x03A2) == category.Unassigned
 }
 
 pub fn category_from_abbreviation_test() {
   assert category.from_abbreviation("Lu") == Ok(category.LetterUppercase)
-
   assert category.from_abbreviation("Cn") == Ok(category.Unassigned)
-
   assert category.from_abbreviation("Sm") == Ok(category.SymbolMath)
-
   assert category.from_abbreviation("Xyz") == Error(Nil)
 }
 
 pub fn category_to_abbreviation_test() {
   assert category.to_abbreviation(category.LetterUppercase) == "Lu"
-
   assert category.to_abbreviation(category.Unassigned) == "Cn"
-
   assert category.to_abbreviation(category.SymbolMath) == "Sm"
 }
 
 pub fn category_from_long_name_test() {
   assert category.from_long_name("Uppercase_Letter")
     == Ok(category.LetterUppercase)
-
   assert category.from_long_name("Unassigned") == Ok(category.Unassigned)
-
   assert category.from_long_name("Math_Symbol") == Ok(category.SymbolMath)
-
   assert category.from_long_name("Invalid_Category") == Error(Nil)
 }
 
 pub fn category_to_long_name_test() {
   assert category.to_long_name(category.LetterUppercase) == "Uppercase_Letter"
-
   assert category.to_long_name(category.Unassigned) == "Unassigned"
-
   assert category.to_long_name(category.SymbolMath) == "Math_Symbol"
 }
 
@@ -286,7 +247,6 @@ fn assert_category_consistency(cat) {
   assert case name {
     "Control" | "Format" | "Surrogate" | "Private_Use" | "Unassigned" ->
       category.is_other(cat)
-
     _ ->
       case string.split_once(name, on: "_") {
         Ok(#(_, "Letter")) -> category.is_letter(cat)
@@ -303,3 +263,4 @@ fn assert_category_consistency(cat) {
 pub fn category_consistency_test() {
   list.each(category.list, assert_category_consistency)
 }
+// END
