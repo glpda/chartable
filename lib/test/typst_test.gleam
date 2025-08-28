@@ -1,51 +1,10 @@
 import birdie
 import chartable/typst
-import codegen/notation_table.{type NotationTable}
-import codegen/typst as typst_codegen
+import codegen/notation_table
 import gleam/dict
 import gleam/list
 import gleam/result
 import gleam/string
-import simplifile
-
-fn assert_codegen_match_table(table: NotationTable, prefix: String) -> Nil {
-  dict.each(table.grapheme_to_notations, fn(grapheme, notations) {
-    assert typst.notations_from_grapheme(grapheme)
-      |> list.filter_map(fn(notation) {
-        string.split_once(notation, on: prefix)
-        |> result.map(fn(pair) { pair.1 })
-      })
-      == list.sort(notations, string.compare)
-  })
-
-  dict.each(table.notation_to_grapheme, fn(notation, grapheme) {
-    assert typst.notation_to_grapheme(prefix <> notation) == Ok(grapheme)
-  })
-}
-
-pub fn symbol_codegen_test() {
-  let assert Ok(sym) = simplifile.read("data/typst/sym.txt")
-  let assert Ok(table) = typst_codegen.parse_codex(sym)
-
-  notation_table.assert_consistency(table)
-
-  assert_codegen_match_table(table, "#sym.")
-
-  notation_table.to_string(table)
-  |> birdie.snap(title: "Typst symbol notations from codepoints")
-}
-
-pub fn emoji_codegen_test() {
-  let assert Ok(emoji) = simplifile.read("data/typst/emoji.txt")
-  let assert Ok(table) = typst_codegen.parse_codex(emoji)
-
-  notation_table.assert_consistency(table)
-
-  assert_codegen_match_table(table, "#emoji.")
-
-  notation_table.to_string(table)
-  |> birdie.snap(title: "Typst emoji notations from codepoints")
-}
 
 pub fn symbols_from_grapheme_test() {
   assert typst.symbols_from_grapheme("⋆") == ["#sym.star.op"]

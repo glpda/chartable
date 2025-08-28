@@ -1,8 +1,8 @@
 ---
 version: 1.3.2
 title: Typst symbol notations from codepoints
-file: ./test/typst_test.gleam
-test_name: symbol_codegen_test
+file: ./test/codegen_test.gleam
+test_name: typst_symbol_test
 ---
 0020 ( ): space
 0021 (!): excl

@@ -1,8 +1,8 @@
 ---
 version: 1.3.2
 title: HTML entities from codepoints
-file: ./test/html_test.gleam
-test_name: entity_codegen_test
+file: ./test/codegen_test.gleam
+test_name: html_entity_test
 ---
 0009 (	): Tab
 000A (

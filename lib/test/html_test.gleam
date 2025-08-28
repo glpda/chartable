@@ -1,37 +1,7 @@
-import birdie
 import chartable/html
-import codegen/html as html_codegen
-import codegen/notation_table.{type NotationTable}
-import gleam/dict
 import gleam/list
 import gleam/result
 import gleam/string
-import simplifile
-
-fn assert_codegen_match_table(table: NotationTable) -> Nil {
-  dict.each(table.grapheme_to_notations, fn(grapheme, notations) {
-    assert html.named_character_references(grapheme)
-      == list.sort(notations, string.compare)
-      |> list.map(fn(notation) { "&" <> notation <> ";" })
-  })
-
-  dict.each(table.notation_to_grapheme, fn(notation, grapheme) {
-    assert html.character_reference_to_grapheme("&" <> notation <> ";")
-      == Ok(grapheme)
-  })
-}
-
-pub fn entity_codegen_test() {
-  let assert Ok(json) = simplifile.read("data/html/entities.json")
-  let assert Ok(table) = html_codegen.parse_entities_json(json)
-
-  notation_table.assert_consistency(table)
-
-  assert_codegen_match_table(table)
-
-  notation_table.to_string(table)
-  |> birdie.snap(title: "HTML entities from codepoints")
-}
 
 pub fn named_character_references_test() {
   assert html.named_character_references("⋆") == ["&Star;", "&sstarf;"]

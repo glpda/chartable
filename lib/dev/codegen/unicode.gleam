@@ -231,22 +231,10 @@ pub fn parse_blocks(txt: String) -> Result(List(Record(String)), ParserError) {
 
 pub fn assert_match_unidata(
   records: List(Record(data)),
-  codegen_match_record: fn(UtfCodepoint, data) -> Bool,
+  codegen_match_record: fn(Int, data) -> Bool,
 ) -> Nil {
   use record <- list.each(records)
-  case record.codepoint_range {
-    CodepointRange(from: start, to: end) -> {
-      use cp <- list.each(list.range(
-        string.utf_codepoint_to_int(start),
-        string.utf_codepoint_to_int(end),
-      ))
-      let assert Ok(cp) = string.utf_codepoint(cp)
-      assert codegen_match_record(cp, record.data)
-    }
-    SingleCodepoint(cp) -> {
-      assert codegen_match_record(cp, record.data)
-    }
-    // NOTE handle surrogates manually in dedicated test assertions
-    _ -> Nil
-  }
+  let #(start, end) = codepoint_range_to_pair(record.codepoint_range)
+  use cp <- list.each(list.range(start, end))
+  assert codegen_match_record(cp, record.data)
 }

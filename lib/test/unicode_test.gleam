@@ -1,23 +1,8 @@
-import chartable/internal
 import chartable/unicode
 import chartable/unicode/category
-import codegen/unicode as unicode_codegen
 import gleam/list
 import gleam/result
 import gleam/string
-import simplifile
-
-pub fn name_codegen_test() {
-  let assert Ok(txt) = simplifile.read("data/unicode/names.txt")
-  let assert Ok(names) = unicode_codegen.parse_names(txt)
-
-  unicode_codegen.assert_match_unidata(names, fn(cp, name) {
-    assert name != ""
-    let hex = internal.codepoint_to_hex(cp)
-    let name = string.replace(in: name, each: "*", with: hex)
-    unicode.name_from_codepoint(cp) == Ok(name)
-  })
-}
 
 pub fn name_from_codepoint_test() {
   assert string.utf_codepoint(0x0041)
@@ -85,7 +70,8 @@ pub fn block_to_pair_test() {
 fn assert_block_consistency(block_name: String) {
   let assert Ok(#(start, end)) = unicode.block_to_pair(block_name)
 
-  assert unicode.block_to_pair("is " <> block_name) == Ok(#(start, end))
+  assert unicode.block_to_pair("is " <> string.lowercase(block_name))
+    == Ok(#(start, end))
 
   assert start % 16 == 0
   assert end % 16 == 15
@@ -317,13 +303,3 @@ fn assert_category_consistency(cat) {
 pub fn category_consistency_test() {
   list.each(category.list, assert_category_consistency)
 }
-//
-// pub fn category_ffi_test() {
-//   let assert Ok(txt) = simplifile.read("data/unicode/categories.txt")
-//   let assert Ok(categories) = unicode_codegen.parse_categories(txt)
-//
-//   unicode_codegen.assert_match_unidata(categories, fn(cp, category) {
-//     unicode.category_from_codepoint(cp) == category
-//   })
-// }
-//
