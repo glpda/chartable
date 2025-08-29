@@ -1,8 +1,10 @@
 import chartable/internal
 import chartable/unicode/category.{type GeneralCategory}
 import gleam/bool
+import gleam/int
 import gleam/list
 import gleam/option.{type Option, None, Some}
+import gleam/order
 import gleam/result
 import gleam/string
 import splitter
@@ -37,6 +39,33 @@ pub fn codepoint_range_to_pair(codepoint_range: CodepointRange) -> #(Int, Int) {
     HighPrivateUseSurrogates -> #(0xDB80, 0xDBFF)
     LowSurrogates -> #(0xDC00, 0xDFFF)
   }
+}
+
+pub fn records_to_string(
+  records: List(Record(data)),
+  data_to_string: fn(data) -> String,
+) -> String {
+  list.sort(records, fn(lhs, rhs) {
+    let #(lhs_start, lhs_end) = codepoint_range_to_pair(lhs.codepoint_range)
+    let #(rhs_start, rhs_end) = codepoint_range_to_pair(rhs.codepoint_range)
+    int.compare(lhs_start, rhs_start)
+    |> order.break_tie(int.compare(lhs_end, rhs_end))
+  })
+  |> list.map(fn(record) {
+    let index = case record.codepoint_range {
+      SingleCodepoint(cp) -> {
+        let hex = internal.codepoint_to_hex(cp)
+        let str = string.from_utf_codepoints([cp])
+        hex <> " (" <> str <> ")"
+      }
+      codepoint_range -> {
+        let #(start, end) = codepoint_range_to_pair(codepoint_range)
+        internal.int_to_hex(start) <> ".." <> internal.int_to_hex(end)
+      }
+    }
+    index <> ": " <> data_to_string(record.data)
+  })
+  |> string.join("\n")
 }
 
 pub fn make_name_map(

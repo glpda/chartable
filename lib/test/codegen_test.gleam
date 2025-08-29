@@ -33,6 +33,9 @@ pub fn unicode_blocks_test() {
   unicode_codegen.assert_match_unidata(blocks, fn(cp, block) {
     unicode.block_from_int(cp) == Ok(block)
   })
+
+  unicode_codegen.records_to_string(blocks, fn(block_name) { block_name })
+  |> birdie.snap(title: "Unicode Blocks")
 }
 
 pub fn unicode_category_test() {
