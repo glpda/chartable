@@ -77,7 +77,7 @@ pub type GeneralCategory {
   /// e.g. U+005E "Circumflex Accent" ( ^ )
   SymbolModifier
   /// `"So"` symbol of other type,
-  /// e.g. U+00B0 "Degree Sing" ( ° )
+  /// e.g. U+2B50 "White Medium Star" ( ⭐ )
   SymbolOther
 
   // Separators:

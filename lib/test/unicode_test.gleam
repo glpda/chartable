@@ -125,7 +125,7 @@ pub fn category_from_int_test() {
   assert unicode.category_from_int(0x002B) == category.SymbolMath
   assert unicode.category_from_int(0x0024) == category.SymbolCurrency
   assert unicode.category_from_int(0x005E) == category.SymbolModifier
-  assert unicode.category_from_int(0x00B0) == category.SymbolOther
+  assert unicode.category_from_int(0x2B50) == category.SymbolOther
   assert unicode.category_from_int(0x0020) == category.SeparatorSpace
   assert unicode.category_from_int(0x2028) == category.SeparatorLine
   assert unicode.category_from_int(0x2029) == category.SeparatorParagraph
