@@ -18,7 +18,7 @@ pub fn unicode_name_test() {
   let assert Ok(txt) = simplifile.read("data/unicode/names.txt")
   let assert Ok(names) = unicode_codegen.parse_names(txt)
 
-  unicode_codegen.assert_match_unidata(names, fn(cp, name) {
+  unicode_codegen.assert_match_range_records(names, fn(cp, name) {
     assert name != ""
     let hex = internal.int_to_hex(cp)
     let name = string.replace(in: name, each: "*", with: hex)
@@ -30,11 +30,11 @@ pub fn unicode_blocks_test() {
   let assert Ok(txt) = simplifile.read("data/unicode/blocks.txt")
   let assert Ok(blocks) = unicode_codegen.parse_blocks(txt)
 
-  unicode_codegen.assert_match_unidata(blocks, fn(cp, block) {
+  unicode_codegen.assert_match_range_records(blocks, fn(cp, block) {
     unicode.block_from_int(cp) == Ok(block)
   })
 
-  unicode_codegen.records_to_string(blocks, fn(block_name) { block_name })
+  unicode_codegen.range_records_to_string(blocks, fn(block_name) { block_name })
   |> birdie.snap(title: "Unicode Blocks")
 }
 
@@ -42,7 +42,7 @@ pub fn unicode_category_test() {
   let assert Ok(txt) = simplifile.read("data/unicode/categories.txt")
   let assert Ok(categories) = unicode_codegen.parse_categories(txt)
 
-  unicode_codegen.assert_match_unidata(categories, fn(cp, category) {
+  unicode_codegen.assert_match_range_records(categories, fn(cp, category) {
     unicode.category_from_int(cp) == category
   })
 }
