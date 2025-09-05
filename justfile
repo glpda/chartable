@@ -6,6 +6,7 @@ unidata := "https://www.unicode.org/Public/UCD/latest/ucd"
 derived-name := "extracted/DerivedName.txt"
 categories := "extracted/DerivedGeneralCategory.txt"
 blocks := "Blocks.txt"
+property-value-aliases := "PropertyValueAliases.txt"
 
 whatwg := "https://html.spec.whatwg.org/"
 html-entities := "entities.json"
@@ -42,6 +43,8 @@ fetch-all: fetch-unidata fetch-html fetch-typst
 
 [group('fetch')]
 fetch-unidata: \
+(download unidata property-value-aliases) \
+(add-data property-value-aliases "unicode/property-value-aliases.txt") \
 (download unidata derived-name) \
 (add-data derived-name "unicode/names.txt") \
 (download unidata categories) \

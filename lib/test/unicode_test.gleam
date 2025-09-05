@@ -1,5 +1,6 @@
 import chartable/unicode
 import chartable/unicode/category
+import chartable/unicode/script
 import gleam/list
 import gleam/result
 import gleam/string
@@ -81,6 +82,42 @@ fn assert_block_consistency(block_name: String) {
 
 pub fn block_consistency_test() {
   list.each(unicode.blocks(), assert_block_consistency)
+}
+
+// END
+
+// =============================================================================
+// BEGIN Unicode Scripts Tests
+
+pub fn script_name_test() {
+  let assert Ok(egypt_hiero) = script.from_name("Egyp")
+  assert Ok(egypt_hiero) == script.from_name("Egyptian Hieroglyphs")
+  assert Ok(egypt_hiero) == script.from_name("Egyptian-Hieroglyphs")
+  assert Ok(egypt_hiero) == script.from_name("is_egyptian_hieroglyphs")
+  assert script.to_short_name(egypt_hiero) == "Egyp"
+  assert script.to_long_name(egypt_hiero) == "Egyptian_Hieroglyphs"
+
+  let assert Ok(coptic) = script.from_name("copt")
+  assert Ok(coptic) == script.from_name("Coptic")
+  assert Ok(coptic) == script.from_name("Qaac")
+  assert script.to_short_name(coptic) == "Copt"
+  assert script.to_long_name(coptic) == "Coptic"
+
+  let assert Ok(inherited) = script.from_name("zinh")
+  assert Ok(inherited) == script.from_name("Inherited")
+  assert Ok(inherited) == script.from_name("Qaai")
+  assert script.to_short_name(inherited) == "Zinh"
+  assert script.to_long_name(inherited) == "Inherited"
+
+  let assert Ok(common) = script.from_name("zyyy")
+  assert Ok(common) == script.from_name("Common")
+  assert script.to_short_name(common) == "Zyyy"
+  assert script.to_long_name(common) == "Common"
+
+  let assert Ok(unknown) = script.from_name("zzzz")
+  assert Ok(unknown) == script.from_name("Unknown")
+  assert script.to_short_name(unknown) == "Zzzz"
+  assert script.to_long_name(unknown) == "Unknown"
 }
 
 // END

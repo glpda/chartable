@@ -9,6 +9,21 @@ import gleam/result
 import gleam/string
 import splitter
 
+/// Records for "`PropertyValueAliases.txt`"
+pub type PvaRecord {
+  // sc        ; Zinh        ; Inherited  ; Qaai
+  // {property}; {short_name}; {long_name}; {alt_names}...
+  PvaRecord(
+    short_name: String,
+    long_name: String,
+    property: String,
+    alt_names: List(String),
+  )
+  // ccc;         0; NR          ; Not_Reordered
+  // ccc; {numeric}; {short_name}; {long_name}
+  CccRecord(short_name: String, long_name: String, numeric: Int)
+}
+
 pub type RangeRecord(data) {
   RangeRecord(codepoint_range: CodepointRange, data: data)
 }
@@ -134,6 +149,25 @@ pub fn make_block_map(
   string.replace(in: template, each: "/*{{blocks}}*/", with: blocks)
 }
 
+pub fn make_script_map(
+  property_value_aliases pva: List(PvaRecord),
+  template template: String,
+) {
+  let scripts =
+    list.filter_map(pva, fn(record) {
+      case record {
+        PvaRecord(property: "sc", short_name:, long_name:, ..) -> {
+          let short_name = string.lowercase(short_name)
+          // ["zinh", "Inherited"]
+          Ok("[\"" <> short_name <> "\", \"" <> long_name <> "\"]")
+        }
+        _ -> Error(Nil)
+      }
+    })
+    |> string.join(with: ",\n")
+  string.replace(in: template, each: "/*{{scripts}}*/", with: scripts)
+}
+
 // =============================================================================
 // BEGIN UNIDATA PARSERS
 
@@ -141,20 +175,14 @@ type ParserState {
   ParserState(line: Int, txt: String)
 }
 
-pub type ParserError(error) {
-  ParserError(line: Int, error: error)
-}
-
-pub type RangeRecordError {
-  InvalidCodepointRange
-  InvalidFields
-  EmptyFields
+pub type ParserError {
+  ParserError(line: Int, error: String)
 }
 
 fn parse_unidata(
   txt: String,
-  with record_parser: fn(String) -> Result(record, error),
-) -> Result(List(record), ParserError(error)) {
+  with record_parser: fn(String) -> Result(record, String),
+) -> Result(List(record), ParserError) {
   let line_end = splitter.new(["\n"])
   let comment = splitter.new(["#"])
 
@@ -170,8 +198,8 @@ fn parse_unidata(
 fn parse_unidata_loop(
   input state: ParserState,
   output records: List(record),
-  with line_parser: fn(String) -> Result(#(Option(record), String), error),
-) -> Result(List(record), ParserError(error)) {
+  with line_parser: fn(String) -> Result(#(Option(record), String), String),
+) -> Result(List(record), ParserError) {
   case state.txt {
     "" -> Ok(list.reverse(records))
     _ ->
@@ -190,24 +218,44 @@ fn parse_unidata_loop(
   }
 }
 
+pub fn parse_property_value_aliases(
+  txt: String,
+) -> Result(List(PvaRecord), ParserError) {
+  use line <- parse_unidata(txt)
+  let fields = string.split(line, on: ";") |> list.map(string.trim)
+  case fields {
+    // ccc;       0; NR        ; Not_Reordered
+    ["ccc", numeric, short_name, long_name, ..] ->
+      case int.parse(numeric) {
+        Ok(numeric) -> Ok(CccRecord(numeric:, short_name:, long_name:))
+        Error(_) ->
+          Error("Canonical_Combining_Class (ccc): non-numeric second field")
+      }
+    // sc    ; Zinh      ; Inherited; Qaai
+    [property, short_name, long_name, ..alt_names] ->
+      Ok(PvaRecord(property:, short_name:, long_name:, alt_names:))
+    _ -> Error("Missing Fields")
+  }
+}
+
 fn parse_range_records(
   txt: String,
   with fields_parser: fn(List(String)) -> Result(data, Nil),
-) -> Result(List(RangeRecord(data)), ParserError(RangeRecordError)) {
+) -> Result(List(RangeRecord(data)), ParserError) {
   use line <- parse_unidata(txt)
   let fields = string.split(line, on: ";") |> list.map(string.trim)
   case fields {
     [first_field, ..other_fields] -> {
       use codepoint_range <- result.try(result.replace_error(
         parse_codepoint_range(first_field),
-        InvalidCodepointRange,
+        "Invalid Codepoint Range",
       ))
       case fields_parser(other_fields) {
         Ok(data) -> Ok(RangeRecord(codepoint_range:, data:))
-        Error(_) -> Error(InvalidFields)
+        Error(_) -> Error("Invalid Fields")
       }
     }
-    _ -> Error(EmptyFields)
+    _ -> Error("Missing Fields")
   }
 }
 
@@ -235,7 +283,7 @@ fn parse_codepoint_range(str: String) -> Result(CodepointRange, Nil) {
 
 pub fn parse_names(
   txt: String,
-) -> Result(List(RangeRecord(String)), ParserError(RangeRecordError)) {
+) -> Result(List(RangeRecord(String)), ParserError) {
   use data <- parse_range_records(txt)
   case data {
     [name, ..] -> Ok(name)
@@ -245,7 +293,7 @@ pub fn parse_names(
 
 pub fn parse_categories(
   txt: String,
-) -> Result(List(RangeRecord(GeneralCategory)), ParserError(RangeRecordError)) {
+) -> Result(List(RangeRecord(GeneralCategory)), ParserError) {
   use data <- parse_range_records(txt)
   case data {
     [cat, ..] -> category.from_abbreviation(cat)
@@ -255,7 +303,7 @@ pub fn parse_categories(
 
 pub fn parse_blocks(
   txt: String,
-) -> Result(List(RangeRecord(String)), ParserError(RangeRecordError)) {
+) -> Result(List(RangeRecord(String)), ParserError) {
   use data <- parse_range_records(txt)
   case data {
     [block_name, ..] -> Ok(block_name)

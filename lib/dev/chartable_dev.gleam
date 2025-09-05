@@ -4,6 +4,11 @@ import codegen/unicode
 import simplifile
 
 pub fn main() {
+  let assert Ok(txt) =
+    simplifile.read("data/unicode/property-value-aliases.txt")
+  let assert Ok(property_value_aliases) =
+    unicode.parse_property_value_aliases(txt)
+
   let assert Ok(txt) = simplifile.read("data/unicode/names.txt")
   let assert Ok(names) = unicode.parse_names(txt)
   let assert Ok(template) = simplifile.read("codegen_templates/name_map.mjs")
@@ -19,6 +24,12 @@ pub fn main() {
     simplifile.write(
       to: "src/chartable/unicode/block_map.mjs",
       contents: unicode.make_block_map(blocks:, template:),
+    )
+  let assert Ok(template) = simplifile.read("codegen_templates/script_map.mjs")
+  let assert Ok(Nil) =
+    simplifile.write(
+      to: "src/chartable/unicode/script_map.mjs",
+      contents: unicode.make_script_map(property_value_aliases:, template:),
     )
 
   let assert Ok(template) =
