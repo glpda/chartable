@@ -16,8 +16,9 @@ Licenses for third party components used by this project can be found below.
 
 ================================================================================
 The json list of html entities in `lib/data/html/entities.json` and the
-generated file `lib/src/chartable/html/entity_map.mjs` are extracted from the
-WHATWG HTML Standard, the original can be found here:
+generated files `lib/src/chartable/html/entity_map.mjs` and
+`lib/birdie_snapshots/html_*` are extracted from the WHATWG HTML Standard, the
+original can be found here:
 https://html.spec.whatwg.org/entities.json
 
 Copyright © WHATWG (Apple, Google, Mozilla, Microsoft)
@@ -72,11 +73,9 @@ limitations under the License.
 
 ================================================================================
 The list of names and properties in `lib/data/unicode/*` and the generated files
-`lib/src/unicode/*.mjs` are extracted from the Unicode Character Database, the
-original can be found here:
-- https://www.unicode.org/Public/UCD/latest/ucd/extracted/DerivedName.txt
-- https://www.unicode.org/Public/UCD/latest/ucd/Blocks.txt
-- https://www.unicode.org/Public/UCD/latest/ucd/extracted/DerivedGeneralCategory.txt
+`lib/src/unicode/*.mjs` and `lib/birdie_snapshots/unicode_*` are extracted from
+the Unicode Character Database, the original can be found here:
+https://www.unicode.org/Public/UCD/latest/ucd/
 
 UNICODE LICENSE V3
 
