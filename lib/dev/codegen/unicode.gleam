@@ -296,7 +296,7 @@ pub fn parse_categories(
 ) -> Result(List(RangeRecord(GeneralCategory)), ParserError) {
   use data <- parse_range_records(txt)
   case data {
-    [cat, ..] -> category.from_abbreviation(cat)
+    [cat, ..] -> category.from_name(cat)
     [] -> Error(Nil)
   }
 }

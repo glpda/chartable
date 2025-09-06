@@ -173,25 +173,22 @@ pub fn category_from_int_test() {
   assert unicode.category_from_int(0x03A2) == category.Unassigned
 }
 
-pub fn category_from_abbreviation_test() {
-  assert category.from_abbreviation("Lu") == Ok(category.LetterUppercase)
-  assert category.from_abbreviation("Cn") == Ok(category.Unassigned)
-  assert category.from_abbreviation("Sm") == Ok(category.SymbolMath)
-  assert category.from_abbreviation("Xyz") == Error(Nil)
+pub fn category_from_name_test() {
+  assert category.from_name("Lu") == Ok(category.LetterUppercase)
+  assert category.from_name("Cn") == Ok(category.Unassigned)
+  assert category.from_name("Sm") == Ok(category.SymbolMath)
+  assert category.from_name("Xyz") == Error(Nil)
+
+  assert category.from_name("Uppercase Letter") == Ok(category.LetterUppercase)
+  assert category.from_name("unassigned") == Ok(category.Unassigned)
+  assert category.from_name("Math-Symbol") == Ok(category.SymbolMath)
+  assert category.from_name("Invalid_Category") == Error(Nil)
 }
 
-pub fn category_to_abbreviation_test() {
-  assert category.to_abbreviation(category.LetterUppercase) == "Lu"
-  assert category.to_abbreviation(category.Unassigned) == "Cn"
-  assert category.to_abbreviation(category.SymbolMath) == "Sm"
-}
-
-pub fn category_from_long_name_test() {
-  assert category.from_long_name("Uppercase_Letter")
-    == Ok(category.LetterUppercase)
-  assert category.from_long_name("Unassigned") == Ok(category.Unassigned)
-  assert category.from_long_name("Math_Symbol") == Ok(category.SymbolMath)
-  assert category.from_long_name("Invalid_Category") == Error(Nil)
+pub fn category_to_short_name_test() {
+  assert category.to_short_name(category.LetterUppercase) == "Lu"
+  assert category.to_short_name(category.Unassigned) == "Cn"
+  assert category.to_short_name(category.SymbolMath) == "Sm"
 }
 
 pub fn category_to_long_name_test() {
@@ -264,13 +261,13 @@ pub fn category_is_format_test() {
 }
 
 fn assert_category_consistency(cat) {
-  let abbr = category.to_abbreviation(cat)
-  assert Ok(cat) == category.from_abbreviation(abbr)
+  let short_name = category.to_short_name(cat)
+  assert Ok(cat) == category.from_name(short_name)
 
-  let name = category.to_long_name(cat)
-  assert Ok(cat) == category.from_long_name(name)
+  let long_name = category.to_long_name(cat)
+  assert Ok(cat) == category.from_name(long_name)
 
-  assert case abbr {
+  assert case short_name {
     "L" <> _ -> category.is_letter(cat)
     "M" <> _ -> category.is_mark(cat)
     "N" <> _ -> category.is_number(cat)
@@ -281,11 +278,11 @@ fn assert_category_consistency(cat) {
     _ -> False
   }
 
-  assert case name {
+  assert case long_name {
     "Control" | "Format" | "Surrogate" | "Private_Use" | "Unassigned" ->
       category.is_other(cat)
     _ ->
-      case string.split_once(name, on: "_") {
+      case string.split_once(long_name, on: "_") {
         Ok(#(_, "Letter")) -> category.is_letter(cat)
         Ok(#(_, "Mark")) -> category.is_mark(cat)
         Ok(#(_, "Number")) -> category.is_number(cat)

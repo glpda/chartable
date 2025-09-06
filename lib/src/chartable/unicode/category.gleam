@@ -3,6 +3,8 @@
 //// many characters have multiples uses wich are not captured by
 //// this simple categories (Latin letters may be used as numerals).
 
+import chartable/internal
+
 pub type GeneralCategory {
   // Letters:
   /// `"Lu"` uppercase letters,
@@ -145,77 +147,114 @@ pub const list = [
   Unassigned,
 ]
 
-/// Converts an abbreviation `String` to a [`GeneralCategory`](#GeneralCategory).
+/// Converts a name `String` to a [`GeneralCategory`](#GeneralCategory) value,
+/// category's name matching follows rule
+/// [UAX44-LM3](https://www.unicode.org/reports/tr44/#UAX44-LM3)
+/// (ignore case, whitespaces, underscores, hyphens, and initial prefix "is").
 ///
 /// ## Examples
 ///
 /// ```gleam
-/// assert category.from_abbreviation("Lu") == Ok(category.LetterUppercase)
-///
-/// assert category.from_abbreviation("Cn") == Ok(category.Unassigned)
-///
-/// assert category.from_abbreviation("Sm") == Ok(category.SymbolMath)
-///
-/// assert category.from_abbreviation("Xyz") == Error(Nil)
+/// assert category.from_name("Lu") == Ok(category.LetterUppercase)
+/// assert category.from_name("Uppercase Letter") == Ok(category.LetterUppercase)
 /// ```
 ///
-pub fn from_abbreviation(abbr: String) -> Result(GeneralCategory, Nil) {
-  case abbr {
-    // Letters
-    "Lu" -> Ok(LetterUppercase)
-    "Ll" -> Ok(LetterLowercase)
-    "Lt" -> Ok(LetterTitlecase)
-    "Lm" -> Ok(LetterModifier)
-    "Lo" -> Ok(LetterOther)
-    // Marks:
-    "Mn" -> Ok(MarkNonspacing)
-    "Mc" -> Ok(MarkSpacing)
-    "Me" -> Ok(MarkEnclosing)
-    // Numbers:
-    "Nd" -> Ok(NumberDecimal)
-    "Nl" -> Ok(NumberLetter)
-    "No" -> Ok(NumberOther)
-    // Punctuations:
-    "Pc" -> Ok(PunctuationConnector)
-    "Pd" -> Ok(PunctuationDash)
-    "Ps" -> Ok(PunctuationOpen)
-    "Pe" -> Ok(PunctuationClose)
-    "Pi" -> Ok(PunctuationInitial)
-    "Pf" -> Ok(PunctuationFinal)
-    "Po" -> Ok(PunctuationOther)
-    // Symbols:
-    "Sm" -> Ok(SymbolMath)
-    "Sc" -> Ok(SymbolCurrency)
-    "Sk" -> Ok(SymbolModifier)
-    "So" -> Ok(SymbolOther)
-    // Separators:
-    "Zs" -> Ok(SeparatorSpace)
-    "Zl" -> Ok(SeparatorLine)
-    "Zp" -> Ok(SeparatorParagraph)
-    // Others:
-    "Cc" -> Ok(Control)
-    "Cf" -> Ok(Format)
-    "Cs" -> Ok(Surrogate)
-    "Co" -> Ok(PrivateUse)
-    "Cn" -> Ok(Unassigned)
+pub fn from_name(str: String) -> Result(GeneralCategory, Nil) {
+  case internal.comparable_property(str) {
+    // From short name:
+    // - Letters:
+    "lu" -> Ok(LetterUppercase)
+    "ll" -> Ok(LetterLowercase)
+    "lt" -> Ok(LetterTitlecase)
+    "lm" -> Ok(LetterModifier)
+    "lo" -> Ok(LetterOther)
+    // - Marks:
+    "mn" -> Ok(MarkNonspacing)
+    "mc" -> Ok(MarkSpacing)
+    "me" -> Ok(MarkEnclosing)
+    // - Numbers:
+    "nd" -> Ok(NumberDecimal)
+    "nl" -> Ok(NumberLetter)
+    "no" -> Ok(NumberOther)
+    // - Punctuations:
+    "pc" -> Ok(PunctuationConnector)
+    "pd" -> Ok(PunctuationDash)
+    "ps" -> Ok(PunctuationOpen)
+    "pe" -> Ok(PunctuationClose)
+    "pi" -> Ok(PunctuationInitial)
+    "pf" -> Ok(PunctuationFinal)
+    "po" -> Ok(PunctuationOther)
+    // - Symbols:
+    "sm" -> Ok(SymbolMath)
+    "sc" -> Ok(SymbolCurrency)
+    "sk" -> Ok(SymbolModifier)
+    "so" -> Ok(SymbolOther)
+    // - Separators:
+    "zs" -> Ok(SeparatorSpace)
+    "zl" -> Ok(SeparatorLine)
+    "zp" -> Ok(SeparatorParagraph)
+    // - Others:
+    "cc" -> Ok(Control)
+    "cf" -> Ok(Format)
+    "cs" -> Ok(Surrogate)
+    "co" -> Ok(PrivateUse)
+    "cn" -> Ok(Unassigned)
+    // From long name:
+    // - Letters:
+    "uppercaseletter" -> Ok(LetterUppercase)
+    "lowercaseletter" -> Ok(LetterLowercase)
+    "titlecaseletter" -> Ok(LetterTitlecase)
+    "modifierletter" -> Ok(LetterModifier)
+    "otherletter" -> Ok(LetterOther)
+    // - Marks:
+    "nonspacingmark" -> Ok(MarkNonspacing)
+    "spacingmark" -> Ok(MarkSpacing)
+    "enclosingmark" -> Ok(MarkEnclosing)
+    // - Numbers:
+    "decimalnumber" -> Ok(NumberDecimal)
+    "letternumber" -> Ok(NumberLetter)
+    "othernumber" -> Ok(NumberOther)
+    // - Punctuations:
+    "connectorpunctuation" -> Ok(PunctuationConnector)
+    "dashpunctuation" -> Ok(PunctuationDash)
+    "openpunctuation" -> Ok(PunctuationOpen)
+    "closepunctuation" -> Ok(PunctuationClose)
+    "initialpunctuation" -> Ok(PunctuationInitial)
+    "finalpunctuation" -> Ok(PunctuationFinal)
+    "otherpunctuation" -> Ok(PunctuationOther)
+    // - Symbols:
+    "mathsymbol" -> Ok(SymbolMath)
+    "currencysymbol" -> Ok(SymbolCurrency)
+    "modifiersymbol" -> Ok(SymbolModifier)
+    "othersymbol" -> Ok(SymbolOther)
+    // - Separators:
+    "spaceseparator" -> Ok(SeparatorSpace)
+    "lineseparator" -> Ok(SeparatorLine)
+    "paragraphseparator" -> Ok(SeparatorParagraph)
+    // - Others:
+    "control" -> Ok(Control)
+    "format" -> Ok(Format)
+    "surrogate" -> Ok(Surrogate)
+    "privateuse" -> Ok(PrivateUse)
+    "unassigned" -> Ok(Unassigned)
 
     _ -> Error(Nil)
   }
 }
 
-/// Converts a [`GeneralCategory`](#GeneralCategory) to an abbreviation `String`.
+/// Returns the short name `String` of a [`GeneralCategory`](#GeneralCategory).
 ///
 /// ## Examples
 ///
 /// ```gleam
-/// assert category.to_abbreviation(category.LetterUppercase) == "Lu"
+/// assert category.to_short_name(category.LetterUppercase) == "Lu"
 ///
-/// assert category.to_abbreviation(category.Unassigned) == "Cn"
+/// assert category.to_short_name(category.Unassigned) == "Cn"
 ///
-/// assert category.to_abbreviation(category.SymbolMath) == "Sm"
+/// assert category.to_short_name(category.SymbolMath) == "Sm"
 /// ```
 ///
-pub fn to_abbreviation(category: GeneralCategory) -> String {
+pub fn to_short_name(category: GeneralCategory) -> String {
   case category {
     // Letters:
     LetterUppercase -> "Lu"
@@ -257,66 +296,7 @@ pub fn to_abbreviation(category: GeneralCategory) -> String {
   }
 }
 
-/// Converts a long name `String` to a [`GeneralCategory`](#GeneralCategory).
-///
-/// ## Examples
-///
-/// ```gleam
-/// assert category.from_long_name("Uppercase_Letter")
-///   == Ok(category.LetterUppercase)
-///
-/// assert category.from_long_name("Unassigned") == Ok(category.Unassigned)
-///
-/// assert category.from_long_name("Math_Symbol") == Ok(category.SymbolMath)
-///
-/// assert category.from_long_name("Invalid_Category") == Error(Nil)
-/// ```
-///
-pub fn from_long_name(name: String) -> Result(GeneralCategory, Nil) {
-  case name {
-    // Letters
-    "Uppercase_Letter" -> Ok(LetterUppercase)
-    "Lowercase_Letter" -> Ok(LetterLowercase)
-    "Titlecase_Letter" -> Ok(LetterTitlecase)
-    "Modifier_Letter" -> Ok(LetterModifier)
-    "Other_Letter" -> Ok(LetterOther)
-    // Marks:
-    "Nonspacing_Mark" -> Ok(MarkNonspacing)
-    "Spacing_Mark" -> Ok(MarkSpacing)
-    "Enclosing_Mark" -> Ok(MarkEnclosing)
-    // Numbers:
-    "Decimal_Number" -> Ok(NumberDecimal)
-    "Letter_Number" -> Ok(NumberLetter)
-    "Other_Number" -> Ok(NumberOther)
-    // Punctuations:
-    "Connector_Punctuation" -> Ok(PunctuationConnector)
-    "Dash_Punctuation" -> Ok(PunctuationDash)
-    "Open_Punctuation" -> Ok(PunctuationOpen)
-    "Close_Punctuation" -> Ok(PunctuationClose)
-    "Initial_Punctuation" -> Ok(PunctuationInitial)
-    "Final_Punctuation" -> Ok(PunctuationFinal)
-    "Other_Punctuation" -> Ok(PunctuationOther)
-    // Symbols:
-    "Math_Symbol" -> Ok(SymbolMath)
-    "Currency_Symbol" -> Ok(SymbolCurrency)
-    "Modifier_Symbol" -> Ok(SymbolModifier)
-    "Other_Symbol" -> Ok(SymbolOther)
-    // Separators:
-    "Space_Separator" -> Ok(SeparatorSpace)
-    "Line_Separator" -> Ok(SeparatorLine)
-    "Paragraph_Separator" -> Ok(SeparatorParagraph)
-    // Others:
-    "Control" -> Ok(Control)
-    "Format" -> Ok(Format)
-    "Surrogate" -> Ok(Surrogate)
-    "Private_Use" -> Ok(PrivateUse)
-    "Unassigned" -> Ok(Unassigned)
-
-    _ -> Error(Nil)
-  }
-}
-
-/// Converts a [`GeneralCategory`](#GeneralCategory) to a long name `String`.
+/// Returns the long name `String` of a [`GeneralCategory`](#GeneralCategory).
 ///
 /// ## Examples
 ///
