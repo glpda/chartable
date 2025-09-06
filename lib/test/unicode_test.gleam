@@ -66,7 +66,9 @@ pub fn block_to_pair_test() {
   assert unicode.block_to_pair("Lucy") == Error(Nil)
 }
 
-fn assert_block_consistency(block_name: String) {
+pub fn block_consistency_test() {
+  use block_name <- list.each(unicode.blocks())
+
   let assert Ok(#(start, end)) = unicode.block_to_pair(block_name)
 
   assert unicode.block_to_pair("is " <> string.lowercase(block_name))
@@ -78,10 +80,6 @@ fn assert_block_consistency(block_name: String) {
   assert unicode.block_from_int(start) == Ok(block_name)
   assert unicode.block_from_int({ end + start } / 2) == Ok(block_name)
   assert unicode.block_from_int(end) == Ok(block_name)
-}
-
-pub fn block_consistency_test() {
-  list.each(unicode.blocks(), assert_block_consistency)
 }
 
 // END
@@ -260,7 +258,9 @@ pub fn category_is_format_test() {
   assert !category.is_format(category.Control)
 }
 
-fn assert_category_consistency(cat) {
+pub fn category_consistency_test() {
+  use cat <- list.each(category.list)
+
   let short_name = category.to_short_name(cat)
   assert Ok(cat) == category.from_name(short_name)
 
@@ -292,9 +292,5 @@ fn assert_category_consistency(cat) {
         _ -> False
       }
   }
-}
-
-pub fn category_consistency_test() {
-  list.each(category.list, assert_category_consistency)
 }
 // END
