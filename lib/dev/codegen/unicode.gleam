@@ -49,10 +49,65 @@ pub fn codepoint_range_to_pair(codepoint_range: CodepointRange) -> #(Int, Int) {
       #(cp, cp)
     }
     AllSurrogates -> #(0xD800, 0xDFFF)
-    HighSurrogates -> #(0xDB80, 0xDBFF)
+    HighSurrogates -> #(0xD800, 0xDBFF)
     HighStandardSurrogates -> #(0xD800, 0xDB7F)
     HighPrivateUseSurrogates -> #(0xDB80, 0xDBFF)
     LowSurrogates -> #(0xDC00, 0xDFFF)
+  }
+}
+
+pub fn pair_to_codepoint_range(start: Int, end: Int) {
+  case start, end {
+    0xD800, 0xDFFF -> Ok(AllSurrogates)
+    0xD800, 0xDBFF -> Ok(HighSurrogates)
+    0xD800, 0xDB7F -> Ok(HighStandardSurrogates)
+    0xDB80, 0xDBFF -> Ok(HighPrivateUseSurrogates)
+    0xDC00, 0xDFFF -> Ok(LowSurrogates)
+    _, _ if start < end -> {
+      case string.utf_codepoint(start), string.utf_codepoint(end) {
+        Ok(start), Ok(end) -> Ok(CodepointRange(from: start, to: end))
+        _, _ -> Error(Nil)
+      }
+    }
+    _, _ if start == end ->
+      string.utf_codepoint(start) |> result.map(SingleCodepoint)
+    _, _ -> Error(Nil)
+  }
+}
+
+fn concat_codepoint_range(left: CodepointRange, right: CodepointRange) {
+  let #(left_start, left_end) = codepoint_range_to_pair(left)
+  let #(right_start, right_end) = codepoint_range_to_pair(right)
+  // case left, right:
+  //   HighSurrogates, LowSurrogates -> AllSurrogates
+  //   HighStandardSurrogates, HighPrivateUseSurrogates -> HighSurrogates
+  case left_end + 1 == right_start, right_end + 1 == left_start {
+    True, _ -> pair_to_codepoint_range(left_start, right_end)
+    _, True -> pair_to_codepoint_range(right_start, left_end)
+    False, False -> Error(Nil)
+  }
+}
+
+fn concat_range_record(left: RangeRecord(data), right: RangeRecord(data)) {
+  use <- bool.guard(when: left.data != right.data, return: Error(Nil))
+  result.map(
+    concat_codepoint_range(left.codepoint_range, right.codepoint_range),
+    RangeRecord(_, left.data),
+  )
+}
+
+fn concat_range_records(
+  records: List(RangeRecord(data)),
+) -> List(RangeRecord(data)) {
+  use accumulator, previous_record <- list.fold(over: records, from: [])
+  case accumulator {
+    [current_record, ..next_records] -> {
+      case concat_range_record(previous_record, current_record) {
+        Error(_) -> [previous_record, current_record, ..next_records]
+        Ok(concat_record) -> [concat_record, ..next_records]
+      }
+    }
+    [] -> [previous_record]
   }
 }
 
@@ -180,38 +235,43 @@ pub type ParserError {
 }
 
 fn parse_unidata(
-  txt: String,
-  with record_parser: fn(String) -> Result(record, String),
-) -> Result(List(record), ParserError) {
+  // input txt unidata:
+  txt txt: String,
+  // line/record parser:
+  parser parser: fn(String) -> Result(record, String),
+  // process the resulting list of records (in reverse order):
+  reducer reducer: fn(List(record)) -> output,
+) -> Result(output, ParserError) {
   let line_end = splitter.new(["\n"])
   let comment = splitter.new(["#"])
 
   let parser_state = ParserState(line: 0, txt:)
-  use txt <- parse_unidata_loop(input: parser_state, output: [])
+  use txt <- parse_unidata_loop(input: parser_state, output: [], reducer:)
   let #(line, _, rest) = splitter.split(line_end, txt)
   let #(line, _, _) = splitter.split(comment, line)
   let line = string.trim(line)
   use <- bool.guard(when: string.is_empty(line), return: Ok(#(None, rest)))
-  record_parser(line) |> result.map(fn(record) { #(Some(record), rest) })
+  parser(line) |> result.map(fn(record) { #(Some(record), rest) })
 }
 
 fn parse_unidata_loop(
   input state: ParserState,
   output records: List(record),
-  with line_parser: fn(String) -> Result(#(Option(record), String), String),
-) -> Result(List(record), ParserError) {
+  parser parser: fn(String) -> Result(#(Option(record), String), String),
+  reducer reducer: fn(List(record)) -> output,
+) -> Result(output, ParserError) {
   case state.txt {
-    "" -> Ok(list.reverse(records))
+    "" -> Ok(reducer(records))
     _ ->
-      case line_parser(state.txt) {
+      case parser(state.txt) {
         Ok(#(Some(record), rest)) -> {
           let output = [record, ..records]
           let state = ParserState(line: state.line + 1, txt: rest)
-          parse_unidata_loop(state, output:, with: line_parser)
+          parse_unidata_loop(state, output:, parser:, reducer:)
         }
         Ok(#(None, rest)) -> {
           let state = ParserState(line: state.line + 1, txt: rest)
-          parse_unidata_loop(state, output: records, with: line_parser)
+          parse_unidata_loop(state, output: records, parser:, reducer:)
         }
         Error(error) -> Error(ParserError(line: state.line, error:))
       }
@@ -221,7 +281,7 @@ fn parse_unidata_loop(
 pub fn parse_property_value_aliases(
   txt: String,
 ) -> Result(List(PvaRecord), ParserError) {
-  use line <- parse_unidata(txt)
+  use line <- parse_unidata(txt, reducer: list.reverse)
   let fields = string.split(line, on: ";") |> list.map(string.trim)
   case fields {
     // ccc;       0; NR        ; Not_Reordered
@@ -240,26 +300,21 @@ pub fn parse_property_value_aliases(
 
 fn parse_range_records(
   txt: String,
-  with fields_parser: fn(List(String)) -> Result(data, Nil),
+  with fields_parser: fn(List(String)) -> Result(data, String),
 ) -> Result(List(RangeRecord(data)), ParserError) {
-  use line <- parse_unidata(txt)
+  use line: String <- parse_unidata(txt, reducer: concat_range_records)
   let fields = string.split(line, on: ";") |> list.map(string.trim)
   case fields {
     [first_field, ..other_fields] -> {
-      use codepoint_range <- result.try(result.replace_error(
-        parse_codepoint_range(first_field),
-        "Invalid Codepoint Range",
-      ))
-      case fields_parser(other_fields) {
-        Ok(data) -> Ok(RangeRecord(codepoint_range:, data:))
-        Error(_) -> Error("Invalid Fields")
-      }
+      use codepoint_range <- result.try(parse_codepoint_range(first_field))
+      use data <- result.map(fields_parser(other_fields))
+      RangeRecord(codepoint_range:, data:)
     }
     _ -> Error("Missing Fields")
   }
 }
 
-fn parse_codepoint_range(str: String) -> Result(CodepointRange, Nil) {
+fn parse_codepoint_range(str: String) -> Result(CodepointRange, String) {
   case string.split_once(str, on: "..") {
     Ok(#(start, end)) -> {
       let start = internal.parse_codepoint(start)
@@ -271,12 +326,14 @@ fn parse_codepoint_range(str: String) -> Result(CodepointRange, Nil) {
         _, _, "D800..DB7F" -> Ok(HighStandardSurrogates)
         _, _, "DB80..DBFF" -> Ok(HighPrivateUseSurrogates)
         _, _, "DC00..DFFF" -> Ok(LowSurrogates)
-        _, _, _ -> Error(Nil)
+        _, _, _ -> Error("Invalid Codepoint Range")
       }
     }
     Error(_) -> {
-      internal.parse_codepoint(str)
-      |> result.map(SingleCodepoint)
+      case internal.parse_codepoint(str) {
+        Ok(codepoint) -> Ok(SingleCodepoint(codepoint))
+        Error(_) -> Error("Invalid Codepoint")
+      }
     }
   }
 }
@@ -287,7 +344,7 @@ pub fn parse_names(
   use data <- parse_range_records(txt)
   case data {
     [name, ..] -> Ok(name)
-    [] -> Error(Nil)
+    [] -> Error("No Name Field")
   }
 }
 
@@ -296,8 +353,9 @@ pub fn parse_categories(
 ) -> Result(List(RangeRecord(GeneralCategory)), ParserError) {
   use data <- parse_range_records(txt)
   case data {
-    [cat, ..] -> category.from_name(cat)
-    [] -> Error(Nil)
+    [cat, ..] ->
+      category.from_name(cat) |> result.replace_error("Invalid Category")
+    [] -> Error("No Category Field")
   }
 }
 
@@ -307,7 +365,7 @@ pub fn parse_blocks(
   use data <- parse_range_records(txt)
   case data {
     [block_name, ..] -> Ok(block_name)
-    [] -> Error(Nil)
+    [] -> Error("No Block Field")
   }
 }
 
