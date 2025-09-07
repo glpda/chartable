@@ -138,6 +138,9 @@ pub fn range_records_to_string(
   |> string.join("\n")
 }
 
+// =============================================================================
+// BEGIN CODE GENERATORS
+
 pub fn make_name_map(
   names names: List(RangeRecord(String)),
   template template: String,
@@ -222,6 +225,8 @@ pub fn make_script_map(
     |> string.join(with: ",\n")
   string.replace(in: template, each: "/*{{scripts}}*/", with: scripts)
 }
+
+// END
 
 // =============================================================================
 // BEGIN UNIDATA PARSERS
