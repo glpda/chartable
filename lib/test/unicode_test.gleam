@@ -58,6 +58,8 @@ pub fn block_from_int_test() {
   assert unicode.block_from_int(0x0080) == Ok("Latin-1 Supplement")
   assert unicode.block_from_int(0x22C6) == Ok("Mathematical Operators")
   assert unicode.block_from_int(0x661F) == Ok("CJK Unified Ideographs")
+  assert unicode.block_from_int(0x100000)
+    == Ok("Supplementary Private Use Area-B")
 }
 
 pub fn block_to_pair_test() {
