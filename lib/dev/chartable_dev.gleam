@@ -25,11 +25,15 @@ pub fn main() {
       to: "src/chartable/unicode/block_map.mjs",
       contents: unicode.make_block_map(blocks:, template:),
     )
+  let assert Ok(txt) = simplifile.read("data/unicode/scripts.txt")
+  let assert Ok(scripts) = unicode.parse_scripts(txt:, property_value_aliases:)
   let assert Ok(template) = simplifile.read("codegen_templates/script_map.mjs")
+  let script_map =
+    unicode.make_script_map(property_value_aliases:, scripts:, template:)
   let assert Ok(Nil) =
     simplifile.write(
       to: "src/chartable/unicode/script_map.mjs",
-      contents: unicode.make_script_map(property_value_aliases:, template:),
+      contents: script_map,
     )
 
   let assert Ok(template) =

@@ -1,11 +1,13 @@
 import chartable/internal
 import chartable/unicode/category.{type GeneralCategory}
 import gleam/bool
+import gleam/dict
 import gleam/int
 import gleam/list
 import gleam/option.{type Option, None, Some}
 import gleam/order
 import gleam/result
+import gleam/set
 import gleam/string
 import splitter
 
@@ -111,16 +113,20 @@ fn concat_range_records(
   }
 }
 
-pub fn range_records_to_string(
-  records: List(RangeRecord(data)),
-  data_to_string: fn(data) -> String,
-) -> String {
+fn sort_range_records(records: List(RangeRecord(data))) {
   list.sort(records, fn(lhs, rhs) {
     let #(lhs_start, lhs_end) = codepoint_range_to_pair(lhs.codepoint_range)
     let #(rhs_start, rhs_end) = codepoint_range_to_pair(rhs.codepoint_range)
     int.compare(lhs_start, rhs_start)
     |> order.break_tie(int.compare(lhs_end, rhs_end))
   })
+}
+
+pub fn range_records_to_string(
+  records: List(RangeRecord(data)),
+  data_to_string: fn(data) -> String,
+) -> String {
+  sort_range_records(records)
   |> list.map(fn(record) {
     let index = case record.codepoint_range {
       SingleCodepoint(cp) -> {
@@ -209,9 +215,10 @@ pub fn make_block_map(
 
 pub fn make_script_map(
   property_value_aliases pva: List(PvaRecord),
+  scripts scripts: List(RangeRecord(String)),
   template template: String,
 ) {
-  let scripts =
+  let script_names =
     list.filter_map(pva, fn(record) {
       case record {
         PvaRecord(property: "sc", short_name:, long_name:, ..) -> {
@@ -223,7 +230,20 @@ pub fn make_script_map(
       }
     })
     |> string.join(with: ",\n")
-  string.replace(in: template, each: "/*{{scripts}}*/", with: scripts)
+
+  let script_ranges =
+    sort_range_records(scripts)
+    |> list.map(fn(record) {
+      let pair = codepoint_range_to_pair(record.codepoint_range)
+      let start = internal.int_to_hex(pair.0)
+      let end = internal.int_to_hex(pair.1)
+      // [[0x0000, 0x0040], "zyyy"]
+      "[[0x" <> start <> ", 0x" <> end <> "], \"" <> record.data <> "\"]"
+    })
+    |> string.join(with: ",\n")
+
+  string.replace(in: template, each: "/*{{script_names}}*/", with: script_names)
+  |> string.replace(each: "/*{{script_ranges}}*/", with: script_ranges)
 }
 
 // END
@@ -371,6 +391,44 @@ pub fn parse_blocks(
   case data {
     [block_name, ..] -> Ok(block_name)
     [] -> Error("No Block Field")
+  }
+}
+
+pub fn parse_scripts(
+  txt txt: String,
+  property_value_aliases pva: List(PvaRecord),
+) -> Result(List(RangeRecord(String)), ParserError) {
+  let #(short_names, long_names) =
+    list.fold(over: pva, from: #(set.new(), dict.new()), with: fn(acc, record) {
+      case record {
+        PvaRecord(property: "sc", short_name:, long_name:, ..) -> {
+          let #(short_names, long_names) = acc
+          let short_name = string.lowercase(short_name)
+          let long_name = internal.comparable_property(long_name)
+          #(
+            set.insert(short_name, into: short_names),
+            dict.insert(short_name, for: long_name, into: long_names),
+          )
+        }
+        PvaRecord(..) -> acc
+        CccRecord(..) -> acc
+      }
+    })
+
+  use data <- parse_range_records(txt)
+  case data {
+    [script_name, ..] -> {
+      let script_name = internal.comparable_property(script_name)
+      use <- bool.guard(
+        when: set.contains(script_name, in: short_names),
+        return: Ok(script_name),
+      )
+      case dict.get(long_names, script_name) {
+        Ok(short_name) -> Ok(short_name)
+        Error(_) -> Error("Invalid Script Field")
+      }
+    }
+    [] -> Error("No Script Field")
   }
 }
 

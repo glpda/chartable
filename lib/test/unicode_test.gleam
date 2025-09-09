@@ -118,6 +118,102 @@ pub fn script_name_test() {
   assert script.to_long_name(unknown) == "Unknown"
 }
 
+pub fn script_from_int_test() {
+  assert script.from_int(-100) == Error(Nil)
+  assert script.from_int(0x110000) == Error(Nil)
+
+  let assert Ok(common) = script.from_int(0x0020)
+  assert script.to_short_name(common) == "Zyyy"
+  assert script.from_int(0x0032) == Ok(common)
+  assert script.from_int(0x005E) == Ok(common)
+  assert script.from_int(0x007B) == Ok(common)
+  assert script.from_int(0x00AD) == Ok(common)
+  assert script.from_int(0x2028) == Ok(common)
+  assert script.from_int(0x2B50) == Ok(common)
+
+  let assert Ok(latin) = script.from_int(0x0041)
+  assert script.to_long_name(latin) == "Latin"
+  assert script.from_int(0x0061) == Ok(latin)
+  assert script.from_int(0x01F2) == Ok(latin)
+  assert script.from_int(0x02B0) == Ok(latin)
+  assert script.from_int(0x2162) == Ok(latin)
+
+  let assert Ok(inherited) = script.from_int(0x0301)
+  assert script.to_short_name(inherited) == "Zinh"
+  assert script.from_int(0x20E0) == Ok(inherited)
+
+  let assert Ok(devanagari) = script.from_int(0x0903)
+  assert script.to_short_name(devanagari) == "Deva"
+
+  let assert Ok(han) = script.from_int(0x661F)
+  assert script.to_long_name(han) == "Han"
+
+  let assert Ok(unknown) = script.from_int(0xDB7F)
+  assert script.to_short_name(unknown) == "Zzzz"
+  assert script.from_int(0xE000) == Ok(unknown)
+  assert script.from_int(0xF0000) == Ok(unknown)
+  assert script.from_int(0x100000) == Ok(unknown)
+}
+
+pub fn script_from_codepoint_test() {
+  let assert Ok(latin) = script.from_name("Latin")
+  assert string.utf_codepoint(0x0041)
+    |> result.map(script.from_codepoint)
+    == Ok(latin)
+  assert string.utf_codepoint(0x0061)
+    |> result.map(script.from_codepoint)
+    == Ok(latin)
+
+  let assert Ok(inherited) = script.from_name("Zinh")
+  assert string.utf_codepoint(0x0301)
+    |> result.map(script.from_codepoint)
+    == Ok(inherited)
+  assert string.utf_codepoint(0x20E0)
+    |> result.map(script.from_codepoint)
+    == Ok(inherited)
+
+  let assert Ok(unknown) = script.from_name("Zzzz")
+  assert string.utf_codepoint(0xE000)
+    |> result.map(script.from_codepoint)
+    == Ok(unknown)
+  assert string.utf_codepoint(0xF0000)
+    |> result.map(script.from_codepoint)
+    == Ok(unknown)
+  assert string.utf_codepoint(0x100000)
+    |> result.map(script.from_codepoint)
+    == Ok(unknown)
+}
+
+pub fn script_to_pairs_test() {
+  let assert Ok(braille) = script.from_name("braille")
+  assert script.to_pairs(braille) == [#(0x2800, 0x28FF)]
+
+  let assert Ok(hiragana) = script.from_name("Hira")
+  assert script.to_pairs(hiragana)
+    == [
+      #(0x3041, 0x3096),
+      #(0x309D, 0x309F),
+      #(0x1B001, 0x1B11F),
+      #(0x1B132, 0x1B132),
+      #(0x1B150, 0x1B152),
+      #(0x1F200, 0x1F200),
+    ]
+}
+
+pub fn script_consistency_test() {
+  use script <- list.each(script.list())
+
+  assert script.to_short_name(script) |> script.from_name == Ok(script)
+  assert script.to_long_name(script) |> script.from_name == Ok(script)
+
+  use range <- list.each(script.to_pairs(script))
+  let #(start, end) = range
+  assert start <= end
+  assert script.from_int(start) == Ok(script)
+  assert script.from_int(end) == Ok(script)
+  assert script.from_int({ start + end } / 2) == Ok(script)
+}
+
 // END
 
 // =============================================================================
