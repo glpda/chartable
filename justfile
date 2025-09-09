@@ -6,6 +6,8 @@ unidata := "https://www.unicode.org/Public/UCD/latest/ucd"
 derived-name := "extracted/DerivedName.txt"
 categories := "extracted/DerivedGeneralCategory.txt"
 blocks := "Blocks.txt"
+scripts := "Scripts.txt"
+script-extensions := "ScriptExtensions.txt"
 property-value-aliases := "PropertyValueAliases.txt"
 
 whatwg := "https://html.spec.whatwg.org/"
@@ -50,7 +52,11 @@ fetch-unidata: \
 (download unidata categories) \
 (add-data categories "unicode/categories.txt") \
 (download unidata blocks) \
-(add-data blocks "unicode/blocks.txt")
+(add-data blocks "unicode/blocks.txt") \
+(download unidata scripts) \
+(add-data scripts "unicode/scripts.txt") \
+(download unidata script-extensions) \
+(add-data script-extensions "unicode/script-extensions.txt")
 
 entities-filter := \
 	'with_entries(select(.key | startswith("&") and endswith(";"))' + \
