@@ -6,6 +6,12 @@ import gleam/list
 import gleam/result
 import gleam/string
 
+const example_codepoints = [
+  0x0041, 0x0061, 0x01F2, 0x02B0, 0x661F, 0x0301, 0x0903, 0x20E0, 0x0032, 0x2162,
+  0x00BD, 0x2040, 0x2013, 0x007B, 0x007D, 0x201C, 0x201D, 0x0021, 0x002B, 0x0024,
+  0x005E, 0x2B50, 0x0020, 0x2028, 0x2029, 0x0007, 0x00AD, 0xDB7F, 0xE777, 0x03A2,
+]
+
 // =============================================================================
 // BEGIN Unicode Code Points Tests
 
@@ -13,7 +19,7 @@ pub fn codepoint_test() {
   assert codepoint.from_int(-100) == Error(Nil)
   assert codepoint.from_int(0x110000) == Error(Nil)
 
-  use int <- list.each([0, 0x0041, 0x661F, 0xDB7F, 0x10FFFF])
+  use int <- list.each([0, 0x10FFFF, ..example_codepoints])
   let assert Ok(cp) = codepoint.from_int(int)
   assert codepoint.to_int(cp) == int
   case string.utf_codepoint(int) {
@@ -41,6 +47,7 @@ pub fn codepoint_range_test() {
     #(0x2800, 0x28FF),
     #(0x309F, 0x3040),
     #(0x05FF, 0x0590),
+    #(0x661F, 0x661F),
     #(0xD800, 0xDFFF),
     #(0xF0000, 0xFFFFF),
     #(0x10FFFF, 0x100000),
@@ -231,39 +238,9 @@ pub fn script_consistency_test() {
 // BEGIN General Category Tests
 
 pub fn category_from_codepoint_test() {
-  let category_from_int = fn(cp) {
-    result.map(codepoint.from_int(cp), unicode.category_from_codepoint)
-  }
-  assert category_from_int(0x0041) == Ok(category.LetterUppercase)
-  assert category_from_int(0x0061) == Ok(category.LetterLowercase)
-  assert category_from_int(0x01F2) == Ok(category.LetterTitlecase)
-  assert category_from_int(0x02B0) == Ok(category.LetterModifier)
-  assert category_from_int(0x661F) == Ok(category.LetterOther)
-  assert category_from_int(0x0301) == Ok(category.MarkNonspacing)
-  assert category_from_int(0x0903) == Ok(category.MarkSpacing)
-  assert category_from_int(0x20E0) == Ok(category.MarkEnclosing)
-  assert category_from_int(0x0032) == Ok(category.NumberDecimal)
-  assert category_from_int(0x2162) == Ok(category.NumberLetter)
-  assert category_from_int(0x00BD) == Ok(category.NumberOther)
-  assert category_from_int(0x2040) == Ok(category.PunctuationConnector)
-  assert category_from_int(0x2013) == Ok(category.PunctuationDash)
-  assert category_from_int(0x007B) == Ok(category.PunctuationOpen)
-  assert category_from_int(0x007D) == Ok(category.PunctuationClose)
-  assert category_from_int(0x201C) == Ok(category.PunctuationInitial)
-  assert category_from_int(0x201D) == Ok(category.PunctuationFinal)
-  assert category_from_int(0x0021) == Ok(category.PunctuationOther)
-  assert category_from_int(0x002B) == Ok(category.SymbolMath)
-  assert category_from_int(0x0024) == Ok(category.SymbolCurrency)
-  assert category_from_int(0x005E) == Ok(category.SymbolModifier)
-  assert category_from_int(0x2B50) == Ok(category.SymbolOther)
-  assert category_from_int(0x0020) == Ok(category.SeparatorSpace)
-  assert category_from_int(0x2028) == Ok(category.SeparatorLine)
-  assert category_from_int(0x2029) == Ok(category.SeparatorParagraph)
-  assert category_from_int(0x0007) == Ok(category.Control)
-  assert category_from_int(0x00AD) == Ok(category.Format)
-  assert category_from_int(0xD877) == Ok(category.Surrogate)
-  assert category_from_int(0xE777) == Ok(category.PrivateUse)
-  assert category_from_int(0x03A2) == Ok(category.Unassigned)
+  use #(cp, cat) <- list.each(list.zip(example_codepoints, category.list))
+  let assert Ok(cp) = codepoint.from_int(cp)
+  assert unicode.category_from_codepoint(cp) == cat
 }
 
 pub fn category_from_name_test() {
