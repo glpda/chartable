@@ -6,6 +6,7 @@
 //// and one block can contain multiple scripts.
 
 import chartable/internal
+import chartable/unicode/codepoint.{type Codepoint}
 import gleam/list
 import gleam/string
 
@@ -105,34 +106,13 @@ pub fn to_long_name(script: Script) -> String {
 /// ## Examples
 ///
 /// ```gleam
-/// use cp <- result.map(string.utf_codepoint(0x0041))
+/// use cp <- result.map(codepoint.from_int(0x0041))
 /// let latin = script.from_codepoint(cp)
 /// assert script.to_long_name(latin) == "Latin"
 /// ```
 ///
-pub fn from_codepoint(cp: UtfCodepoint) -> Script {
-  string.utf_codepoint_to_int(cp) |> codepoint_to_script |> Script
-}
-
-/// Get the [`Script`](#Script) value of a given codepoint.
-/// Returns `Ok("Zzzz")` (Unknown) if the code point is not assigned,
-/// and `Error(Nil)` if the integer does not represent a valid code point.
-///
-/// ## Examples
-///
-/// ```gleam
-/// let assert Ok(common) = script.from_int(0x0020)
-/// assert script.to_short_name(common) == "Zyyy"
-///
-/// let assert Ok(latin) = script.from_int(0x0041)
-/// assert script.to_long_name(latin) == "Latin"
-/// ```
-///
-pub fn from_int(cp: Int) -> Result(Script, Nil) {
-  case cp {
-    cp if cp < 0 || 0x10FFFF < cp -> Error(Nil)
-    cp -> codepoint_to_script(cp) |> Script |> Ok
-  }
+pub fn from_codepoint(cp: Codepoint) -> Script {
+  codepoint.to_int(cp) |> codepoint_to_script |> Script
 }
 
 /// Get the list of code point ranges `#(start, end)` of a [`Script`](#Script)
@@ -142,10 +122,11 @@ pub fn from_int(cp: Int) -> Result(Script, Nil) {
 ///
 /// ```gleam
 /// let assert Ok(braille) = script.from_name("braille")
-/// assert script.to_pairs(braille) == [#(0x2800, 0x28FF)]
+/// assert script.to_ranges(braille) |> list.map(codepoint.range_to_ints)
+///   == [#(0x2800, 0x28FF)]
 ///
 /// let assert Ok(hiragana) = script.from_name("Hira")
-/// assert script.to_pairs(hiragana)
+/// assert script.to_ranges(hiragana) |> list.map(codepoint.range_to_ints)
 ///   == [
 ///     #(0x3041, 0x3096),
 ///     #(0x309D, 0x309F),
@@ -156,6 +137,7 @@ pub fn from_int(cp: Int) -> Result(Script, Nil) {
 ///   ]
 /// ```
 ///
-pub fn to_pairs(script: Script) -> List(#(Int, Int)) {
+pub fn to_ranges(script: Script) -> List(codepoint.Range) {
   script_to_ranges(script.name)
+  |> list.filter_map(fn(pair) { codepoint.range_from_ints(pair.0, pair.1) })
 }

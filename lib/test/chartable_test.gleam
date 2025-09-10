@@ -6,12 +6,12 @@ pub fn main() {
   gleeunit.main()
 }
 
-pub fn parse_codepoint_test() {
-  assert internal.parse_codepoint("0000") == string.utf_codepoint(0x0000)
-  assert internal.parse_codepoint("0041") == string.utf_codepoint(0x0041)
-  assert internal.parse_codepoint("2B50") == string.utf_codepoint(0x2B50)
-  assert internal.parse_codepoint("661F") == string.utf_codepoint(0x661F)
-  assert internal.parse_codepoint("120000") == Error(Nil)
+pub fn parse_utf_test() {
+  assert internal.parse_utf("0000") == string.utf_codepoint(0x0000)
+  assert internal.parse_utf("0041") == string.utf_codepoint(0x0041)
+  assert internal.parse_utf("2B50") == string.utf_codepoint(0x2B50)
+  assert internal.parse_utf("661F") == string.utf_codepoint(0x661F)
+  assert internal.parse_utf("120000") == Error(Nil)
 }
 
 pub fn int_to_hex_test() {

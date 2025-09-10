@@ -1,35 +1,78 @@
 import chartable/unicode
 import chartable/unicode/category
+import chartable/unicode/codepoint
 import chartable/unicode/script
 import gleam/list
 import gleam/result
 import gleam/string
 
 // =============================================================================
+// BEGIN Unicode Code Points Tests
+
+pub fn codepoint_test() {
+  assert codepoint.from_int(-100) == Error(Nil)
+  assert codepoint.from_int(0x110000) == Error(Nil)
+
+  use int <- list.each([0, 0x0041, 0x661F, 0xDB7F, 0x10FFFF])
+  let assert Ok(cp) = codepoint.from_int(int)
+  assert codepoint.to_int(cp) == int
+  case string.utf_codepoint(int) {
+    Error(_) -> {
+      assert codepoint.to_utf(cp) == Error(Nil)
+    }
+    Ok(utf) -> {
+      assert codepoint.to_utf(cp) == Ok(utf)
+      assert codepoint.from_utf(utf) == cp
+    }
+  }
+}
+
+pub fn codepoint_range_test() {
+  let assert Error(_) = codepoint.range_from_ints(-100, 0)
+  let assert Error(_) = codepoint.range_from_ints(100, -50)
+  let assert Error(_) = codepoint.range_from_ints(-50, -100)
+  let assert Error(_) = codepoint.range_from_ints(0x0041, 0x110000)
+  let assert Error(_) = codepoint.range_from_ints(0x120000, 0)
+  let assert Error(_) = codepoint.range_from_ints(0x110000, 0x120000)
+
+  use #(left, right) <- list.each([
+    #(0x0000, 0x007F),
+    #(0x009F, 0x0080),
+    #(0x2800, 0x28FF),
+    #(0x309F, 0x3040),
+    #(0x05FF, 0x0590),
+    #(0xD800, 0xDFFF),
+    #(0xF0000, 0xFFFFF),
+    #(0x10FFFF, 0x100000),
+  ])
+  let assert Ok(range) = codepoint.range_from_ints(left, right)
+  case left <= right {
+    True -> {
+      assert #(left, right) == codepoint.range_to_ints(range)
+    }
+    False -> {
+      assert #(right, left) == codepoint.range_to_ints(range)
+    }
+  }
+  let assert Ok(left) = codepoint.from_int(left)
+  let assert Ok(right) = codepoint.from_int(right)
+  assert codepoint.range_from_codepoints(left, right) == range
+  assert codepoint.range_from_codepoints(right, left) == range
+}
+
+// END
+
+// =============================================================================
 // BEGIN Unicode Name Tests
 
 pub fn name_from_codepoint_test() {
-  assert string.utf_codepoint(0x0041)
-    |> result.try(unicode.name_from_codepoint)
-    == Ok("LATIN CAPITAL LETTER A")
-  assert string.utf_codepoint(0x03A2)
-    |> result.try(unicode.name_from_codepoint)
-    == Error(Nil)
-  assert string.utf_codepoint(0x22C6)
-    |> result.try(unicode.name_from_codepoint)
-    == Ok("STAR OPERATOR")
-  assert string.utf_codepoint(0x661F)
-    |> result.try(unicode.name_from_codepoint)
-    == Ok("CJK UNIFIED IDEOGRAPH-661F")
-}
-
-pub fn name_from_int_test() {
-  assert unicode.name_from_int(0x0041) == Ok("LATIN CAPITAL LETTER A")
-  assert unicode.name_from_int(0x03A2) == Error(Nil)
-  assert unicode.name_from_int(0x22C6) == Ok("STAR OPERATOR")
-  assert unicode.name_from_int(0x661F) == Ok("CJK UNIFIED IDEOGRAPH-661F")
-  assert unicode.name_from_int(-100) == Error(Nil)
-  assert unicode.name_from_int(0x110000) == Error(Nil)
+  let name_from_int = fn(cp) {
+    result.try(codepoint.from_int(cp), unicode.name_from_codepoint)
+  }
+  assert name_from_int(0x0041) == Ok("LATIN CAPITAL LETTER A")
+  assert name_from_int(0x03A2) == Error(Nil)
+  assert name_from_int(0x22C6) == Ok("STAR OPERATOR")
+  assert name_from_int(0x661F) == Ok("CJK UNIFIED IDEOGRAPH-661F")
 }
 
 // END
@@ -38,50 +81,40 @@ pub fn name_from_int_test() {
 // BEGIN Unicode Blocks Tests
 
 pub fn block_from_codepoint_test() {
-  assert string.utf_codepoint(0x0041)
-    |> result.map(unicode.block_from_codepoint)
-    == Ok("Basic Latin")
-  assert string.utf_codepoint(0x22C6)
-    |> result.map(unicode.block_from_codepoint)
-    == Ok("Mathematical Operators")
-  assert string.utf_codepoint(0x661F)
-    |> result.map(unicode.block_from_codepoint)
-    == Ok("CJK Unified Ideographs")
+  let block_from_int = fn(cp) {
+    result.map(codepoint.from_int(cp), unicode.block_from_codepoint)
+  }
+  assert block_from_int(0x0000) == Ok("Basic Latin")
+  assert block_from_int(0x0041) == Ok("Basic Latin")
+  assert block_from_int(0x007F) == Ok("Basic Latin")
+  assert block_from_int(0x0080) == Ok("Latin-1 Supplement")
+  assert block_from_int(0x22C6) == Ok("Mathematical Operators")
+  assert block_from_int(0x661F) == Ok("CJK Unified Ideographs")
+  assert block_from_int(0x100000) == Ok("Supplementary Private Use Area-B")
 }
 
-pub fn block_from_int_test() {
-  assert unicode.block_from_int(-100) == Error(Nil)
-  assert unicode.block_from_int(0x110000) == Error(Nil)
-  assert unicode.block_from_int(0x0000) == Ok("Basic Latin")
-  assert unicode.block_from_int(0x0041) == Ok("Basic Latin")
-  assert unicode.block_from_int(0x007F) == Ok("Basic Latin")
-  assert unicode.block_from_int(0x0080) == Ok("Latin-1 Supplement")
-  assert unicode.block_from_int(0x22C6) == Ok("Mathematical Operators")
-  assert unicode.block_from_int(0x661F) == Ok("CJK Unified Ideographs")
-  assert unicode.block_from_int(0x100000)
-    == Ok("Supplementary Private Use Area-B")
-}
-
-pub fn block_to_pair_test() {
-  assert unicode.block_to_pair("Basic_Latin") == Ok(#(0x0000, 0x007F))
-  assert unicode.block_to_pair("isHighSurrogates") == Ok(#(0xD800, 0xDB7F))
-  assert unicode.block_to_pair("Lucy") == Error(Nil)
+pub fn block_to_range_test() {
+  let block_to_pair = fn(block) {
+    result.map(unicode.block_to_range(block), codepoint.range_to_ints)
+  }
+  assert block_to_pair("Basic_Latin") == Ok(#(0x0000, 0x007F))
+  assert block_to_pair("isHighSurrogates") == Ok(#(0xD800, 0xDB7F))
+  assert block_to_pair("Lucy") == Error(Nil)
 }
 
 pub fn block_consistency_test() {
   use block_name <- list.each(unicode.blocks())
+  let assert Ok(block_range) = unicode.block_to_range(block_name)
 
-  let assert Ok(#(start, end)) = unicode.block_to_pair(block_name)
+  let #(start, end) = codepoint.range_to_codepoints(block_range)
+  assert unicode.block_from_codepoint(start) == block_name
+  assert unicode.block_from_codepoint(end) == block_name
 
-  assert unicode.block_to_pair("is " <> string.lowercase(block_name))
-    == Ok(#(start, end))
-
+  let #(start, end) = codepoint.range_to_ints(block_range)
   assert start % 16 == 0
   assert end % 16 == 15
-
-  assert unicode.block_from_int(start) == Ok(block_name)
-  assert unicode.block_from_int({ end + start } / 2) == Ok(block_name)
-  assert unicode.block_from_int(end) == Ok(block_name)
+  let assert Ok(cp) = codepoint.from_int({ start + end } / 2)
+  assert unicode.block_from_codepoint(cp) == block_name
 }
 
 // END
@@ -120,78 +153,53 @@ pub fn script_name_test() {
   assert script.to_long_name(unknown) == "Unknown"
 }
 
-pub fn script_from_int_test() {
-  assert script.from_int(-100) == Error(Nil)
-  assert script.from_int(0x110000) == Error(Nil)
-
-  let assert Ok(common) = script.from_int(0x0020)
+pub fn script_from_codepoint_test() {
+  let script_from_int = fn(cp) {
+    result.map(codepoint.from_int(cp), script.from_codepoint)
+  }
+  let assert Ok(common) = script_from_int(0x0020)
   assert script.to_short_name(common) == "Zyyy"
-  assert script.from_int(0x0032) == Ok(common)
-  assert script.from_int(0x005E) == Ok(common)
-  assert script.from_int(0x007B) == Ok(common)
-  assert script.from_int(0x00AD) == Ok(common)
-  assert script.from_int(0x2028) == Ok(common)
-  assert script.from_int(0x2B50) == Ok(common)
+  assert script_from_int(0x0032) == Ok(common)
+  assert script_from_int(0x005E) == Ok(common)
+  assert script_from_int(0x007B) == Ok(common)
+  assert script_from_int(0x00AD) == Ok(common)
+  assert script_from_int(0x2028) == Ok(common)
+  assert script_from_int(0x2B50) == Ok(common)
 
-  let assert Ok(latin) = script.from_int(0x0041)
+  let assert Ok(latin) = script_from_int(0x0041)
   assert script.to_long_name(latin) == "Latin"
-  assert script.from_int(0x0061) == Ok(latin)
-  assert script.from_int(0x01F2) == Ok(latin)
-  assert script.from_int(0x02B0) == Ok(latin)
-  assert script.from_int(0x2162) == Ok(latin)
+  assert script_from_int(0x0061) == Ok(latin)
+  assert script_from_int(0x01F2) == Ok(latin)
+  assert script_from_int(0x02B0) == Ok(latin)
+  assert script_from_int(0x2162) == Ok(latin)
 
-  let assert Ok(inherited) = script.from_int(0x0301)
+  let assert Ok(inherited) = script_from_int(0x0301)
   assert script.to_short_name(inherited) == "Zinh"
-  assert script.from_int(0x20E0) == Ok(inherited)
+  assert script_from_int(0x20E0) == Ok(inherited)
 
-  let assert Ok(devanagari) = script.from_int(0x0903)
+  let assert Ok(devanagari) = script_from_int(0x0903)
   assert script.to_short_name(devanagari) == "Deva"
 
-  let assert Ok(han) = script.from_int(0x661F)
+  let assert Ok(han) = script_from_int(0x661F)
   assert script.to_long_name(han) == "Han"
 
-  let assert Ok(unknown) = script.from_int(0xDB7F)
+  let assert Ok(unknown) = script_from_int(0xDB7F)
   assert script.to_short_name(unknown) == "Zzzz"
-  assert script.from_int(0xE000) == Ok(unknown)
-  assert script.from_int(0xF0000) == Ok(unknown)
-  assert script.from_int(0x100000) == Ok(unknown)
+  assert script_from_int(0xE000) == Ok(unknown)
+  assert script_from_int(0xF0000) == Ok(unknown)
+  assert script_from_int(0x100000) == Ok(unknown)
 }
 
-pub fn script_from_codepoint_test() {
-  let assert Ok(latin) = script.from_name("Latin")
-  assert string.utf_codepoint(0x0041)
-    |> result.map(script.from_codepoint)
-    == Ok(latin)
-  assert string.utf_codepoint(0x0061)
-    |> result.map(script.from_codepoint)
-    == Ok(latin)
-
-  let assert Ok(inherited) = script.from_name("Zinh")
-  assert string.utf_codepoint(0x0301)
-    |> result.map(script.from_codepoint)
-    == Ok(inherited)
-  assert string.utf_codepoint(0x20E0)
-    |> result.map(script.from_codepoint)
-    == Ok(inherited)
-
+pub fn script_to_ranges_test() {
   let assert Ok(unknown) = script.from_name("Zzzz")
-  assert string.utf_codepoint(0xE000)
-    |> result.map(script.from_codepoint)
-    == Ok(unknown)
-  assert string.utf_codepoint(0xF0000)
-    |> result.map(script.from_codepoint)
-    == Ok(unknown)
-  assert string.utf_codepoint(0x100000)
-    |> result.map(script.from_codepoint)
-    == Ok(unknown)
-}
+  assert script.to_ranges(unknown) == []
 
-pub fn script_to_pairs_test() {
   let assert Ok(braille) = script.from_name("braille")
-  assert script.to_pairs(braille) == [#(0x2800, 0x28FF)]
+  assert script.to_ranges(braille) |> list.map(codepoint.range_to_ints)
+    == [#(0x2800, 0x28FF)]
 
-  let assert Ok(hiragana) = script.from_name("Hira")
-  assert script.to_pairs(hiragana)
+  let assert Ok(hiragana) = script.from_name("hira")
+  assert script.to_ranges(hiragana) |> list.map(codepoint.range_to_ints)
     == [
       #(0x3041, 0x3096),
       #(0x309D, 0x309F),
@@ -208,12 +216,13 @@ pub fn script_consistency_test() {
   assert script.to_short_name(script) |> script.from_name == Ok(script)
   assert script.to_long_name(script) |> script.from_name == Ok(script)
 
-  use range <- list.each(script.to_pairs(script))
-  let #(start, end) = range
-  assert start <= end
-  assert script.from_int(start) == Ok(script)
-  assert script.from_int(end) == Ok(script)
-  assert script.from_int({ start + end } / 2) == Ok(script)
+  use range <- list.each(script.to_ranges(script))
+  let #(start, end) = codepoint.range_to_codepoints(range)
+  assert script.from_codepoint(start) == script
+  assert script.from_codepoint(end) == script
+  let #(start, end) = codepoint.range_to_ints(range)
+  let assert Ok(cp) = codepoint.from_int({ start + end } / 2)
+  assert script.from_codepoint(cp) == script
 }
 
 // END
@@ -222,51 +231,39 @@ pub fn script_consistency_test() {
 // BEGIN General Category Tests
 
 pub fn category_from_codepoint_test() {
-  assert string.utf_codepoint(0x0041)
-    |> result.map(unicode.category_from_codepoint)
-    == Ok(category.LetterUppercase)
-  assert string.utf_codepoint(0x0032)
-    |> result.map(unicode.category_from_codepoint)
-    == Ok(category.NumberDecimal)
-  assert string.utf_codepoint(0x0024)
-    |> result.map(unicode.category_from_codepoint)
-    == Ok(category.SymbolCurrency)
-  assert string.utf_codepoint(0x0007)
-    |> result.map(unicode.category_from_codepoint)
-    == Ok(category.Control)
-}
-
-pub fn category_from_int_test() {
-  assert unicode.category_from_int(0x0041) == category.LetterUppercase
-  assert unicode.category_from_int(0x0061) == category.LetterLowercase
-  assert unicode.category_from_int(0x01F2) == category.LetterTitlecase
-  assert unicode.category_from_int(0x02B0) == category.LetterModifier
-  assert unicode.category_from_int(0x661F) == category.LetterOther
-  assert unicode.category_from_int(0x0301) == category.MarkNonspacing
-  assert unicode.category_from_int(0x0903) == category.MarkSpacing
-  assert unicode.category_from_int(0x20E0) == category.MarkEnclosing
-  assert unicode.category_from_int(0x0032) == category.NumberDecimal
-  assert unicode.category_from_int(0x2162) == category.NumberLetter
-  assert unicode.category_from_int(0x00BD) == category.NumberOther
-  assert unicode.category_from_int(0x2040) == category.PunctuationConnector
-  assert unicode.category_from_int(0x2013) == category.PunctuationDash
-  assert unicode.category_from_int(0x007B) == category.PunctuationOpen
-  assert unicode.category_from_int(0x007D) == category.PunctuationClose
-  assert unicode.category_from_int(0x201C) == category.PunctuationInitial
-  assert unicode.category_from_int(0x201D) == category.PunctuationFinal
-  assert unicode.category_from_int(0x0021) == category.PunctuationOther
-  assert unicode.category_from_int(0x002B) == category.SymbolMath
-  assert unicode.category_from_int(0x0024) == category.SymbolCurrency
-  assert unicode.category_from_int(0x005E) == category.SymbolModifier
-  assert unicode.category_from_int(0x2B50) == category.SymbolOther
-  assert unicode.category_from_int(0x0020) == category.SeparatorSpace
-  assert unicode.category_from_int(0x2028) == category.SeparatorLine
-  assert unicode.category_from_int(0x2029) == category.SeparatorParagraph
-  assert unicode.category_from_int(0x0007) == category.Control
-  assert unicode.category_from_int(0x00AD) == category.Format
-  assert unicode.category_from_int(0xD877) == category.Surrogate
-  assert unicode.category_from_int(0xE777) == category.PrivateUse
-  assert unicode.category_from_int(0x03A2) == category.Unassigned
+  let category_from_int = fn(cp) {
+    result.map(codepoint.from_int(cp), unicode.category_from_codepoint)
+  }
+  assert category_from_int(0x0041) == Ok(category.LetterUppercase)
+  assert category_from_int(0x0061) == Ok(category.LetterLowercase)
+  assert category_from_int(0x01F2) == Ok(category.LetterTitlecase)
+  assert category_from_int(0x02B0) == Ok(category.LetterModifier)
+  assert category_from_int(0x661F) == Ok(category.LetterOther)
+  assert category_from_int(0x0301) == Ok(category.MarkNonspacing)
+  assert category_from_int(0x0903) == Ok(category.MarkSpacing)
+  assert category_from_int(0x20E0) == Ok(category.MarkEnclosing)
+  assert category_from_int(0x0032) == Ok(category.NumberDecimal)
+  assert category_from_int(0x2162) == Ok(category.NumberLetter)
+  assert category_from_int(0x00BD) == Ok(category.NumberOther)
+  assert category_from_int(0x2040) == Ok(category.PunctuationConnector)
+  assert category_from_int(0x2013) == Ok(category.PunctuationDash)
+  assert category_from_int(0x007B) == Ok(category.PunctuationOpen)
+  assert category_from_int(0x007D) == Ok(category.PunctuationClose)
+  assert category_from_int(0x201C) == Ok(category.PunctuationInitial)
+  assert category_from_int(0x201D) == Ok(category.PunctuationFinal)
+  assert category_from_int(0x0021) == Ok(category.PunctuationOther)
+  assert category_from_int(0x002B) == Ok(category.SymbolMath)
+  assert category_from_int(0x0024) == Ok(category.SymbolCurrency)
+  assert category_from_int(0x005E) == Ok(category.SymbolModifier)
+  assert category_from_int(0x2B50) == Ok(category.SymbolOther)
+  assert category_from_int(0x0020) == Ok(category.SeparatorSpace)
+  assert category_from_int(0x2028) == Ok(category.SeparatorLine)
+  assert category_from_int(0x2029) == Ok(category.SeparatorParagraph)
+  assert category_from_int(0x0007) == Ok(category.Control)
+  assert category_from_int(0x00AD) == Ok(category.Format)
+  assert category_from_int(0xD877) == Ok(category.Surrogate)
+  assert category_from_int(0xE777) == Ok(category.PrivateUse)
+  assert category_from_int(0x03A2) == Ok(category.Unassigned)
 }
 
 pub fn category_from_name_test() {

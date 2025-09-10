@@ -103,7 +103,7 @@ fn parse_grapheme_loop(str: String, acc: String) -> Result(String, Nil) {
       }
     "\\u{" <> rest -> {
       use #(hex_code, rest) <- result.try(string.split_once(rest, on: "}"))
-      use codepoint <- result.try(internal.parse_codepoint(hex_code))
+      use codepoint <- result.try(internal.parse_utf(hex_code))
       parse_grapheme_loop(rest, acc <> string.from_utf_codepoints([codepoint]))
     }
     string -> {

@@ -20,9 +20,9 @@ pub fn unicode_name_test() {
 
   unicode_codegen.assert_match_range_records(names, fn(cp, name) {
     assert name != ""
-    let hex = internal.int_to_hex(cp)
+    let hex = internal.codepoint_to_hex(cp)
     let name = string.replace(in: name, each: "*", with: hex)
-    unicode.name_from_int(cp) == Ok(name)
+    unicode.name_from_codepoint(cp) == Ok(name)
   })
 }
 
@@ -31,7 +31,7 @@ pub fn unicode_blocks_test() {
   let assert Ok(blocks) = unicode_codegen.parse_blocks(txt)
 
   unicode_codegen.assert_match_range_records(blocks, fn(cp, block) {
-    unicode.block_from_int(cp) == Ok(block)
+    unicode.block_from_codepoint(cp) == block
   })
 
   unicode_codegen.range_records_to_string(blocks, fn(block_name) { block_name })
@@ -43,7 +43,7 @@ pub fn unicode_category_test() {
   let assert Ok(categories) = unicode_codegen.parse_categories(txt)
 
   unicode_codegen.assert_match_range_records(categories, fn(cp, category) {
-    unicode.category_from_int(cp) == category
+    unicode.category_from_codepoint(cp) == category
   })
 }
 
