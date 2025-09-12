@@ -14,6 +14,8 @@ Inspirations (a prior art list):
 - [r21a UniView](https://r12a.github.io/uniview/)
 - [KreativeKorp Unicode Character Charts](https://www.kreativekorp.com/charset/unicode/)
 - [decode unicode](https://decodeunicode.org/en/u+00041)
+- [Compart Unicode](https://www.compart.com/en/unicode/)
+- [Codepoints.net](https://codepoints.net/)
 - [Typst ASCII Table](https://typst.app/tools/ascii-table/)
 
 
@@ -27,8 +29,8 @@ Requirements:
 
 You can install these tools using a version manager like
 [asdf](https://asdf-vm.com/guide/getting-started.html) or
-[mise](https://mise.jdx.dev/getting-started.html), which can read from
-`.tool-versions`.
+[mise](https://mise.jdx.dev/getting-started.html),
+which can read from `.tool-versions`.
 
 ```sh
 just codegen   # Dowload source data and generate library code
