@@ -1,3 +1,6 @@
+import gleam/int
+import gleam/list
+import gleam/order.{type Order}
 import gleam/string
 
 // =============================================================================
@@ -54,6 +57,11 @@ pub fn to_int(cp: Codepoint) -> Int {
   cp.value
 }
 
+/// Compares two code points.
+pub fn compare(lhs: Codepoint, rhs: Codepoint) -> Order {
+  int.compare(lhs.value, rhs.value)
+}
+
 // END
 
 // =============================================================================
@@ -97,4 +105,66 @@ pub fn range_to_codepoints(range: Range) -> #(Codepoint, Codepoint) {
 pub fn range_to_ints(range: Range) -> #(Int, Int) {
   #(range.start.value, range.end.value)
 }
-// END
+
+/// Get the list of code points in a given [`Range`](#Range).
+pub fn range_to_list(range: Range) -> List(Codepoint) {
+  // NOTE: This function does not perform any bounds checking because every
+  // code point between two valid code points are guaranteed to be also valid
+  // (since surrogates are considered valid, so there is no "holes").
+  list.range(range.start.value, range.end.value) |> list.map(Codepoint)
+}
+
+pub fn range_length(range: Range) -> Int {
+  range.end.value - range.start.value + 1
+}
+
+/// Compares two code point ranges; they are considered equal if there is any
+/// overlapping between the two.
+pub fn range_compare(lhs: Range, rhs: Range) -> Order {
+  // compare(lhs.start, rhs.start) |> order.break_tie(compare(lhs.end, rhs.end))
+  case compare(lhs.end, rhs.start), compare(rhs.end, lhs.start) {
+    // <--lhs-->  <--rhs-->
+    order.Lt, _ -> order.Lt
+    // <--rhs-->  <--lhs-->
+    _, order.Lt -> order.Gt
+    _, _ -> order.Eq
+  }
+}
+
+/// Get the range of code points that are in both given codepoint ranges.
+///
+/// Returns an `Error` if there is no overlapping between the two ranges.
+pub fn range_intersection(of r1: Range, and r2: Range) -> Result(Range, Nil) {
+  let #(r1_start, r1_end) = range_to_ints(r1)
+  let #(r2_start, r2_end) = range_to_ints(r2)
+  case r1_start <= r2_start {
+    True if r1_end < r2_start -> Error(Nil)
+    True if r2_end <= r1_end -> Ok(r2)
+    True -> Ok(Range(Codepoint(r2_start), Codepoint(r1_end)))
+    // r2_start < r1_start:
+    False if r2_end < r1_start -> Error(Nil)
+    False if r1_end <= r2_end -> Ok(r1)
+    False -> Ok(Range(Codepoint(r1_start), Codepoint(r2_end)))
+  }
+}
+
+/// Get the range of code points that are in either given codepoint ranges.
+///
+/// Returns an `Error` if there is no overlapping between the two ranges.
+pub fn range_union(of r1: Range, and r2: Range) -> Result(Range, Nil) {
+  let #(r1_start, r1_end) = range_to_ints(r1)
+  let #(r2_start, r2_end) = range_to_ints(r2)
+  case r1_start <= r2_start {
+    True if r1_end + 1 == r2_start ->
+      Ok(Range(Codepoint(r1_start), Codepoint(r2_end)))
+    True if r1_end < r2_start -> Error(Nil)
+    True if r2_end <= r1_end -> Ok(r1)
+    True -> Ok(Range(Codepoint(r1_start), Codepoint(r2_end)))
+    // r2_start < r1_start:
+    False if r2_end + 1 == r1_start ->
+      Ok(Range(Codepoint(r2_start), Codepoint(r1_end)))
+    False if r2_end < r1_start -> Error(Nil)
+    False if r1_end <= r2_end -> Ok(r2)
+    False -> Ok(Range(Codepoint(r2_start), Codepoint(r1_end)))
+  }
+}

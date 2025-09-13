@@ -36,19 +36,10 @@ pub type AlternatingRecord(data) {
   ContiguousRecord(codepoint_range: codepoint.Range, data: data)
 }
 
-fn concat_codepoint_range(left: codepoint.Range, right: codepoint.Range) {
-  let #(left_start, left_end) = codepoint.range_to_ints(left)
-  let #(right_start, right_end) = codepoint.range_to_ints(right)
-  case left_end + 1 == right_start || right_end + 1 == left_start {
-    True -> codepoint.range_from_ints(left_start, right_end)
-    False -> Error(Nil)
-  }
-}
-
 fn concat_range_record(left: RangeRecord(data), right: RangeRecord(data)) {
   use <- bool.guard(when: left.data != right.data, return: Error(Nil))
   result.map(
-    concat_codepoint_range(left.codepoint_range, right.codepoint_range),
+    codepoint.range_union(left.codepoint_range, right.codepoint_range),
     RangeRecord(_, left.data),
   )
 }
@@ -70,10 +61,7 @@ fn concat_range_records(
 
 fn sort_range_records(records: List(RangeRecord(data))) {
   list.sort(records, fn(lhs, rhs) {
-    let #(lhs_start, lhs_end) = codepoint.range_to_ints(lhs.codepoint_range)
-    let #(rhs_start, rhs_end) = codepoint.range_to_ints(rhs.codepoint_range)
-    int.compare(lhs_start, rhs_start)
-    |> order.break_tie(int.compare(lhs_end, rhs_end))
+    codepoint.range_compare(lhs.codepoint_range, rhs.codepoint_range)
   })
 }
 
@@ -314,17 +302,14 @@ fn parse_alternating_records(
   use accumulator, previous_record <- list.fold(
     from: [],
     over: list.sort(records, fn(lhs, rhs) {
-      let #(lhs_start, lhs_end) = codepoint.range_to_ints(lhs.codepoint_range)
-      let #(rhs_start, rhs_end) = codepoint.range_to_ints(rhs.codepoint_range)
-      int.compare(lhs_start, rhs_start)
-      |> order.break_tie(int.compare(lhs_end, rhs_end))
+      codepoint.range_compare(lhs.codepoint_range, rhs.codepoint_range)
       |> order.negate
     }),
   )
   let RangeRecord(range_0, data_0) = previous_record
   case accumulator {
     [ContiguousRecord(range_1, data_1), ..next_records] if data_0 == data_1 ->
-      case concat_codepoint_range(range_0, range_1) {
+      case codepoint.range_union(range_0, range_1) {
         Error(_) -> [ContiguousRecord(range_0, data_0), ..accumulator]
         Ok(codepoint_range) -> [
           ContiguousRecord(codepoint_range, data_0),
