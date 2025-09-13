@@ -3,6 +3,88 @@ import chartable/unicode/category.{type GeneralCategory}
 import chartable/unicode/codepoint.{type Codepoint}
 import gleam/result
 
+/// The basic types of code points
+/// (see [Table 2-3](https://www.unicode.org/versions/latest/core-spec/chapter-2/#G286941))
+pub type BasicType {
+  /// Visible characters: letters, marks, numbers, punctuations, symbols, and
+  /// spaces.
+  Graphic
+  /// Invisible characters afecting neighboring characters.
+  Format
+  /// [C0 and C1 control codes](https://www.unicode.org/versions/latest/core-spec/chapter-23/#G20365)
+  /// (U+0000..U+001F and U+007F..U+009F)
+  Control
+  /// [Private-Use Characters](https://www.unicode.org/versions/latest/core-spec/chapter-23/#G19184)
+  /// left undefined for third-party non-standard use.
+  PrivateUse
+  /// [Surrogates](https://www.unicode.org/versions/latest/core-spec/chapter-23/#G24089)
+  /// used by UTF-16 encoding to represent supplementary characters.
+  Surrogate
+  /// [Noncharacters](https://www.unicode.org/versions/latest/core-spec/chapter-23/#G12612)
+  /// permanently reserved for internal use (U+FDD0..U+FDEF and any code points
+  /// ending in the value FFFE or FFFF, e.g. U+5FFFE).
+  NonCharacter
+  /// Reserved characters for future assignement.
+  Reserved
+}
+
+/// Get the basic type of a code point.
+///
+/// ## Examples
+///
+/// ```gleam
+/// use cp <- result.map(codepoint.from_int(0x2B50))
+/// assert unicode.basic_type_from_codepoint(cp) == unicode.Graphic
+/// ```
+///
+pub fn basic_type_from_codepoint(cp: Codepoint) -> BasicType {
+  case category_from_codepoint(cp) {
+    category.Letter(_) -> Graphic
+    category.Mark(_) -> Graphic
+    category.Number(_) -> Graphic
+    category.Punctuation(_) -> Graphic
+    category.Symbol(_) -> Graphic
+    category.Separator(category.SpaceSeparator) -> Graphic
+
+    category.Other(category.Format) -> Format
+    category.Separator(category.LineSeparator) -> Format
+    category.Separator(category.ParagraphSeparator) -> Format
+
+    category.Other(category.Control) -> Control
+    category.Other(category.PrivateUse) -> PrivateUse
+    category.Other(category.Surrogate) -> Surrogate
+    _ -> {
+      let int = codepoint.to_int(cp)
+      case int % 0x10000 {
+        0xFFFE | 0xFFFF -> NonCharacter
+        _ if 0xFDD0 <= int && int <= 0xFDEF -> NonCharacter
+        _ -> Reserved
+      }
+    }
+  }
+}
+
+// NOTE: Implementation of the character/codepoint status columns in Table 2-3.
+// https://www.unicode.org/versions/latest/core-spec/chapter-2/#G286941
+//
+// The names of these 2 functions are confusing and they are easy to implement,
+// so they are probably not worth poluting the API namespace.
+//
+// pub fn is_assigned(cp: Codepoint) -> Bool {
+//   case category_from_codepoint(cp) {
+//     category.Other(category.Surrogate) -> False
+//     category.Other(category.Unassigned) -> False
+//     _ -> True
+//   }
+// }
+//
+// pub fn is_designated(cp: Codepoint) -> Bool {
+//   case basic_type_from_codepoint(cp) {
+//     Reserved -> False
+//     _ -> True
+//   }
+// }
+
 /// Get the Unicode "Name" property of a code point.
 ///
 /// Returns an `Error` if the character does not have a standard name
@@ -16,17 +98,17 @@ import gleam/result
 /// ```
 ///
 pub fn name_from_codepoint(cp: Codepoint) -> Result(String, Nil) {
-  codepoint_to_name_ffi(codepoint.to_int(cp))
+  name_from_codepoint_ffi(codepoint.to_int(cp))
 }
 
 @external(javascript, "./unicode/name_map.mjs", "get_name")
-fn codepoint_to_name_ffi(cp: Int) -> Result(String, Nil)
+fn name_from_codepoint_ffi(cp: Int) -> Result(String, Nil)
 
 /// Get the list of all Unicode blocks' name.
 @external(javascript, "./unicode/block_map.mjs", "get_list")
 pub fn blocks() -> List(String)
 
-/// Get the name of the Unicode block to which a `Codepoint` belongs.
+/// Get the name of the Unicode block to which a code point belongs.
 ///
 /// Returns `"No_Block"` if the code point is not assigned to any blocks.
 ///
@@ -38,13 +120,13 @@ pub fn blocks() -> List(String)
 /// ```
 ///
 pub fn block_from_codepoint(cp: Codepoint) -> String {
-  codepoint_to_block_ffi(codepoint.to_int(cp))
+  block_from_codepoint_ffi(codepoint.to_int(cp))
 }
 
 @external(javascript, "./unicode/block_map.mjs", "codepoint_to_block")
-fn codepoint_to_block_ffi(cp: Int) -> String
+fn block_from_codepoint_ffi(cp: Int) -> String
 
-/// Get the code point range `#(start, end)` of a Unicode block,
+/// Get the code point range of a Unicode block,
 /// block's name matching follows rule
 /// [UAX44-LM3](https://www.unicode.org/reports/tr44/#UAX44-LM3)
 /// (ignore case, whitespaces, underscores, hyphens, and initial prefix "is").
@@ -65,8 +147,7 @@ pub fn block_to_range(block_name: String) -> Result(codepoint.Range, Nil) {
 @external(javascript, "./unicode/block_map.mjs", "block_to_range")
 fn block_to_range_ffi(block_name: String) -> Result(#(Int, Int), Nil)
 
-/// Get the Unicode [`GeneralCategory`](unicode/category.html#GeneralCategory)
-/// property of a code point.
+/// Get the Unicode "General Category" property of a code point.
 ///
 /// ## Examples
 ///

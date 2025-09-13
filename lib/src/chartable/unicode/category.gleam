@@ -365,21 +365,6 @@ pub fn to_long_name(category: GeneralCategory) -> String {
   }
 }
 
-/// Returns `True` if the [`GeneralCategory`](#GeneralCategory) provided
-/// is assigned to abstract characters (not `Surrogate` or `Unassigned`).
-///
-/// ## Examples
-///
-/// ```gleam
-/// assert category.is_assigned(category.LetterLowercase)
-/// assert !category.is_assigned(category.Surrogate)
-/// assert !category.is_assigned(category.Unassigned)
-/// ```
-///
-pub fn is_assigned(category: GeneralCategory) -> Bool {
-  category != Other(Surrogate) && category != Other(Unassigned)
-}
-
 /// Returns `True` if the [`Letter`](#Letter) category provided
 /// is a cased letter category (uppercase, lowercase, or titlecase).
 ///
@@ -409,46 +394,4 @@ pub fn is_cased_letter(category: Letter) -> Bool {
 ///
 pub fn is_quotation(category: Punctuation) -> Bool {
   category == InitialPunctuation || category == FinalPunctuation
-}
-
-/// Returns `True` if the [`GeneralCategory`](#GeneralCategory) provided
-/// is a "Graphic" Basic Type
-/// (letters, marks, numbers, punctuations, symbols, and spaces).
-///
-/// ## Examples
-///
-/// ```gleam
-/// assert category.is_graphic(category.LetterLowercase)
-/// assert !category.is_graphic(category.Control)
-/// ```
-///
-pub fn is_graphic(category: GeneralCategory) -> Bool {
-  case category {
-    Letter(_)
-    | Mark(_)
-    | Number(_)
-    | Punctuation(_)
-    | Symbol(_)
-    | Separator(SpaceSeparator) -> True
-    _ -> False
-  }
-}
-
-/// Returns `True` if the [`GeneralCategory`](#GeneralCategory) provided
-/// is a "Format" Basic Type
-/// (invisible but affects neighboring characters).
-///
-/// ## Examples
-///
-/// ```gleam
-/// assert category.is_format(category.Format)
-/// assert category.is_format(category.SeparatorLine)
-/// assert category.is_format(category.SeparatorParagraph)
-/// assert !category.is_format(category.Control)
-/// ```
-///
-pub fn is_format(category: GeneralCategory) -> Bool {
-  category == Other(Format)
-  || category == Separator(LineSeparator)
-  || category == Separator(ParagraphSeparator)
 }

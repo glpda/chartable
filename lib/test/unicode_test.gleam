@@ -70,6 +70,40 @@ pub fn codepoint_range_test() {
 // END
 
 // =============================================================================
+// BEGIN Unicode Basic Type Tests
+
+pub fn basic_type_from_codepoint_test() {
+  let basic_type_from_int = fn(cp) {
+    result.map(codepoint.from_int(cp), unicode.basic_type_from_codepoint)
+  }
+  assert basic_type_from_int(0x0041) == Ok(unicode.Graphic)
+  assert basic_type_from_int(0x0301) == Ok(unicode.Graphic)
+  assert basic_type_from_int(0x0032) == Ok(unicode.Graphic)
+  assert basic_type_from_int(0x2013) == Ok(unicode.Graphic)
+  assert basic_type_from_int(0x2B50) == Ok(unicode.Graphic)
+  assert basic_type_from_int(0x0020) == Ok(unicode.Graphic)
+
+  assert basic_type_from_int(0x00AD) == Ok(unicode.Format)
+  assert basic_type_from_int(0x2028) == Ok(unicode.Format)
+  assert basic_type_from_int(0x2029) == Ok(unicode.Format)
+
+  assert basic_type_from_int(0x0007) == Ok(unicode.Control)
+  assert basic_type_from_int(0xDB7F) == Ok(unicode.Surrogate)
+  assert basic_type_from_int(0xE777) == Ok(unicode.PrivateUse)
+
+  assert basic_type_from_int(0x03A2) == Ok(unicode.Reserved)
+  assert basic_type_from_int(0xFDD0) == Ok(unicode.NonCharacter)
+  assert basic_type_from_int(0xFDE0) == Ok(unicode.NonCharacter)
+  assert basic_type_from_int(0xFDEF) == Ok(unicode.NonCharacter)
+  assert basic_type_from_int(0xFFFE) == Ok(unicode.NonCharacter)
+  assert basic_type_from_int(0xFFFF) == Ok(unicode.NonCharacter)
+  assert basic_type_from_int(0x5FFFE) == Ok(unicode.NonCharacter)
+  assert basic_type_from_int(0x5FFFF) == Ok(unicode.NonCharacter)
+}
+
+// END
+
+// =============================================================================
 // BEGIN Unicode Name Tests
 
 pub fn name_from_codepoint_test() {
@@ -275,12 +309,6 @@ pub fn category_to_long_name_test() {
     == "Math_Symbol"
 }
 
-pub fn category_is_assigned_test() {
-  assert category.is_assigned(category.Letter(category.LowercaseLetter))
-  assert !category.is_assigned(category.Other(category.Surrogate))
-  assert !category.is_assigned(category.Other(category.Unassigned))
-}
-
 pub fn category_is_cased_letter_test() {
   assert category.is_cased_letter(category.LowercaseLetter)
   assert !category.is_cased_letter(category.OtherLetter)
@@ -289,18 +317,6 @@ pub fn category_is_cased_letter_test() {
 pub fn category_is_quotation_test() {
   assert category.is_quotation(category.InitialPunctuation)
   assert !category.is_quotation(category.OpenPunctuation)
-}
-
-pub fn category_is_graphic_test() {
-  assert category.is_graphic(category.Letter(category.LowercaseLetter))
-  assert !category.is_graphic(category.Other(category.Control))
-}
-
-pub fn category_is_format_test() {
-  assert category.is_format(category.Other(category.Format))
-  assert category.is_format(category.Separator(category.LineSeparator))
-  assert category.is_format(category.Separator(category.ParagraphSeparator))
-  assert !category.is_format(category.Other(category.Control))
 }
 
 pub fn category_consistency_test() {
