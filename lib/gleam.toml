@@ -41,6 +41,7 @@ allow_write = [
     "./src/chartable/unicode/name_map.mjs",
     "./src/chartable/unicode/block_map.mjs",
     "./src/chartable/unicode/script_map.mjs",
+    "./src/chartable/unicode/category_map.mjs",
     "./src/chartable/typst/symbol_map.mjs",
     "./src/chartable/typst/emoji_map.mjs",
     "./src/chartable/html/entity_map.mjs",

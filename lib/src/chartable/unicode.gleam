@@ -76,11 +76,8 @@ fn block_to_range_ffi(block_name: String) -> Result(#(Int, Int), Nil)
 /// ```
 ///
 pub fn category_from_codepoint(cp: Codepoint) -> GeneralCategory {
-  case codepoint.to_utf(cp) {
-    Ok(cp) -> category_from_codepoint_ffi(cp)
-    Error(_) -> category.Surrogate
-  }
+  category_from_codepoint_ffi(codepoint.to_int(cp))
 }
 
-@external(javascript, "./unicode/category_regexp.mjs", "get_category")
-fn category_from_codepoint_ffi(cp: UtfCodepoint) -> GeneralCategory
+@external(javascript, "./unicode/category_map.mjs", "codepoint_to_category")
+fn category_from_codepoint_ffi(cp: Int) -> GeneralCategory

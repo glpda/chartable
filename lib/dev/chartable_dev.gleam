@@ -35,6 +35,15 @@ pub fn main() {
       to: "src/chartable/unicode/script_map.mjs",
       contents: script_map,
     )
+  let assert Ok(txt) = simplifile.read("data/unicode/categories.txt")
+  let assert Ok(categories) = unicode.parse_alternating_categories(txt)
+  let assert Ok(template) =
+    simplifile.read("codegen_templates/category_map.mjs")
+  let assert Ok(Nil) =
+    simplifile.write(
+      to: "src/chartable/unicode/category_map.mjs",
+      contents: unicode.make_category_map(categories:, template:),
+    )
 
   let assert Ok(template) =
     simplifile.read("codegen_templates/notation_map.mjs")
