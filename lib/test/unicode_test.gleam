@@ -244,90 +244,63 @@ pub fn category_from_codepoint_test() {
 }
 
 pub fn category_from_name_test() {
-  assert category.from_name("Lu") == Ok(category.LetterUppercase)
-  assert category.from_name("Cn") == Ok(category.Unassigned)
-  assert category.from_name("Sm") == Ok(category.SymbolMath)
+  assert category.from_name("Lu")
+    == Ok(category.Letter(category.UppercaseLetter))
+  assert category.from_name("Cn") == Ok(category.Other(category.Unassigned))
+  assert category.from_name("Sm") == Ok(category.Symbol(category.MathSymbol))
   assert category.from_name("Xyz") == Error(Nil)
 
-  assert category.from_name("Uppercase Letter") == Ok(category.LetterUppercase)
-  assert category.from_name("unassigned") == Ok(category.Unassigned)
-  assert category.from_name("Math-Symbol") == Ok(category.SymbolMath)
+  assert category.from_name("Uppercase Letter")
+    == Ok(category.Letter(category.UppercaseLetter))
+  assert category.from_name("unassigned")
+    == Ok(category.Other(category.Unassigned))
+  assert category.from_name("Math-Symbol")
+    == Ok(category.Symbol(category.MathSymbol))
   assert category.from_name("Invalid_Category") == Error(Nil)
 }
 
 pub fn category_to_short_name_test() {
-  assert category.to_short_name(category.LetterUppercase) == "Lu"
-  assert category.to_short_name(category.Unassigned) == "Cn"
-  assert category.to_short_name(category.SymbolMath) == "Sm"
+  assert category.to_short_name(category.Letter(category.UppercaseLetter))
+    == "Lu"
+  assert category.to_short_name(category.Other(category.Unassigned)) == "Cn"
+  assert category.to_short_name(category.Symbol(category.MathSymbol)) == "Sm"
 }
 
 pub fn category_to_long_name_test() {
-  assert category.to_long_name(category.LetterUppercase) == "Uppercase_Letter"
-  assert category.to_long_name(category.Unassigned) == "Unassigned"
-  assert category.to_long_name(category.SymbolMath) == "Math_Symbol"
+  assert category.to_long_name(category.Letter(category.UppercaseLetter))
+    == "Uppercase_Letter"
+  assert category.to_long_name(category.Other(category.Unassigned))
+    == "Unassigned"
+  assert category.to_long_name(category.Symbol(category.MathSymbol))
+    == "Math_Symbol"
 }
 
 pub fn category_is_assigned_test() {
-  assert category.is_assigned(category.LetterLowercase)
-  assert !category.is_assigned(category.Surrogate)
-  assert !category.is_assigned(category.Unassigned)
+  assert category.is_assigned(category.Letter(category.LowercaseLetter))
+  assert !category.is_assigned(category.Other(category.Surrogate))
+  assert !category.is_assigned(category.Other(category.Unassigned))
 }
 
 pub fn category_is_cased_letter_test() {
-  assert category.is_cased_letter(category.LetterLowercase)
-  assert !category.is_cased_letter(category.LetterOther)
-}
-
-pub fn category_is_letter_test() {
-  assert category.is_letter(category.LetterLowercase)
-  assert !category.is_letter(category.NumberDecimal)
-}
-
-pub fn category_is_mark_test() {
-  assert category.is_mark(category.MarkSpacing)
-  assert !category.is_mark(category.NumberDecimal)
-}
-
-pub fn category_is_number_test() {
-  assert category.is_number(category.NumberDecimal)
-  assert !category.is_number(category.LetterLowercase)
-}
-
-pub fn category_is_punctuation_test() {
-  assert category.is_punctuation(category.PunctuationOther)
-  assert !category.is_punctuation(category.NumberDecimal)
+  assert category.is_cased_letter(category.LowercaseLetter)
+  assert !category.is_cased_letter(category.OtherLetter)
 }
 
 pub fn category_is_quotation_test() {
-  assert category.is_quotation(category.PunctuationInitial)
-  assert !category.is_quotation(category.PunctuationOpen)
-}
-
-pub fn category_is_symbol_test() {
-  assert category.is_symbol(category.SymbolCurrency)
-  assert !category.is_symbol(category.NumberDecimal)
-}
-
-pub fn category_is_separator_test() {
-  assert category.is_separator(category.SeparatorSpace)
-  assert !category.is_separator(category.NumberDecimal)
-}
-
-pub fn category_is_other_test() {
-  assert category.is_other(category.Control)
-  assert !category.is_other(category.NumberDecimal)
+  assert category.is_quotation(category.InitialPunctuation)
+  assert !category.is_quotation(category.OpenPunctuation)
 }
 
 pub fn category_is_graphic_test() {
-  assert category.is_graphic(category.LetterLowercase)
-  assert !category.is_graphic(category.Control)
+  assert category.is_graphic(category.Letter(category.LowercaseLetter))
+  assert !category.is_graphic(category.Other(category.Control))
 }
 
 pub fn category_is_format_test() {
-  assert category.is_format(category.Format)
-  assert category.is_format(category.SeparatorLine)
-  assert category.is_format(category.SeparatorParagraph)
-  assert !category.is_format(category.Control)
+  assert category.is_format(category.Other(category.Format))
+  assert category.is_format(category.Separator(category.LineSeparator))
+  assert category.is_format(category.Separator(category.ParagraphSeparator))
+  assert !category.is_format(category.Other(category.Control))
 }
 
 pub fn category_consistency_test() {
@@ -339,29 +312,56 @@ pub fn category_consistency_test() {
   let long_name = category.to_long_name(cat)
   assert Ok(cat) == category.from_name(long_name)
 
-  assert case short_name {
-    "L" <> _ -> category.is_letter(cat)
-    "M" <> _ -> category.is_mark(cat)
-    "N" <> _ -> category.is_number(cat)
-    "P" <> _ -> category.is_punctuation(cat)
-    "S" <> _ -> category.is_symbol(cat)
-    "Z" <> _ -> category.is_separator(cat)
-    "C" <> _ -> category.is_other(cat)
-    _ -> False
+  case short_name {
+    "L" <> _ -> {
+      let assert category.Letter(_) = cat
+    }
+    "M" <> _ -> {
+      let assert category.Mark(_) = cat
+    }
+    "N" <> _ -> {
+      let assert category.Number(_) = cat
+    }
+    "P" <> _ -> {
+      let assert category.Punctuation(_) = cat
+    }
+    "S" <> _ -> {
+      let assert category.Symbol(_) = cat
+    }
+    "Z" <> _ -> {
+      let assert category.Separator(_) = cat
+    }
+    "C" <> _ -> {
+      let assert category.Other(_) = cat
+    }
+    _ -> panic as "Invalid short_name prefix!"
   }
 
-  assert case long_name {
-    "Control" | "Format" | "Surrogate" | "Private_Use" | "Unassigned" ->
-      category.is_other(cat)
+  case long_name {
+    "Control" | "Format" | "Surrogate" | "Private_Use" | "Unassigned" -> {
+      let assert category.Other(_) = cat
+    }
     _ ->
       case string.split_once(long_name, on: "_") {
-        Ok(#(_, "Letter")) -> category.is_letter(cat)
-        Ok(#(_, "Mark")) -> category.is_mark(cat)
-        Ok(#(_, "Number")) -> category.is_number(cat)
-        Ok(#(_, "Punctuation")) -> category.is_punctuation(cat)
-        Ok(#(_, "Symbol")) -> category.is_symbol(cat)
-        Ok(#(_, "Separator")) -> category.is_separator(cat)
-        _ -> False
+        Ok(#(_, "Letter")) -> {
+          let assert category.Letter(_) = cat
+        }
+        Ok(#(_, "Mark")) -> {
+          let assert category.Mark(_) = cat
+        }
+        Ok(#(_, "Number")) -> {
+          let assert category.Number(_) = cat
+        }
+        Ok(#(_, "Punctuation")) -> {
+          let assert category.Punctuation(_) = cat
+        }
+        Ok(#(_, "Symbol")) -> {
+          let assert category.Symbol(_) = cat
+        }
+        Ok(#(_, "Separator")) -> {
+          let assert category.Separator(_) = cat
+        }
+        _ -> panic as "Invalid long_name suffix!"
       }
   }
 }

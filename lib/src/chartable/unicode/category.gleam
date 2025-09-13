@@ -6,92 +6,107 @@
 import chartable/internal
 
 pub type GeneralCategory {
-  // Letters:
+  Letter(Letter)
+  Mark(Mark)
+  Number(Number)
+  Punctuation(Punctuation)
+  Symbol(Symbol)
+  Separator(Separator)
+  Other(Other)
+}
+
+pub type Letter {
   /// `"Lu"` uppercase letters,
   /// e.g. U+0041 "Latin Capital Letter A" ( A )
-  LetterUppercase
+  UppercaseLetter
   /// `"Ll"` lowercase letters,
   /// e.g. U+0061 "Latin Small Letter A" ( a )
-  LetterLowercase
+  LowercaseLetter
   /// `"Lt"`  digraphs encoded as a single character, with first part uppercase,
   /// e.g. U+01F2 "Latin Capital Letter D with Small Letter Z" ( ǲ )
-  LetterTitlecase
+  TitlecaseLetter
   /// `"Lm"` modifier letters,
   /// e.g. U+02B0 "Modifier Letter Small H" ( ʰ )
-  LetterModifier
+  ModifierLetter
   /// `"Lo"` other letters, including syllables and ideographs,
   /// e.g. U+661F "CJK Ideograph for Star" ( 星 )
-  LetterOther
+  OtherLetter
+}
 
-  // Marks:
+pub type Mark {
   /// `"Mn"` nonspacing combining marks (zero advance width),
   /// e.g. U+0301 "Combining Acute Accent" ( ◌́ )
-  MarkNonspacing
+  NonspacingMark
   /// `"Mc"` spacing combining marks (positive advance width),
   /// e.g. U+0903 "Devanagari Sign Visarga" ( ◌ः )
-  MarkSpacing
+  SpacingMark
   /// `"Me"` enclosing combining marks,
   /// e.g. U+20E0 "Combining Enclosing Circle Backslash" ( ◌⃠ )
-  MarkEnclosing
+  EnclosingMark
+}
 
-  // Numbers:
+pub type Number {
   /// `"Nd"` decimal digits,
   /// e.g. U+0032 "Digit Two" ( 2 )
-  NumberDecimal
+  DecimalNumber
   /// `"Nl"` letterlike numeric characters,
   /// e.g. U+2162 "Roman Numeral Three" ( Ⅲ )
-  NumberLetter
+  LetterNumber
   /// `"No"` numeric character of other type,
   /// e.g. U+00BD "Vulgar Fraction One Half" ( ½ )
-  NumberOther
+  OtherNumber
+}
 
-  // Punctuations:
+pub type Punctuation {
   /// `"Pc"`, connecting punctuation marks,
   /// e.g. U+2040 "Character Tie" (◌⁀◌)
-  PunctuationConnector
+  ConnectorPunctuation
   /// `"Pd"` dash or hyphen punctuation marks,
   /// e.g. U+2013 "En Dash" ( – )
-  PunctuationDash
+  DashPunctuation
   /// `"Ps"` opening/starting punctuation marks (of a pair),
   /// e.g. U+007B "Left Curly Bracket" ( { )
-  PunctuationOpen
+  OpenPunctuation
   /// `"Pe"` closing/ending punctuation marks (of a pair),
   /// e.g. U+007D "Right Curly Bracket" ( } )
-  PunctuationClose
+  ClosePunctuation
   /// `"Pi"` initial quotation marks,
   /// e.g. U+201C "Left Double Quotation Mark" ( “ )
-  PunctuationInitial
+  InitialPunctuation
   /// `"Pf"` final quotation marks,
   /// e.g. U+201D "Right Double Quotation Mark" ( ” )
-  PunctuationFinal
+  FinalPunctuation
   /// `"Po"` punctuation marks of other type,
   /// e.g. U+0021 "Exclamation Mark" ( ! )
-  PunctuationOther
+  OtherPunctuation
+}
 
-  // Symbols:
+pub type Symbol {
   /// `"Sm"` symbols of mathematical use,
   /// e.g. U+002B "Plus Sign" ( + )
-  SymbolMath
+  MathSymbol
   /// `"Sc"` currency signs,
   /// e.g. U+0024 "Dollar Sign" ( $ )
-  SymbolCurrency
+  CurrencySymbol
   /// `"Sk"` non-letterlike modifier symbol,
   /// e.g. U+005E "Circumflex Accent" ( ^ )
-  SymbolModifier
+  ModifierSymbol
   /// `"So"` symbol of other type,
   /// e.g. U+2B50 "White Medium Star" ( ⭐ )
-  SymbolOther
+  OtherSymbol
+}
 
-  // Separators:
+pub type Separator {
   /// `"Zs"` space characters (of various non-zero widths),
   /// e.g. U+0020 "Space" ( )
-  SeparatorSpace
+  SpaceSeparator
   /// `"Zl"` only U+2028 "Line Separator" (LSEP)
-  SeparatorLine
+  LineSeparator
   /// `"Zp"` only U+2029 "Paragraph Separator" (PSEP)
-  SeparatorParagraph
+  ParagraphSeparator
+}
 
-  // Others:
+pub type Other {
   /// `"Cc"` C0 or C1 control codes,
   /// e.g. U+0007 "Alert" (BEL)
   Control
@@ -109,42 +124,42 @@ pub type GeneralCategory {
 /// A list of all General Categories.
 pub const list = [
   // Letters:
-  LetterUppercase,
-  LetterLowercase,
-  LetterTitlecase,
-  LetterModifier,
-  LetterOther,
+  Letter(UppercaseLetter),
+  Letter(LowercaseLetter),
+  Letter(TitlecaseLetter),
+  Letter(ModifierLetter),
+  Letter(OtherLetter),
   // Marks:
-  MarkNonspacing,
-  MarkSpacing,
-  MarkEnclosing,
+  Mark(NonspacingMark),
+  Mark(SpacingMark),
+  Mark(EnclosingMark),
   // Numbers:
-  NumberDecimal,
-  NumberLetter,
-  NumberOther,
+  Number(DecimalNumber),
+  Number(LetterNumber),
+  Number(OtherNumber),
   // Punctuations:
-  PunctuationConnector,
-  PunctuationDash,
-  PunctuationOpen,
-  PunctuationClose,
-  PunctuationInitial,
-  PunctuationFinal,
-  PunctuationOther,
+  Punctuation(ConnectorPunctuation),
+  Punctuation(DashPunctuation),
+  Punctuation(OpenPunctuation),
+  Punctuation(ClosePunctuation),
+  Punctuation(InitialPunctuation),
+  Punctuation(FinalPunctuation),
+  Punctuation(OtherPunctuation),
   // Symbols:
-  SymbolMath,
-  SymbolCurrency,
-  SymbolModifier,
-  SymbolOther,
+  Symbol(MathSymbol),
+  Symbol(CurrencySymbol),
+  Symbol(ModifierSymbol),
+  Symbol(OtherSymbol),
   // Separators:
-  SeparatorSpace,
-  SeparatorLine,
-  SeparatorParagraph,
+  Separator(SpaceSeparator),
+  Separator(LineSeparator),
+  Separator(ParagraphSeparator),
   // Others:
-  Control,
-  Format,
-  Surrogate,
-  PrivateUse,
-  Unassigned,
+  Other(Control),
+  Other(Format),
+  Other(Surrogate),
+  Other(PrivateUse),
+  Other(Unassigned),
 ]
 
 /// Converts a name `String` to a [`GeneralCategory`](#GeneralCategory) value,
@@ -163,80 +178,80 @@ pub fn from_name(str: String) -> Result(GeneralCategory, Nil) {
   case internal.comparable_property(str) {
     // From short name:
     // - Letters:
-    "lu" -> Ok(LetterUppercase)
-    "ll" -> Ok(LetterLowercase)
-    "lt" -> Ok(LetterTitlecase)
-    "lm" -> Ok(LetterModifier)
-    "lo" -> Ok(LetterOther)
+    "lu" -> Ok(Letter(UppercaseLetter))
+    "ll" -> Ok(Letter(LowercaseLetter))
+    "lt" -> Ok(Letter(TitlecaseLetter))
+    "lm" -> Ok(Letter(ModifierLetter))
+    "lo" -> Ok(Letter(OtherLetter))
     // - Marks:
-    "mn" -> Ok(MarkNonspacing)
-    "mc" -> Ok(MarkSpacing)
-    "me" -> Ok(MarkEnclosing)
+    "mn" -> Ok(Mark(NonspacingMark))
+    "mc" -> Ok(Mark(SpacingMark))
+    "me" -> Ok(Mark(EnclosingMark))
     // - Numbers:
-    "nd" -> Ok(NumberDecimal)
-    "nl" -> Ok(NumberLetter)
-    "no" -> Ok(NumberOther)
+    "nd" -> Ok(Number(DecimalNumber))
+    "nl" -> Ok(Number(LetterNumber))
+    "no" -> Ok(Number(OtherNumber))
     // - Punctuations:
-    "pc" -> Ok(PunctuationConnector)
-    "pd" -> Ok(PunctuationDash)
-    "ps" -> Ok(PunctuationOpen)
-    "pe" -> Ok(PunctuationClose)
-    "pi" -> Ok(PunctuationInitial)
-    "pf" -> Ok(PunctuationFinal)
-    "po" -> Ok(PunctuationOther)
+    "pc" -> Ok(Punctuation(ConnectorPunctuation))
+    "pd" -> Ok(Punctuation(DashPunctuation))
+    "ps" -> Ok(Punctuation(OpenPunctuation))
+    "pe" -> Ok(Punctuation(ClosePunctuation))
+    "pi" -> Ok(Punctuation(InitialPunctuation))
+    "pf" -> Ok(Punctuation(FinalPunctuation))
+    "po" -> Ok(Punctuation(OtherPunctuation))
     // - Symbols:
-    "sm" -> Ok(SymbolMath)
-    "sc" -> Ok(SymbolCurrency)
-    "sk" -> Ok(SymbolModifier)
-    "so" -> Ok(SymbolOther)
+    "sm" -> Ok(Symbol(MathSymbol))
+    "sc" -> Ok(Symbol(CurrencySymbol))
+    "sk" -> Ok(Symbol(ModifierSymbol))
+    "so" -> Ok(Symbol(OtherSymbol))
     // - Separators:
-    "zs" -> Ok(SeparatorSpace)
-    "zl" -> Ok(SeparatorLine)
-    "zp" -> Ok(SeparatorParagraph)
+    "zs" -> Ok(Separator(SpaceSeparator))
+    "zl" -> Ok(Separator(LineSeparator))
+    "zp" -> Ok(Separator(ParagraphSeparator))
     // - Others:
-    "cc" -> Ok(Control)
-    "cf" -> Ok(Format)
-    "cs" -> Ok(Surrogate)
-    "co" -> Ok(PrivateUse)
-    "cn" -> Ok(Unassigned)
+    "cc" -> Ok(Other(Control))
+    "cf" -> Ok(Other(Format))
+    "cs" -> Ok(Other(Surrogate))
+    "co" -> Ok(Other(PrivateUse))
+    "cn" -> Ok(Other(Unassigned))
     // From long name:
     // - Letters:
-    "uppercaseletter" -> Ok(LetterUppercase)
-    "lowercaseletter" -> Ok(LetterLowercase)
-    "titlecaseletter" -> Ok(LetterTitlecase)
-    "modifierletter" -> Ok(LetterModifier)
-    "otherletter" -> Ok(LetterOther)
+    "uppercaseletter" -> Ok(Letter(UppercaseLetter))
+    "lowercaseletter" -> Ok(Letter(LowercaseLetter))
+    "titlecaseletter" -> Ok(Letter(TitlecaseLetter))
+    "modifierletter" -> Ok(Letter(ModifierLetter))
+    "otherletter" -> Ok(Letter(OtherLetter))
     // - Marks:
-    "nonspacingmark" -> Ok(MarkNonspacing)
-    "spacingmark" -> Ok(MarkSpacing)
-    "enclosingmark" -> Ok(MarkEnclosing)
+    "nonspacingmark" -> Ok(Mark(NonspacingMark))
+    "spacingmark" -> Ok(Mark(SpacingMark))
+    "enclosingmark" -> Ok(Mark(EnclosingMark))
     // - Numbers:
-    "decimalnumber" -> Ok(NumberDecimal)
-    "letternumber" -> Ok(NumberLetter)
-    "othernumber" -> Ok(NumberOther)
+    "decimalnumber" -> Ok(Number(DecimalNumber))
+    "letternumber" -> Ok(Number(LetterNumber))
+    "othernumber" -> Ok(Number(OtherNumber))
     // - Punctuations:
-    "connectorpunctuation" -> Ok(PunctuationConnector)
-    "dashpunctuation" -> Ok(PunctuationDash)
-    "openpunctuation" -> Ok(PunctuationOpen)
-    "closepunctuation" -> Ok(PunctuationClose)
-    "initialpunctuation" -> Ok(PunctuationInitial)
-    "finalpunctuation" -> Ok(PunctuationFinal)
-    "otherpunctuation" -> Ok(PunctuationOther)
+    "connectorpunctuation" -> Ok(Punctuation(ConnectorPunctuation))
+    "dashpunctuation" -> Ok(Punctuation(DashPunctuation))
+    "openpunctuation" -> Ok(Punctuation(OpenPunctuation))
+    "closepunctuation" -> Ok(Punctuation(ClosePunctuation))
+    "initialpunctuation" -> Ok(Punctuation(InitialPunctuation))
+    "finalpunctuation" -> Ok(Punctuation(FinalPunctuation))
+    "otherpunctuation" -> Ok(Punctuation(OtherPunctuation))
     // - Symbols:
-    "mathsymbol" -> Ok(SymbolMath)
-    "currencysymbol" -> Ok(SymbolCurrency)
-    "modifiersymbol" -> Ok(SymbolModifier)
-    "othersymbol" -> Ok(SymbolOther)
+    "mathsymbol" -> Ok(Symbol(MathSymbol))
+    "currencysymbol" -> Ok(Symbol(CurrencySymbol))
+    "modifiersymbol" -> Ok(Symbol(ModifierSymbol))
+    "othersymbol" -> Ok(Symbol(OtherSymbol))
     // - Separators:
-    "spaceseparator" -> Ok(SeparatorSpace)
-    "lineseparator" -> Ok(SeparatorLine)
-    "paragraphseparator" -> Ok(SeparatorParagraph)
+    "spaceseparator" -> Ok(Separator(SpaceSeparator))
+    "lineseparator" -> Ok(Separator(LineSeparator))
+    "paragraphseparator" -> Ok(Separator(ParagraphSeparator))
     // - Others:
-    "control" -> Ok(Control)
-    "format" -> Ok(Format)
-    "surrogate" -> Ok(Surrogate)
-    "privateuse" -> Ok(PrivateUse)
-    "unassigned" -> Ok(Unassigned)
+    "control" -> Ok(Other(Control))
+    "format" -> Ok(Other(Format))
+    "surrogate" -> Ok(Other(Surrogate))
+    "privateuse" -> Ok(Other(PrivateUse))
+    "unassigned" -> Ok(Other(Unassigned))
 
     _ -> Error(Nil)
   }
@@ -257,42 +272,42 @@ pub fn from_name(str: String) -> Result(GeneralCategory, Nil) {
 pub fn to_short_name(category: GeneralCategory) -> String {
   case category {
     // Letters:
-    LetterUppercase -> "Lu"
-    LetterLowercase -> "Ll"
-    LetterTitlecase -> "Lt"
-    LetterModifier -> "Lm"
-    LetterOther -> "Lo"
+    Letter(UppercaseLetter) -> "Lu"
+    Letter(LowercaseLetter) -> "Ll"
+    Letter(TitlecaseLetter) -> "Lt"
+    Letter(ModifierLetter) -> "Lm"
+    Letter(OtherLetter) -> "Lo"
     // Marks:
-    MarkNonspacing -> "Mn"
-    MarkSpacing -> "Mc"
-    MarkEnclosing -> "Me"
+    Mark(NonspacingMark) -> "Mn"
+    Mark(SpacingMark) -> "Mc"
+    Mark(EnclosingMark) -> "Me"
     // Numbers:
-    NumberDecimal -> "Nd"
-    NumberLetter -> "Nl"
-    NumberOther -> "No"
+    Number(DecimalNumber) -> "Nd"
+    Number(LetterNumber) -> "Nl"
+    Number(OtherNumber) -> "No"
     // Punctuations:
-    PunctuationConnector -> "Pc"
-    PunctuationDash -> "Pd"
-    PunctuationOpen -> "Ps"
-    PunctuationClose -> "Pe"
-    PunctuationInitial -> "Pi"
-    PunctuationFinal -> "Pf"
-    PunctuationOther -> "Po"
+    Punctuation(ConnectorPunctuation) -> "Pc"
+    Punctuation(DashPunctuation) -> "Pd"
+    Punctuation(OpenPunctuation) -> "Ps"
+    Punctuation(ClosePunctuation) -> "Pe"
+    Punctuation(InitialPunctuation) -> "Pi"
+    Punctuation(FinalPunctuation) -> "Pf"
+    Punctuation(OtherPunctuation) -> "Po"
     // Symbols:
-    SymbolMath -> "Sm"
-    SymbolCurrency -> "Sc"
-    SymbolModifier -> "Sk"
-    SymbolOther -> "So"
+    Symbol(MathSymbol) -> "Sm"
+    Symbol(CurrencySymbol) -> "Sc"
+    Symbol(ModifierSymbol) -> "Sk"
+    Symbol(OtherSymbol) -> "So"
     // Separators:
-    SeparatorSpace -> "Zs"
-    SeparatorLine -> "Zl"
-    SeparatorParagraph -> "Zp"
+    Separator(SpaceSeparator) -> "Zs"
+    Separator(LineSeparator) -> "Zl"
+    Separator(ParagraphSeparator) -> "Zp"
     // Others:
-    Control -> "Cc"
-    Format -> "Cf"
-    Surrogate -> "Cs"
-    PrivateUse -> "Co"
-    Unassigned -> "Cn"
+    Other(Control) -> "Cc"
+    Other(Format) -> "Cf"
+    Other(Surrogate) -> "Cs"
+    Other(PrivateUse) -> "Co"
+    Other(Unassigned) -> "Cn"
   }
 }
 
@@ -311,42 +326,42 @@ pub fn to_short_name(category: GeneralCategory) -> String {
 pub fn to_long_name(category: GeneralCategory) -> String {
   case category {
     // Letters:
-    LetterUppercase -> "Uppercase_Letter"
-    LetterLowercase -> "Lowercase_Letter"
-    LetterTitlecase -> "Titlecase_Letter"
-    LetterModifier -> "Modifier_Letter"
-    LetterOther -> "Other_Letter"
+    Letter(UppercaseLetter) -> "Uppercase_Letter"
+    Letter(LowercaseLetter) -> "Lowercase_Letter"
+    Letter(TitlecaseLetter) -> "Titlecase_Letter"
+    Letter(ModifierLetter) -> "Modifier_Letter"
+    Letter(OtherLetter) -> "Other_Letter"
     // Marks:
-    MarkNonspacing -> "Nonspacing_Mark"
-    MarkSpacing -> "Spacing_Mark"
-    MarkEnclosing -> "Enclosing_Mark"
+    Mark(NonspacingMark) -> "Nonspacing_Mark"
+    Mark(SpacingMark) -> "Spacing_Mark"
+    Mark(EnclosingMark) -> "Enclosing_Mark"
     // Numbers:
-    NumberDecimal -> "Decimal_Number"
-    NumberLetter -> "Letter_Number"
-    NumberOther -> "Other_Number"
+    Number(DecimalNumber) -> "Decimal_Number"
+    Number(LetterNumber) -> "Letter_Number"
+    Number(OtherNumber) -> "Other_Number"
     // Punctuations:
-    PunctuationConnector -> "Connector_Punctuation"
-    PunctuationDash -> "Dash_Punctuation"
-    PunctuationOpen -> "Open_Punctuation"
-    PunctuationClose -> "Close_Punctuation"
-    PunctuationInitial -> "Initial_Punctuation"
-    PunctuationFinal -> "Final_Punctuation"
-    PunctuationOther -> "Other_Punctuation"
+    Punctuation(ConnectorPunctuation) -> "Connector_Punctuation"
+    Punctuation(DashPunctuation) -> "Dash_Punctuation"
+    Punctuation(OpenPunctuation) -> "Open_Punctuation"
+    Punctuation(ClosePunctuation) -> "Close_Punctuation"
+    Punctuation(InitialPunctuation) -> "Initial_Punctuation"
+    Punctuation(FinalPunctuation) -> "Final_Punctuation"
+    Punctuation(OtherPunctuation) -> "Other_Punctuation"
     // Symbols:
-    SymbolMath -> "Math_Symbol"
-    SymbolCurrency -> "Currency_Symbol"
-    SymbolModifier -> "Modifier_Symbol"
-    SymbolOther -> "Other_Symbol"
+    Symbol(MathSymbol) -> "Math_Symbol"
+    Symbol(CurrencySymbol) -> "Currency_Symbol"
+    Symbol(ModifierSymbol) -> "Modifier_Symbol"
+    Symbol(OtherSymbol) -> "Other_Symbol"
     // Separators:
-    SeparatorSpace -> "Space_Separator"
-    SeparatorLine -> "Line_Separator"
-    SeparatorParagraph -> "Paragraph_Separator"
+    Separator(SpaceSeparator) -> "Space_Separator"
+    Separator(LineSeparator) -> "Line_Separator"
+    Separator(ParagraphSeparator) -> "Paragraph_Separator"
     // Others:
-    Control -> "Control"
-    Format -> "Format"
-    Surrogate -> "Surrogate"
-    PrivateUse -> "Private_Use"
-    Unassigned -> "Unassigned"
+    Other(Control) -> "Control"
+    Other(Format) -> "Format"
+    Other(Surrogate) -> "Surrogate"
+    Other(PrivateUse) -> "Private_Use"
+    Other(Unassigned) -> "Unassigned"
   }
 }
 
@@ -362,10 +377,10 @@ pub fn to_long_name(category: GeneralCategory) -> String {
 /// ```
 ///
 pub fn is_assigned(category: GeneralCategory) -> Bool {
-  category != Surrogate && category != Unassigned
+  category != Other(Surrogate) && category != Other(Unassigned)
 }
 
-/// Returns `True` if the [`GeneralCategory`](#GeneralCategory) provided
+/// Returns `True` if the [`Letter`](#Letter) category provided
 /// is a cased letter category (uppercase, lowercase, or titlecase).
 ///
 /// ## Examples
@@ -375,81 +390,13 @@ pub fn is_assigned(category: GeneralCategory) -> Bool {
 /// assert !category.is_cased_letter(category.LetterOther)
 /// ```
 ///
-pub fn is_cased_letter(category: GeneralCategory) -> Bool {
-  category == LetterUppercase
-  || category == LetterLowercase
-  || category == LetterTitlecase
+pub fn is_cased_letter(category: Letter) -> Bool {
+  category == UppercaseLetter
+  || category == LowercaseLetter
+  || category == TitlecaseLetter
 }
 
-/// Returns `True` if the [`GeneralCategory`](#GeneralCategory) provided
-/// is a letter category.
-///
-/// ## Examples
-///
-/// ```gleam
-/// assert category.is_letter(category.LetterLowercase)
-/// assert !category.is_letter(category.NumberDecimal)
-/// ```
-///
-pub fn is_letter(category: GeneralCategory) -> Bool {
-  is_cased_letter(category)
-  || category == LetterModifier
-  || category == LetterOther
-}
-
-/// Returns `True` if the [`GeneralCategory`](#GeneralCategory) provided
-/// is a mark category.
-///
-/// ## Examples
-///
-/// ```gleam
-/// assert category.is_letter(category.MarkSpacing)
-/// assert !category.is_letter(category.NumberDecimal)
-/// ```
-///
-pub fn is_mark(category: GeneralCategory) -> Bool {
-  category == MarkNonspacing
-  || category == MarkSpacing
-  || category == MarkEnclosing
-}
-
-/// Returns `True` if the [`GeneralCategory`](#GeneralCategory) provided
-/// is a number category.
-///
-/// ## Examples
-///
-/// ```gleam
-/// assert category.is_letter(category.NumberDecimal)
-/// assert !category.is_letter(category.LetterLowercase)
-/// ```
-///
-pub fn is_number(category: GeneralCategory) -> Bool {
-  category == NumberDecimal
-  || category == NumberLetter
-  || category == NumberOther
-}
-
-/// Returns `True` if the [`GeneralCategory`](#GeneralCategory) provided
-/// is a punctuation category.
-///
-/// ## Examples
-///
-/// ```gleam
-/// assert category.is_punctuation(category.PunctuationOther)
-/// assert !category.is_punctuation(category.NumberDecimal)
-/// ```
-///
-pub fn is_punctuation(category: GeneralCategory) -> Bool {
-  category == PunctuationConnector
-  || category == PunctuationDash
-  || category == PunctuationOpen
-  || category == PunctuationClose
-  || category == PunctuationInitial
-  || category == PunctuationFinal
-  || category == PunctuationOther
-}
-
-/// Returns `True` if the [`GeneralCategory`](#GeneralCategory) provided
+/// Returns `True` if the [`Punctuation`](#Punctuation) category provided
 /// is a quotation category (initial or final punctuation).
 /// Note that not all quotation marks are in those categories.
 ///
@@ -460,59 +407,8 @@ pub fn is_punctuation(category: GeneralCategory) -> Bool {
 /// assert !category.is_quotation(category.PunctuationOpen)
 /// ```
 ///
-pub fn is_quotation(category: GeneralCategory) -> Bool {
-  category == PunctuationInitial || category == PunctuationFinal
-}
-
-/// Returns `True` if the [`GeneralCategory`](#GeneralCategory) provided
-/// is a symbol category.
-///
-/// ## Examples
-///
-/// ```gleam
-/// assert category.is_symbol(category.SymbolCurrency)
-/// assert !category.is_symbol(category.NumberDecimal)
-/// ```
-///
-pub fn is_symbol(category: GeneralCategory) -> Bool {
-  category == SymbolMath
-  || category == SymbolCurrency
-  || category == SymbolModifier
-  || category == SymbolOther
-}
-
-/// Returns `True` if the [`GeneralCategory`](#GeneralCategory) provided
-/// is a separator category.
-///
-/// ## Examples
-///
-/// ```gleam
-/// assert category.is_separator(category.SeparatorSpace)
-/// assert !category.is_separator(category.NumberDecimal)
-/// ```
-///
-pub fn is_separator(category: GeneralCategory) -> Bool {
-  category == SeparatorSpace
-  || category == SeparatorLine
-  || category == SeparatorParagraph
-}
-
-/// Returns `True` if the [`GeneralCategory`](#GeneralCategory) provided
-/// is an "other" category.
-///
-/// ## Examples
-///
-/// ```gleam
-/// assert category.is_other(category.Control)
-/// assert !category.is_other(category.NumberDecimal)
-/// ```
-///
-pub fn is_other(category: GeneralCategory) -> Bool {
-  category == Control
-  || category == Format
-  || category == Surrogate
-  || category == PrivateUse
-  || category == Unassigned
+pub fn is_quotation(category: Punctuation) -> Bool {
+  category == InitialPunctuation || category == FinalPunctuation
 }
 
 /// Returns `True` if the [`GeneralCategory`](#GeneralCategory) provided
@@ -527,12 +423,15 @@ pub fn is_other(category: GeneralCategory) -> Bool {
 /// ```
 ///
 pub fn is_graphic(category: GeneralCategory) -> Bool {
-  is_letter(category)
-  || is_mark(category)
-  || is_number(category)
-  || is_punctuation(category)
-  || is_symbol(category)
-  || category == SeparatorSpace
+  case category {
+    Letter(_)
+    | Mark(_)
+    | Number(_)
+    | Punctuation(_)
+    | Symbol(_)
+    | Separator(SpaceSeparator) -> True
+    _ -> False
+  }
 }
 
 /// Returns `True` if the [`GeneralCategory`](#GeneralCategory) provided
@@ -549,7 +448,7 @@ pub fn is_graphic(category: GeneralCategory) -> Bool {
 /// ```
 ///
 pub fn is_format(category: GeneralCategory) -> Bool {
-  category == Format
-  || category == SeparatorLine
-  || category == SeparatorParagraph
+  category == Other(Format)
+  || category == Separator(LineSeparator)
+  || category == Separator(ParagraphSeparator)
 }
