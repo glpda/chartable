@@ -3,7 +3,8 @@
 <!-- [![Package Version](https://img.shields.io/hexpm/v/chartable)](https://hex.pm/packages/chartable) -->
 <!-- [![Hex Docs](https://img.shields.io/badge/hex-docs-ffaff3)](https://hexdocs.pm/chartable/) -->
 
-The library behind the chartable application.
+The library behind the
+[CharTable application](https://glpda.github.io/chartable/).
 May be useful if you need to work with the unicode database
 or other data about code points such as escape codes.
 
