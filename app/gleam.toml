@@ -1,0 +1,42 @@
+name = "chartable_app"
+version = "1.0.0"
+
+description = "An application to explore the Unicode database"
+licences = ["Apache-2.0"]
+# links = [{ title = "Website", href = "" }]
+target = "javascript"
+
+[repository]
+type = "github"
+user = "glpda"
+repo = "chartable"
+path = "app"
+
+[dependencies]
+gleam_stdlib = ">= 0.44.0 and < 2.0.0"
+chartable = { path = "../lib" }
+lustre = ">= 5.3.5 and < 6.0.0"
+
+[dev-dependencies]
+gleeunit = ">= 1.0.0 and < 2.0.0"
+esgleam = ">= 0.8.0 and < 1.0.0"
+
+[javascript]
+runtime = "deno"
+
+[javascript.deno]
+allow_env = true
+allow_net = ["registry.npmjs.org:443"]
+allow_read = [
+    "./gleam.toml",
+    "./src",
+    "./build",
+    "./test",
+]
+allow_write = [
+    "./build/dev/bin/package/bin",
+    "./dist"
+]
+allow_run = [
+    "./build/dev/bin/package/bin/esbuild"
+]

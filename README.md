@@ -2,7 +2,7 @@
 
 🎒 Character table (cartable = schoolbag in French)
 
-An application to explore the Unicode database
+An application to explore the Unicode database.
 
 Features: ...
 
@@ -26,11 +26,6 @@ Requirements:
 [jq](https://jqlang.org/),
 [just](https://just.systems/),
 [wget](https://www.gnu.org/software/wget/).
-
-You can install these tools using a version manager like
-[asdf](https://asdf-vm.com/guide/getting-started.html) or
-[mise](https://mise.jdx.dev/getting-started.html),
-which can read from `.tool-versions`.
 
 ```sh
 just codegen   # Dowload source data and generate library code

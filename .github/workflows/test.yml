@@ -11,42 +11,50 @@ jobs:
     name: Library tests
     runs-on: ubuntu-latest
     steps:
-      - uses: actions/checkout@v4
-      - uses: jdx/mise-action@v2
-      # - uses: erlef/setup-beam@v1
-      #   with:
-      #     otp-version: "27.1.2"
-      #     gleam-version: "1.11.0"
-      #     rebar3-version: "3"
-      #     elixir-version: "1"
-      - name: Download gleam dependencies
+      - name: Checkout
+        uses: actions/checkout@v4
+      - name: Install Erlang & Gleam
+        uses: erlef/setup-beam@v1
+        with:
+          otp-version: "27"
+          rebar3-version: "3"
+          gleam-version: "1.12.0"
+      - name: Install Deno
+        uses: denoland/setup-deno@v2
+        with:
+          deno-version: v2.x
+      - name: Download Gleam dependencies
+        working-directory: lib
         run: gleam deps download
+      - name: Run Gleam test
         working-directory: lib
-      - name: Run gleam test
         run: gleam test
+      - name: Check Gleam format
         working-directory: lib
-      - name: Check gleam format
         run: gleam format --check src test
-        working-directory: lib
 
-  # application-test:
-  #   name: Application tests
-  #   runs-on: ubuntu-latest
-  #   steps:
-  #     - uses: actions/checkout@v4
-  #     - uses: jdx/mise-action@v2
-  #     - uses: erlef/setup-beam@v1
-  #       with:
-  #         otp-version: "27.1.2"
-  #         gleam-version: "1.11.0"
-  #         rebar3-version: "3"
-  #         # elixir-version: "1"
-  #     - name: Download gleam dependencies
-  #       run: gleam deps download
-  #       working-directory: app
-  #     - name: Run gleam test
-  #       run: gleam test
-  #       working-directory: app
-  #     - name: Check gleam format
-  #       run: gleam format --check src test
-  #       working-directory: app
+  application-test:
+    name: Application tests
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+      - name: Install Erlang & Gleam
+        uses: erlef/setup-beam@v1
+        with:
+          otp-version: "27"
+          rebar3-version: "3"
+          gleam-version: "1.12.0"
+      - name: Install Deno
+        uses: denoland/setup-deno@v2
+        with:
+          deno-version: v2.x
+      - name: Download Gleam dependencies
+        working-directory: app
+        run: gleam deps download
+      - name: Run Gleam test
+        working-directory: app
+        run: gleam test
+      - name: Check Gleam format
+        working-directory: app
+        run: gleam format --check src test
