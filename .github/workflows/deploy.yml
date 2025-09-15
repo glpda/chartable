@@ -41,6 +41,7 @@ jobs:
             gleam run -m esgleam/install
             gleam run -m bundle
             cat index.html | sed 's|dist/chartable_app.js|chartable_app.js|' > dist/index.html
+            cp -r ./assets ./dist/assets
       - name: Setup Pages
         uses: actions/configure-pages@v4
       - name: Upload artifact

@@ -1,0 +1,13 @@
+#chartable {
+  --bg: #fff;
+  --fg: #222;
+  color: var(--fg);
+  background-color: var(--bg);
+}
+
+@media (prefers-color-scheme: dark) {
+  #chartable {
+    --bg: #222;
+    --fg: #ddd;
+  }
+}
