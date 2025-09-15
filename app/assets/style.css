@@ -1,3 +1,16 @@
+:root {
+  --font-sans: system-ui, 'Noto Sans', sans-serif, emoji;
+  --font-mono: ui-monospace, 'Courier New', monospace;
+}
+
+body {
+  font-family: var(--font-sans);
+}
+
+code {
+  font-family: var(--font-mono);
+}
+
 #chartable {
   --bg: #fff;
   --fg: #222;

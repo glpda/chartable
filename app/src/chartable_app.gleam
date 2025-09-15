@@ -49,7 +49,7 @@ fn view_main(model: Model) -> Element(Msg) {
   html.main([], [
     html.button([event.on_click(UserClickedIncrement)], [html.text("+")]),
     html.button([event.on_click(UserClickedDecrement)], [html.text("-")]),
-    html.p([], [html.text("count:" <> count)]),
+    html.p([], [html.text("count: "), html.code([], [html.text(count)])]),
   ])
 }
 
