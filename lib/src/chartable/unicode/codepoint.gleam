@@ -63,9 +63,25 @@ pub fn to_int(cp: Codepoint) -> Int {
   cp.value
 }
 
-/// Compares two code points.
+/// Compares two code points, returning an order.
 pub fn compare(lhs: Codepoint, rhs: Codepoint) -> Order {
   int.compare(lhs.value, rhs.value)
+}
+
+/// Compares two code points, returning the larger of the two.
+pub fn max(lhs: Codepoint, rhs: Codepoint) -> Codepoint {
+  case lhs.value > rhs.value {
+    True -> lhs
+    False -> rhs
+  }
+}
+
+/// Compares two code points, returning the smaller of the two.
+pub fn min(lhs: Codepoint, rhs: Codepoint) -> Codepoint {
+  case lhs.value < rhs.value {
+    True -> lhs
+    False -> rhs
+  }
 }
 
 // END
