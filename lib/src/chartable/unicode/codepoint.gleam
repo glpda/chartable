@@ -26,6 +26,12 @@ pub opaque type Codepoint {
   Codepoint(value: Int)
 }
 
+/// Smallest possible code point: `0`.
+pub const minimum = Codepoint(0)
+
+/// Greatest possible code point: `0x10FFFF`.
+pub const maximum = Codepoint(0x10FFFF)
+
 /// Converts a standard `UtfCodepoint` to a chartable [`Codepoint`](#Codepoint).
 pub fn from_utf(utf: UtfCodepoint) -> Codepoint {
   Codepoint(string.utf_codepoint_to_int(utf))
