@@ -140,17 +140,42 @@ pub fn make_name_map(
 }
 
 pub fn make_block_map(
+  property_value_aliases pva: List(PvaRecord),
   blocks blocks: List(RangeRecord(String)),
   template template: String,
 ) -> String {
+  let aliases =
+    list.fold(over: pva, from: dict.new(), with: fn(acc, record) {
+      case record {
+        PvaRecord(property: "blk", short_name:, long_name:, alt_names:) -> {
+          let key = internal.comparable_property(long_name)
+          let value = case internal.comparable_property(short_name) == key {
+            True -> alt_names
+            False -> [short_name, ..alt_names]
+          }
+          dict.insert(value, into: acc, for: key)
+        }
+        _ -> acc
+      }
+    })
   let blocks =
     list.map(blocks, fn(record) {
-      let #(start, end) = codepoint.range_to_ints(record.codepoint_range)
-      let start = internal.int_to_hex(start)
-      let end = internal.int_to_hex(end)
-      let block_name = record.data
-      // [[0x0000, 0x007F], "Basic Latin"]
-      "[[0x" <> start <> ", 0x" <> end <> "], \"" <> block_name <> "\"]"
+      let long_name = record.data
+      let names =
+        [
+          long_name,
+          ..result.unwrap(
+            dict.get(aliases, internal.comparable_property(long_name)),
+            or: [],
+          )
+        ]
+        |> list.map(fn(name) { "\"" <> name <> "\"" })
+        |> string.join(with: ", ")
+      let ints = codepoint.range_to_ints(record.codepoint_range)
+      let start = internal.int_to_hex(ints.0)
+      let end = internal.int_to_hex(ints.1)
+      // [0x0000, 0x007F, "Basic Latin", "ASCII"]
+      "[0x" <> start <> ", 0x" <> end <> ", " <> names <> "]"
     })
     |> string.join(with: ",\n")
   string.replace(in: template, each: "/*{{blocks}}*/", with: blocks)

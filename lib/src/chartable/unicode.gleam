@@ -1,6 +1,7 @@
 import chartable/internal
 import chartable/unicode/category.{type GeneralCategory}
 import chartable/unicode/codepoint.{type Codepoint}
+import gleam/list
 import gleam/result
 
 /// The basic types of code points
@@ -104,48 +105,80 @@ pub fn name_from_codepoint(cp: Codepoint) -> Result(String, Nil) {
 @external(javascript, "./unicode/name_map.mjs", "get_name")
 fn name_from_codepoint_ffi(cp: Int) -> Result(String, Nil)
 
-/// Get the list of all Unicode blocks' name.
-@external(javascript, "./unicode/block_map.mjs", "get_list")
-pub fn blocks() -> List(String)
-
-/// Get the name of the Unicode block to which a code point belongs.
+/// A contiguous range of code points identified by a name.
 ///
-/// Returns `"No_Block"` if the code point is not assigned to any blocks.
+/// Standard blocks contains a multiple of 16 code points and starts at a
+/// location that is a multiple of 16.
+pub type Block {
+  Block(range: codepoint.Range, name: String, aliases: List(String))
+}
+
+/// Get the list of all Unicode blocks.
+pub fn blocks() -> List(Block) {
+  use #(start, end, name, aliases) <- list.filter_map(blocks_ffi())
+  use range <- result.map(codepoint.range_from_ints(start, end))
+  Block(range:, name:, aliases:)
+}
+
+@external(javascript, "./unicode/block_map.mjs", "get_list")
+fn blocks_ffi() -> List(#(Int, Int, String, List(String)))
+
+/// Get the Unicode block to which a code point belongs.
+///
+/// Returns an `Error` if the code point is not assigned to any blocks.
+/// The default value for the block name of unassigned code points is
+/// `"No_Block"` (alias `"NB"`).
 ///
 /// ## Examples
 ///
 /// ```gleam
-/// use cp <- result.map(codepoint.from_int(0x661F))
-/// assert unicode.block_from_codepoint(cp) == "CJK Unified Ideographs"
+/// let assert Ok(cp) = codepoint.from_int(0x661F)
+/// let block_name = case unicode.block_from_codepoint(cp) {
+///   Ok(block) -> block.name
+///   Error(_) -> "No_Block"
+/// }
+/// assert block_name == "CJK Unified Ideographs"
 /// ```
 ///
-pub fn block_from_codepoint(cp: Codepoint) -> String {
-  block_from_codepoint_ffi(codepoint.to_int(cp))
+pub fn block_from_codepoint(cp: Codepoint) -> Result(Block, Nil) {
+  use #(start, end, name, aliases) <- result.try(
+    block_from_codepoint_ffi(codepoint.to_int(cp)),
+  )
+  use range <- result.map(codepoint.range_from_ints(start, end))
+  Block(range:, name:, aliases:)
 }
 
 @external(javascript, "./unicode/block_map.mjs", "codepoint_to_block")
-fn block_from_codepoint_ffi(cp: Int) -> String
+fn block_from_codepoint_ffi(
+  cp: Int,
+) -> Result(#(Int, Int, String, List(String)), Nil)
 
-/// Get the code point range of a Unicode block,
-/// block's name matching follows rule
+// TODO examples
+/// Find a Unicode block by its name.
+///
+/// Name matching follows rule
 /// [UAX44-LM3](https://www.unicode.org/reports/tr44/#UAX44-LM3)
 /// (ignore case, whitespaces, underscores, hyphens, and initial prefix "is").
 ///
 /// ## Examples
 ///
 /// ```gleam
-/// let assert Ok(ascii) = unicode.block_to_range("Basic Latin")
-/// assert codepoint.range_to_ints(ascii) == #(0x0000, 0x007F)
+/// let assert Ok(ascii) = unicode.block_from_name("Basic Latin")
+/// assert codepoint.range_to_ints(ascii.range) == #(0x0000, 0x007F)
 /// ```
 ///
-pub fn block_to_range(block_name: String) -> Result(codepoint.Range, Nil) {
-  let comparable_property = internal.comparable_property(block_name)
-  use pair <- result.try(block_to_range_ffi(comparable_property))
-  codepoint.range_from_ints(pair.0, pair.1)
+pub fn block_from_name(name: String) -> Result(Block, Nil) {
+  use #(start, end, name, aliases) <- result.try(
+    block_from_name_ffi(internal.comparable_property(name)),
+  )
+  use range <- result.map(codepoint.range_from_ints(start, end))
+  Block(range:, name:, aliases:)
 }
 
-@external(javascript, "./unicode/block_map.mjs", "block_to_range")
-fn block_to_range_ffi(block_name: String) -> Result(#(Int, Int), Nil)
+@external(javascript, "./unicode/block_map.mjs", "name_to_block")
+fn block_from_name_ffi(
+  name: String,
+) -> Result(#(Int, Int, String, List(String)), Nil)
 
 /// Get the Unicode "General Category" property of a code point.
 ///

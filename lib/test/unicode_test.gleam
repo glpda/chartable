@@ -213,39 +213,50 @@ pub fn name_from_codepoint_test() {
 
 pub fn block_from_codepoint_test() {
   let block_from_int = fn(cp) {
-    result.map(codepoint.from_int(cp), unicode.block_from_codepoint)
+    case result.try(codepoint.from_int(cp), unicode.block_from_codepoint) {
+      Ok(block) -> {
+        let #(start, end) = codepoint.range_to_ints(block.range)
+        #(start, end, block.name)
+      }
+      Error(_) -> #(0, 0x10FFFF, "No_Block")
+    }
   }
-  assert block_from_int(0x0000) == Ok("Basic Latin")
-  assert block_from_int(0x0041) == Ok("Basic Latin")
-  assert block_from_int(0x007F) == Ok("Basic Latin")
-  assert block_from_int(0x0080) == Ok("Latin-1 Supplement")
-  assert block_from_int(0x22C6) == Ok("Mathematical Operators")
-  assert block_from_int(0x661F) == Ok("CJK Unified Ideographs")
-  assert block_from_int(0x100000) == Ok("Supplementary Private Use Area-B")
+  assert block_from_int(0x0000) == #(0x0000, 0x007F, "Basic Latin")
+  assert block_from_int(0x0041) == #(0x0000, 0x007F, "Basic Latin")
+  assert block_from_int(0x007F) == #(0x0000, 0x007F, "Basic Latin")
+  assert block_from_int(0x0080) == #(0x0080, 0x00FF, "Latin-1 Supplement")
+  assert block_from_int(0x22C6) == #(0x2200, 0x22FF, "Mathematical Operators")
+  assert block_from_int(0x661F) == #(0x4E00, 0x9FFF, "CJK Unified Ideographs")
+  assert block_from_int(0xD0000) == #(0, 0x10FFFF, "No_Block")
+  assert block_from_int(0x100000)
+    == #(0x100000, 0x10FFFF, "Supplementary Private Use Area-B")
 }
 
-pub fn block_to_range_test() {
-  let block_to_pair = fn(block) {
-    result.map(unicode.block_to_range(block), codepoint.range_to_ints)
+pub fn block_from_name_test() {
+  let block_range = fn(block_name) {
+    use block <- result.map(unicode.block_from_name(block_name))
+    codepoint.range_to_ints(block.range)
   }
-  assert block_to_pair("Basic_Latin") == Ok(#(0x0000, 0x007F))
-  assert block_to_pair("isHighSurrogates") == Ok(#(0xD800, 0xDB7F))
-  assert block_to_pair("Lucy") == Error(Nil)
+  assert block_range("ascii") == Ok(#(0x0000, 0x007F))
+  assert block_range("Basic_Latin") == Ok(#(0x0000, 0x007F))
+  assert block_range("isHighSurrogates") == Ok(#(0xD800, 0xDB7F))
+  assert block_range("PUA") == Ok(#(0xE000, 0xF8FF))
+  assert block_range("Lucy") == Error(Nil)
 }
 
 pub fn block_consistency_test() {
-  use block_name <- list.each(unicode.blocks())
-  let assert Ok(block_range) = unicode.block_to_range(block_name)
+  use block <- list.each(unicode.blocks())
+  assert unicode.block_from_name(block.name) == Ok(block)
 
-  let #(start, end) = codepoint.range_to_codepoints(block_range)
-  assert unicode.block_from_codepoint(start) == block_name
-  assert unicode.block_from_codepoint(end) == block_name
+  let #(start, end) = codepoint.range_to_codepoints(block.range)
+  assert unicode.block_from_codepoint(start) == Ok(block)
+  assert unicode.block_from_codepoint(end) == Ok(block)
 
-  let #(start, end) = codepoint.range_to_ints(block_range)
+  let #(start, end) = codepoint.range_to_ints(block.range)
   assert start % 16 == 0
   assert end % 16 == 15
   let assert Ok(cp) = codepoint.from_int({ start + end } / 2)
-  assert unicode.block_from_codepoint(cp) == block_name
+  assert unicode.block_from_codepoint(cp) == Ok(block)
 }
 
 // END

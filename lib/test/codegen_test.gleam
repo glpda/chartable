@@ -30,8 +30,9 @@ pub fn unicode_blocks_test() {
   let assert Ok(txt) = simplifile.read("data/unicode/blocks.txt")
   let assert Ok(blocks) = unicode_codegen.parse_blocks(txt)
 
-  unicode_codegen.assert_match_range_records(blocks, fn(cp, block) {
-    unicode.block_from_codepoint(cp) == block
+  unicode_codegen.assert_match_range_records(blocks, fn(cp, block_name) {
+    let assert Ok(block) = unicode.block_from_codepoint(cp)
+    block.name == block_name
   })
 
   unicode_codegen.range_records_to_string(blocks, fn(block_name) { block_name })

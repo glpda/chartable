@@ -20,10 +20,12 @@ pub fn main() {
   let assert Ok(txt) = simplifile.read("data/unicode/blocks.txt")
   let assert Ok(blocks) = unicode.parse_blocks(txt)
   let assert Ok(template) = simplifile.read("codegen_templates/block_map.mjs")
+  let block_map =
+    unicode.make_block_map(property_value_aliases:, blocks:, template:)
   let assert Ok(Nil) =
     simplifile.write(
       to: "src/chartable/unicode/block_map.mjs",
-      contents: unicode.make_block_map(blocks:, template:),
+      contents: block_map,
     )
   let assert Ok(txt) = simplifile.read("data/unicode/scripts.txt")
   let assert Ok(scripts) = unicode.parse_scripts(txt:, property_value_aliases:)
