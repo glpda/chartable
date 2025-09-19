@@ -30,7 +30,7 @@ test-app:
 # BEGIN Fetch Recipes
 
 [group('fetch')]
-fetch: fetch-unidata fetch-html fetch-typst
+fetch: fetch-unidata fetch-html fetch-latex fetch-typst
 
 [group('fetch'), private]
 download url file:
@@ -74,6 +74,11 @@ entities-filter := \
 clean-entities:
 	jq '{{entities-filter}}' \
 	tmp/{{html-entities}} > tmp/{{html-entities-clean}}
+
+latex3 := "https://raw.githubusercontent.com/latex3/unicode-math/refs/heads/master/"
+[group('fetch')]
+fetch-latex: \
+(dl-data latex3 "unicode-math-table.tex" "latex/unicode-math.tex")
 
 typst-codex := "https://raw.githubusercontent.com/typst/codex/refs/heads/main/src/modules"
 [group('fetch')]
