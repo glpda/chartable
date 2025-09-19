@@ -1,16 +1,15 @@
 import chartable/internal
 import chartable/unicode/category.{type GeneralCategory}
 import chartable/unicode/codepoint.{type Codepoint}
+import codegen/parser.{type ParserError}
 import gleam/bool
 import gleam/dict
 import gleam/int
 import gleam/list
-import gleam/option.{type Option, None, Some}
 import gleam/order
 import gleam/result
 import gleam/set
 import gleam/string
-import splitter
 
 /// Records for "`PropertyValueAliases.txt`"
 pub type PvaRecord {
@@ -247,14 +246,6 @@ pub fn make_category_map(
 // =============================================================================
 // BEGIN UNIDATA PARSERS
 
-type ParserState {
-  ParserState(line: Int, txt: String)
-}
-
-pub type ParserError {
-  ParserError(line: Int, error: String)
-}
-
 fn parse_unidata(
   // input txt unidata:
   txt txt: String,
@@ -263,39 +254,7 @@ fn parse_unidata(
   // process the resulting list of records (in reverse order):
   reducer reducer: fn(List(record)) -> output,
 ) -> Result(output, ParserError) {
-  let line_end = splitter.new(["\n"])
-  let comment = splitter.new(["#"])
-
-  let parser_state = ParserState(line: 0, txt:)
-  use txt <- parse_unidata_loop(input: parser_state, output: [], reducer:)
-  let #(line, _, rest) = splitter.split(line_end, txt)
-  let line = splitter.split_before(comment, line).0 |> string.trim
-  use <- bool.guard(when: string.is_empty(line), return: Ok(#(None, rest)))
-  parser(line) |> result.map(fn(record) { #(Some(record), rest) })
-}
-
-fn parse_unidata_loop(
-  input state: ParserState,
-  output records: List(record),
-  parser parser: fn(String) -> Result(#(Option(record), String), String),
-  reducer reducer: fn(List(record)) -> output,
-) -> Result(output, ParserError) {
-  case state.txt {
-    "" -> Ok(reducer(records))
-    _ ->
-      case parser(state.txt) {
-        Ok(#(Some(record), rest)) -> {
-          let output = [record, ..records]
-          let state = ParserState(line: state.line + 1, txt: rest)
-          parse_unidata_loop(state, output:, parser:, reducer:)
-        }
-        Ok(#(None, rest)) -> {
-          let state = ParserState(line: state.line + 1, txt: rest)
-          parse_unidata_loop(state, output: records, parser:, reducer:)
-        }
-        Error(error) -> Error(ParserError(line: state.line, error:))
-      }
-  }
+  parser.parse_lines(txt:, comment: ["#"], parser:, reducer:)
 }
 
 pub fn parse_property_value_aliases(
