@@ -43,27 +43,27 @@ add-data source target:
 	mkdir -p `dirname {{data-path}}/{{target}}`
 	mv tmp/{{source}} {{data-path}}/{{target}}
 
+[group('fetch'), private]
+dl-data url file target: (download url file) (add-data file target)
+
 unidata := "https://www.unicode.org/Public/UCD/latest/ucd"
-property-value-aliases := "PropertyValueAliases.txt"
-derived-name := "extracted/DerivedName.txt"
-categories := "extracted/DerivedGeneralCategory.txt"
-blocks := "Blocks.txt"
-scripts := "Scripts.txt"
-script-extensions := "ScriptExtensions.txt"
 [group('fetch')]
 fetch-unidata: \
-(download unidata property-value-aliases) \
-(add-data property-value-aliases "unicode/property-value-aliases.txt") \
-(download unidata derived-name) \
-(add-data derived-name "unicode/names.txt") \
-(download unidata categories) \
-(add-data categories "unicode/categories.txt") \
-(download unidata blocks) \
-(add-data blocks "unicode/blocks.txt") \
-(download unidata scripts) \
-(add-data scripts "unicode/scripts.txt") \
-(download unidata script-extensions) \
-(add-data script-extensions "unicode/script-extensions.txt")
+(dl-data unidata "PropertyValueAliases.txt" "unicode/property-value-aliases.txt") \
+(dl-data unidata "extracted/DerivedName.txt" "unicode/names.txt") \
+(dl-data unidata "extracted/DerivedGeneralCategory.txt" "unicode/categories.txt") \
+(dl-data unidata "Blocks.txt" "unicode/blocks.txt") \
+(dl-data unidata "Scripts.txt" "unicode/scripts.txt") \
+(dl-data unidata "ScriptExtensions.txt" "unicode/script-extensions.txt")
+
+whatwg := "https://html.spec.whatwg.org/"
+html-entities := "entities.json"
+html-entities-clean := "entities-clean.json"
+[group('fetch')]
+fetch-html: \
+(download whatwg html-entities) \
+(clean-entities) \
+(add-data html-entities-clean "html/entities.json")
 
 entities-filter := \
 	'with_entries(select(.key | startswith("&") and endswith(";"))' + \
@@ -75,23 +75,10 @@ clean-entities:
 	jq '{{entities-filter}}' \
 	tmp/{{html-entities}} > tmp/{{html-entities-clean}}
 
-whatwg := "https://html.spec.whatwg.org/"
-html-entities := "entities.json"
-html-entities-clean := "entities-clean.json"
-[group('fetch')]
-fetch-html: \
-(download whatwg html-entities) \
-(clean-entities) \
-(add-data html-entities-clean "html/entities.json")
-
 typst-codex := "https://raw.githubusercontent.com/typst/codex/refs/heads/main/src/modules"
-typst-sym := "sym.txt"
-typst-emoji := "emoji.txt"
 [group('fetch')]
 fetch-typst: \
-(download typst-codex typst-sym) \
-(download typst-codex typst-emoji) \
-(add-data typst-sym "typst/sym.txt") \
-(add-data typst-emoji "typst/emoji.txt")
+(dl-data typst-codex "sym.txt" "typst/sym.txt") \
+(dl-data typst-codex "emoji.txt" "typst/emoji.txt")
 
 # END
