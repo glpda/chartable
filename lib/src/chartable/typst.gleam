@@ -30,7 +30,10 @@ fn emoji_notation_to_grapheme(notation: String) -> Result(String, Nil)
 /// ```
 ///
 pub fn symbols_from_grapheme(grapheme: String) -> List(String) {
-  symbol_grapheme_to_notations(grapheme)
+  list.append(
+    symbol_grapheme_to_notations(grapheme),
+    symbol_grapheme_to_notations(grapheme <> "\u{FE0E}"),
+  )
   |> list.map(string.append(_, to: "#sym."))
 }
 
@@ -66,7 +69,10 @@ pub fn symbols_from_codepoint(codepoint: UtfCodepoint) -> List(String) {
 /// ```
 ///
 pub fn emojis_from_grapheme(grapheme: String) -> List(String) {
-  emoji_grapheme_to_notations(grapheme)
+  list.append(
+    emoji_grapheme_to_notations(grapheme),
+    emoji_grapheme_to_notations(grapheme <> "\u{FE0F}"),
+  )
   |> list.map(string.append(_, to: "#emoji."))
 }
 

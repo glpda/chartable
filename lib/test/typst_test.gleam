@@ -7,12 +7,19 @@ import gleam/result
 import gleam/string
 
 pub fn symbols_from_grapheme_test() {
+  assert typst.symbols_from_grapheme("\u{26A7}") == ["#sym.gender.trans"]
+  assert typst.symbols_from_grapheme("\u{26A7}\u{FE0F}") == []
+  assert typst.symbols_from_grapheme("\u{26A7}\u{FE0E}")
+    == ["#sym.gender.trans"]
   assert typst.symbols_from_grapheme("⋆") == ["#sym.star.op"]
   assert typst.symbols_from_grapheme("$")
     == ["#sym.dollar", "#sym.pataca", "#sym.peso"]
 }
 
 pub fn symbols_from_codepoint_test() {
+  assert string.utf_codepoint(0x26A7)
+    |> result.map(typst.symbols_from_codepoint)
+    == Ok(["#sym.gender.trans"])
   assert string.utf_codepoint(0x22C6)
     |> result.map(typst.symbols_from_codepoint)
     == Ok(["#sym.star.op"])
@@ -22,6 +29,10 @@ pub fn symbols_from_codepoint_test() {
 }
 
 pub fn emojis_from_grapheme_test() {
+  assert typst.emojis_from_grapheme("\u{26A7}") == ["#emoji.transgender"]
+  assert typst.emojis_from_grapheme("\u{26A7}\u{FE0E}") == []
+  assert typst.emojis_from_grapheme("\u{26A7}\u{FE0F}")
+    == ["#emoji.transgender"]
   assert typst.emojis_from_grapheme("⭐") == ["#emoji.star"]
   assert typst.emojis_from_grapheme("🌟") == ["#emoji.star.glow"]
 }
@@ -143,6 +154,8 @@ pub fn notations_from_grapheme_test() {
   assert typst.notations_from_grapheme("\u{22C6}") == ["#sym.star.op"]
   assert typst.notations_from_grapheme("\u{2013}") == ["#sym.dash.en", "--"]
   assert typst.notations_from_grapheme("\u{2192}") == ["#sym.arrow.r", "$ -> $"]
+  assert typst.notations_from_grapheme("\u{26A7}")
+    == ["#sym.gender.trans", "#emoji.transgender"]
   assert typst.notations_from_grapheme("\u{0393}")
     == ["#sym.Gamma", "$ Gamma $"]
   assert typst.notations_from_grapheme("\u{1D6AA}") == ["$ bold(Gamma) $"]
@@ -150,7 +163,7 @@ pub fn notations_from_grapheme_test() {
 
 pub fn notation_to_grapheme_test() {
   assert typst.notation_to_grapheme("#sym.star.op") == Ok("\u{22C6}")
-  assert typst.notation_to_grapheme("#emoji.star") == Ok("\u{2B50}")
+  assert typst.notation_to_grapheme("#emoji.star") == Ok("\u{2B50}\u{FE0F}")
   assert typst.notation_to_grapheme("emoji.star") == Error(Nil)
   assert typst.notation_to_grapheme("#emoji.staaar") == Error(Nil)
 }

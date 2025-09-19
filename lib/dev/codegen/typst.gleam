@@ -105,10 +105,37 @@ fn parse_grapheme_loop(str: String, acc: String) -> Result(String, Nil) {
       use codepoint <- result.try(internal.parse_utf(hex_code))
       parse_grapheme_loop(rest, acc <> string.from_utf_codepoints([codepoint]))
     }
+    "\\vs{" <> rest -> {
+      use #(vs, rest) <- result.try(string.split_once(rest, on: "}"))
+      use vs <- result.try(parse_variation_selector(vs))
+      parse_grapheme_loop(rest, acc <> vs)
+    }
     string -> {
       use #(grapheme, rest) <- result.try(string.pop_grapheme(string))
       parse_grapheme_loop(rest, acc <> grapheme)
     }
+  }
+}
+
+fn parse_variation_selector(vs: String) -> Result(String, Nil) {
+  case vs {
+    "16" | "emoji" -> Ok("\u{FE0F}")
+    "15" | "text" -> Ok("\u{FE0E}")
+    "1" -> Ok("\u{FE00}")
+    "2" -> Ok("\u{FE01}")
+    "3" -> Ok("\u{FE02}")
+    "4" -> Ok("\u{FE03}")
+    "5" -> Ok("\u{FE04}")
+    "6" -> Ok("\u{FE05}")
+    "7" -> Ok("\u{FE06}")
+    "8" -> Ok("\u{FE07}")
+    "9" -> Ok("\u{FE08}")
+    "10" -> Ok("\u{FE09}")
+    "11" -> Ok("\u{FE0A}")
+    "12" -> Ok("\u{FE0B}")
+    "13" -> Ok("\u{FE0C}")
+    "14" -> Ok("\u{FE0D}")
+    _ -> Error(Nil)
   }
 }
 

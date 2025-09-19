@@ -1,5 +1,5 @@
 ---
-version: 1.3.2
+version: 1.4.0
 title: Typst symbol notations from codepoints
 file: ./test/codegen_test.gleam
 test_name: typst_symbol_test
@@ -7,14 +7,14 @@ test_name: typst_symbol_test
 0020 ( ): space
 0021 (!): excl
 0022 ("): quote.double
-0023 (#): hash
+0023-FE0E (#︎): hash
 0024 ($): dollar, pataca, peso
 0025 (%): percent
 0026 (&): amp
 0027 ('): quote.single
 0028 ((): paren.l
 0029 ()): paren.r
-002A (*): ast.basic
+002A-FE0E (*︎): ast.basic
 002B (+): plus
 002C (,): comma
 002D (-): hyph.minus
@@ -44,18 +44,18 @@ test_name: typst_symbol_test
 00A6 (¦): bar.v.broken
 00A7 (§): section
 00A8 (¨): diaer, dot.double
-00A9 (©): copyright
-00AB («): quote.angle.l.double
+00A9-FE0E (©︎): copyright
+00AB («): quote.angle.l.double, quote.chevron.l.double
 00AC (¬): not
 00AD (­): hyph.soft
-00AE (®): trademark.registered
+00AE-FE0E (®︎): trademark.registered
 00AF (¯): macron
 00B0 (°): degree
 00B1 (±): plus.minus
 00B4 (´): acute
 00B6 (¶): pilcrow
 00B7 (·): dot.c
-00BB (»): quote.angle.r.double
+00BB (»): quote.angle.r.double, quote.chevron.r.double
 00BF (¿): quest.inv
 00C5 (Å): angstrom
 00D7 (×): times
@@ -188,16 +188,16 @@ test_name: typst_symbol_test
 2036 (‶): prime.double.rev
 2037 (‷): prime.triple.rev
 2038 (‸): caret
-2039 (‹): quote.angle.l.single
-203A (›): quote.angle.r.single
+2039 (‹): quote.angle.l.single, quote.chevron.l.single
+203A (›): quote.angle.r.single, quote.chevron.r.single
 203B (※): refmark
-203C (‼): excl.double
+203C-FE0E (‼︎): excl.double
 203D (‽): interrobang
 2042 (⁂): ast.triple
 2043 (⁃): bullet.hyph
 2047 (⁇): quest.double
 2048 (⁈): quest.excl
-2049 (⁉): excl.quest
+2049-FE0E (⁉︎): excl.quest
 204B (⁋): pilcrow.rev
 204C (⁌): bullet.l
 204D (⁍): bullet.r
@@ -245,7 +245,7 @@ test_name: typst_symbol_test
 211C (ℜ): Re
 211D (ℝ): RR
 2120 (℠): trademark.service
-2122 (™): trademark
+2122-FE0E (™︎): trademark
 2124 (ℤ): ZZ
 2127 (℧): Omega.inv
 2129 (℩): iota.inv
@@ -254,12 +254,12 @@ test_name: typst_symbol_test
 2191 (↑): arrow.t
 2192 (→): arrow.r
 2193 (↓): arrow.b
-2194 (↔): arrow.l.r
-2195 (↕): arrow.t.b
-2196 (↖): arrow.tl
-2197 (↗): arrow.tr
-2198 (↘): arrow.br
-2199 (↙): arrow.bl
+2194-FE0E (↔︎): arrow.l.r
+2195-FE0E (↕︎): arrow.t.b
+2196-FE0E (↖︎): arrow.tl
+2197-FE0E (↗︎): arrow.tr
+2198-FE0E (↘︎): arrow.br
+2199-FE0E (↙︎): arrow.bl
 219A (↚): arrow.l.not
 219B (↛): arrow.r.not
 219C (↜): arrow.l.wave
@@ -274,8 +274,8 @@ test_name: typst_symbol_test
 21A5 (↥): arrow.t.bar
 21A6 (↦): arrow.r.bar, mapsto
 21A7 (↧): arrow.b.bar
-21A9 (↩): arrow.l.hook
-21AA (↪): arrow.r.hook
+21A9-FE0E (↩︎): arrow.l.hook
+21AA-FE0E (↪︎): arrow.r.hook
 21AB (↫): arrow.l.loop
 21AC (↬): arrow.r.loop
 21AD (↭): arrow.l.r.wave
@@ -571,7 +571,7 @@ test_name: typst_symbol_test
 231F (⌟): corner.r.b
 2322 (⌢): frown
 2323 (⌣): smile
-237C (⍼): angzarr
+237C (⍼): angle.azimuth, angzarr
 23B0 (⎰): mustache.l
 23B1 (⎱): mustache.r
 23B4 (⎴): bracket.t
@@ -589,8 +589,8 @@ test_name: typst_symbol_test
 25A0 (■): square.filled
 25A1 (□): square.stroked
 25A2 (▢): square.stroked.rounded
-25AA (▪): square.filled.tiny
-25AB (▫): square.stroked.tiny
+25AA-FE0E (▪︎): square.filled.tiny
+25AB-FE0E (▫︎): square.stroked.tiny
 25AC (▬): rect.filled.h
 25AD (▭): rect.stroked.h
 25AE (▮): rect.filled.v
@@ -601,7 +601,7 @@ test_name: typst_symbol_test
 25B3 (△): triangle.stroked.t
 25B4 (▴): triangle.filled.small.t
 25B5 (▵): triangle.stroked.small.t
-25B6 (▶): triangle.filled.r
+25B6-FE0E (▶︎): triangle.filled.r
 25B7 (▷): triangle.stroked.r
 25B8 (▸): triangle.filled.small.r
 25B9 (▹): triangle.stroked.small.r
@@ -609,7 +609,7 @@ test_name: typst_symbol_test
 25BD (▽): triangle.stroked.b
 25BE (▾): triangle.filled.small.b
 25BF (▿): triangle.stroked.small.b
-25C0 (◀): triangle.filled.l
+25C0-FE0E (◀︎): triangle.filled.l
 25C1 (◁): triangle.stroked.l
 25C2 (◂): triangle.filled.small.l
 25C3 (◃): triangle.stroked.small.l
@@ -630,33 +630,33 @@ test_name: typst_symbol_test
 25F8 (◸): triangle.stroked.tl
 25F9 (◹): triangle.stroked.tr
 25FA (◺): triangle.stroked.bl
-25FB (◻): square.stroked.medium
-25FC (◼): square.filled.medium
-25FD (◽): square.stroked.small
-25FE (◾): square.filled.small
+25FB-FE0E (◻︎): square.stroked.medium
+25FC-FE0E (◼︎): square.filled.medium
+25FD-FE0E (◽︎): square.stroked.small
+25FE-FE0E (◾︎): square.filled.small
 25FF (◿): triangle.stroked.br
 2605 (★): star.filled
 2606 (☆): star.stroked
 2609 (☉): sun
 2610 (☐): ballot
-2611 (☑): ballot.check
+2611-FE0E (☑︎): ballot.check
 2612 (☒): ballot.cross
 2619 (☙): floral.l
 263F (☿): mercury
-2640 (♀): gender.female, venus
+2640-FE0E (♀︎): gender.female, venus
 2641 (♁): earth.alt
-2642 (♂): gender.male, mars
+2642-FE0E (♂︎): gender.male, mars
 2643 (♃): jupiter
 2644 (♄): saturn
 2645 (♅): uranus.alt
 2646 (♆): neptune
-2660 (♠): suit.spade.filled
+2660-FE0E (♠︎): suit.spade.filled
 2661 (♡): suit.heart.stroked
 2662 (♢): suit.diamond.stroked
-2663 (♣): suit.club.filled
+2663-FE0E (♣︎): suit.club.filled
 2664 (♤): suit.spade.stroked
-2665 (♥): suit.heart.filled
-2666 (♦): suit.diamond.filled
+2665-FE0E (♥︎): suit.heart.filled
+2666-FE0E (♦︎): suit.diamond.filled
 2667 (♧): suit.club.stroked
 2669 (♩): note.quarter.alt
 266A (♪): note.eighth.alt
@@ -676,14 +676,14 @@ test_name: typst_symbol_test
 26A4 (⚤): gender.female.male, gender.male.female
 26A5 (⚥): gender.intersex
 26A6 (⚦): gender.male.stroke
-26A7 (⚧): gender.trans
+26A7-FE0E (⚧︎): gender.trans
 26A8 (⚨): gender.male.stroke.t
 26A9 (⚩): gender.male.stroke.r
 26AC (⚬): circle.stroked.small
 26B2 (⚲): gender.neuter
 26E2 (⛢): uranus
 2713 (✓): checkmark
-2714 (✔): checkmark.heavy
+2714-FE0E (✔︎): checkmark.heavy
 2717 (✗): crossmark
 2718 (✘): crossmark.heavy
 2720 (✠): maltese
@@ -691,7 +691,7 @@ test_name: typst_symbol_test
 2767 (❧): floral.r
 2772 (❲): shell.l
 2773 (❳): shell.r
-27A1 (➡): arrow.r.filled
+27A1-FE0E (➡︎): arrow.r.filled
 27C0 (⟀): angle.spatial
 27C1 (⟁): triangle.stroked.nested
 27C2 (⟂): perp
@@ -709,14 +709,14 @@ test_name: typst_symbol_test
 27DB (⟛): tack.l.r
 27DD (⟝): tack.r.long
 27DE (⟞): tack.l.long
-27E6 (⟦): bracket.l.double
-27E7 (⟧): bracket.r.double
-27E8 (⟨): angle.l
-27E9 (⟩): angle.r
-27EA (⟪): angle.l.double
-27EB (⟫): angle.r.double
-27EC (⟬): shell.l.double
-27ED (⟭): shell.r.double
+27E6 (⟦): bracket.l.double, bracket.l.stroked
+27E7 (⟧): bracket.r.double, bracket.r.stroked
+27E8 (⟨): angle.l, chevron.l
+27E9 (⟩): angle.r, chevron.r
+27EA (⟪): angle.l.double, chevron.l.double
+27EB (⟫): angle.r.double, chevron.r.double
+27EC (⟬): shell.l.double, shell.l.stroked
+27ED (⟭): shell.r.double, shell.r.stroked
 27EE (⟮): paren.l.flat
 27EF (⟯): paren.r.flat
 27F0 (⟰): arrow.t.quad
@@ -759,8 +759,8 @@ test_name: typst_symbol_test
 2924 (⤤): arrow.tr.hook
 2925 (⤥): arrow.br.hook
 2926 (⤦): arrow.bl.hook
-2934 (⤴): arrow.t.curve
-2935 (⤵): arrow.b.curve
+2934-FE0E (⤴︎): arrow.t.curve
+2935-FE0E (⤵︎): arrow.b.curve
 2936 (⤶): arrow.l.curve
 2937 (⤷): arrow.r.curve
 294A (⥊): harpoon.lt.rb
@@ -800,26 +800,32 @@ test_name: typst_symbol_test
 2972 (⥲): arrow.r.tilde
 2980 (⦀): bar.v.triple
 2981 (⦁): circle.filled.tiny
-2983 (⦃): brace.l.double
-2984 (⦄): brace.r.double
-2985 (⦅): paren.l.double
-2986 (⦆): paren.r.double
+2983 (⦃): brace.l.double, brace.l.stroked
+2984 (⦄): brace.r.double, brace.r.stroked
+2985 (⦅): paren.l.double, paren.l.stroked
+2986 (⦆): paren.r.double, paren.r.stroked
+2987 (⦇): paren.l.closed
+2988 (⦈): paren.r.closed
+2989 (⦉): chevron.l.closed
+298A (⦊): chevron.r.closed
 298D (⦍): bracket.l.tick.t
 298E (⦎): bracket.r.tick.b
 298F (⦏): bracket.l.tick.b
 2990 (⦐): bracket.r.tick.t
-2991 (⦑): angle.l.dot
-2992 (⦒): angle.r.dot
+2991 (⦑): angle.l.dot, chevron.l.dot
+2992 (⦒): angle.r.dot, chevron.r.dot
+2997 (⦗): shell.l.filled
+2998 (⦘): shell.r.filled
 2999 (⦙): fence.dotted
 299B (⦛): angle.arc.rev
-299C (⦜): angle.right.sq, angle.right.square
-299D (⦝): angle.right.arc.dot
+299C (⦜): angle.right.sq
+299D (⦝): angle.right.dot
 299E (⦞): angle.s
 299F (⦟): angle.acute
 29A0 (⦠): angle.spheric.rev
 29A1 (⦡): angle.spheric.t, angle.spheric.top
 29A3 (⦣): angle.rev
-29A6 (⦦): angle.oblique
+29A6 (⦦): angle.oblique, angle.obtuse
 29B0 (⦰): emptyset.rev, nothing.rev
 29B1 (⦱): emptyset.bar, nothing.bar
 29B2 (⦲): emptyset.circle, nothing.circle
@@ -859,8 +865,8 @@ test_name: typst_symbol_test
 29F8 (⧸): slash.big
 29FA (⧺): plus.double
 29FB (⧻): plus.triple
-29FC (⧼): angle.l.curly
-29FD (⧽): angle.r.curly
+29FC (⧼): angle.l.curly, chevron.l.curly
+29FD (⧽): angle.r.curly, chevron.r.curly
 29FE (⧾): tiny
 29FF (⧿): miny
 2A00 (⨀): dot.circle.big, dot.o.big
@@ -954,9 +960,9 @@ test_name: typst_symbol_test
 2B02 (⬂): arrow.br.stroked
 2B03 (⬃): arrow.bl.stroked
 2B04 (⬄): arrow.l.r.stroked
-2B05 (⬅): arrow.l.filled
-2B06 (⬆): arrow.t.filled
-2B07 (⬇): arrow.b.filled
+2B05-FE0E (⬅︎): arrow.l.filled
+2B06-FE0E (⬆︎): arrow.t.filled
+2B07-FE0E (⬇︎): arrow.b.filled
 2B08 (⬈): arrow.tr.filled
 2B09 (⬉): arrow.tl.filled
 2B0A (⬊): arrow.br.filled
@@ -964,8 +970,8 @@ test_name: typst_symbol_test
 2B0C (⬌): arrow.l.r.filled
 2B0D (⬍): arrow.t.b.filled
 2B1A (⬚): square.stroked.dotted
-2B1B (⬛): square.filled.big
-2B1C (⬜): square.stroked.big
+2B1B-FE0E (⬛︎): square.filled.big
+2B1C-FE0E (⬜︎): square.stroked.big
 2B1F (⬟): penta.filled
 2B20 (⬠): penta.stroked
 2B21 (⬡): hexa.stroked
@@ -1014,7 +1020,7 @@ test_name: typst_symbol_test
 2E41 (⹁): comma.rev
 2E4B (⹋): dagger.triple
 301C (〜): dash.wave
-3030 (〰): dash.wave.double
+3030-FE0E (〰︎): dash.wave.double
 1D129 (𝄩): rest.multiple.measure
 1D12A (𝄪): sharp.double
 1D12B (𝄫): flat.double
