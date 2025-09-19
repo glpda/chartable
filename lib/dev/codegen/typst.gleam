@@ -52,8 +52,7 @@ pub fn parse_codex(txt: String) -> Result(NotationTable, ParserError) {
     ParserState(line: 0, txt:, prefix: "", submodule: "", pair: None)
   use state <- parse_codex_loop(input: initialize_parser, output: table)
   let #(line, _, rest) = splitter.split(line_ends, state.txt)
-  let #(line, _, _) = splitter.split(comments, line)
-  let line = string.trim(line)
+  let line = splitter.split_before(comments, line).0 |> string.trim
   case line {
     "" -> Ok(next_line(state:, rest:))
     "}" <> _ if state.submodule != "" ->

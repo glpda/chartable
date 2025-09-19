@@ -269,8 +269,7 @@ fn parse_unidata(
   let parser_state = ParserState(line: 0, txt:)
   use txt <- parse_unidata_loop(input: parser_state, output: [], reducer:)
   let #(line, _, rest) = splitter.split(line_end, txt)
-  let #(line, _, _) = splitter.split(comment, line)
-  let line = string.trim(line)
+  let line = splitter.split_before(comment, line).0 |> string.trim
   use <- bool.guard(when: string.is_empty(line), return: Ok(#(None, rest)))
   parser(line) |> result.map(fn(record) { #(Some(record), rest) })
 }
