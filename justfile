@@ -76,9 +76,11 @@ clean-entities:
 	tmp/{{html-entities}} > tmp/{{html-entities-clean}}
 
 latex3 := "https://raw.githubusercontent.com/latex3/unicode-math/refs/heads/master/"
+lucr := "https://milde.users.sourceforge.net/LUCR/Math/data/"
 [group('fetch')]
 fetch-latex: \
-(dl-data latex3 "unicode-math-table.tex" "latex/unicode-math.tex")
+(dl-data latex3 "unicode-math-table.tex" "latex/unicode-math.tex") \
+(dl-data lucr "unimathsymbols.txt" "latex/lucr-unimath.txt")
 
 typst-codex := "https://raw.githubusercontent.com/typst/codex/refs/heads/main/src/modules"
 [group('fetch')]
