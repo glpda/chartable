@@ -1,3 +1,4 @@
+import gleam/list
 import gleam/string
 import splitter
 
@@ -10,26 +11,44 @@ pub type ParserError {
   ParserError(line: Int, error: String)
 }
 
+pub type SplitPosition {
+  Anywhere(List(String))
+  LineStart(List(String))
+}
+
 pub fn parse_lines(
   // input txt lines/records:
   txt txt: String,
-  // comment markers:
-  comment comment: List(String),
+  // comment split position:
+  comment comment: SplitPosition,
   // line/record parser (return `Error("")` for empty lines):
   parser parser: fn(String) -> Result(record, String),
   // process the resulting list of records (in reverse order):
   reducer reducer: fn(List(record)) -> output,
 ) -> Result(output, ParserError) {
   let line_end = splitter.new(["\n"])
-  let comment = splitter.new(comment)
-
   let parser_state = ParserState(line: 0, txt:)
-  use txt <- parser_loop(input: parser_state, acc: [], reducer:)
-  let #(line, _, rest) = splitter.split(line_end, txt)
-  let line = splitter.split_before(comment, line).0 |> string.trim
-  case line {
-    "" -> #(Error(""), rest)
-    _ -> #(parser(line), rest)
+
+  case comment {
+    Anywhere(comment_markers) -> {
+      let comment_splitter = splitter.new(comment_markers)
+      use txt <- parser_loop(input: parser_state, acc: [], reducer:)
+      let #(line, _, rest) = splitter.split(line_end, txt)
+      let line = splitter.split_before(comment_splitter, line).0 |> string.trim
+      case line {
+        "" -> #(Error(""), rest)
+        _ -> #(parser(line), rest)
+      }
+    }
+    LineStart(comment_markers) -> {
+      use txt <- parser_loop(input: parser_state, acc: [], reducer:)
+      let #(line, _, rest) = splitter.split(line_end, txt)
+      case list.any(comment_markers, string.starts_with(line, _)) {
+        True -> #(Error(""), rest)
+        _ if line == "" -> #(Error(""), rest)
+        False -> #(parser(line), rest)
+      }
+    }
   }
 }
 

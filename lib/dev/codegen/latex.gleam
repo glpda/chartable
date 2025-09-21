@@ -20,7 +20,8 @@ pub fn parse_math_symbols(
 ) -> Result(List(MathSymbol), ParserError) {
   // \UnicodeMathSymbol{"00021}{\mathexclam   }{\mathclose}{exclamation mark}%
   let curly = splitter.new(["}{"])
-  use line <- parser.parse_lines(txt:, comment: ["%"], reducer: list.reverse)
+  let comment = parser.Anywhere(["%"])
+  use line <- parser.parse_lines(txt:, comment:, reducer: list.reverse)
   use rest <- result.try(case line {
     "\\UnicodeMathSymbol{\"" <> rest -> Ok(rest)
     _ -> Error("Invalid Command")
