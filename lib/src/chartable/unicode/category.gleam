@@ -22,7 +22,7 @@ pub type Letter {
   /// `"Ll"` lowercase letters,
   /// e.g. U+0061 "Latin Small Letter A" ( a )
   LowercaseLetter
-  /// `"Lt"`  digraphs encoded as a single character, with first part uppercase,
+  /// `"Lt"` digraphs encoded as a single character, with first part uppercase,
   /// e.g. U+01F2 "Latin Capital Letter D with Small Letter Z" ( ǲ )
   TitlecaseLetter
   /// `"Lm"` modifier letters,
@@ -58,7 +58,7 @@ pub type Number {
 }
 
 pub type Punctuation {
-  /// `"Pc"`, connecting punctuation marks,
+  /// `"Pc"` connecting punctuation marks,
   /// e.g. U+2040 "Character Tie" (◌⁀◌)
   ConnectorPunctuation
   /// `"Pd"` dash or hyphen punctuation marks,
