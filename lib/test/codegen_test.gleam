@@ -4,6 +4,7 @@ import chartable/internal
 import chartable/typst
 import chartable/unicode
 import codegen/html as html_codegen
+import codegen/latex
 import codegen/notation_table
 import codegen/typst as typst_codegen
 import codegen/unicode as unicode_codegen
@@ -99,5 +100,19 @@ pub fn html_entity_test() {
 
   notation_table.to_string(table)
   |> birdie.snap(title: "HTML entities from codepoints")
+}
+
+// END
+
+// =============================================================================
+// BEGIN LaTeX Notation Tests
+
+pub fn latex_symbols_test() {
+  let assert Ok(tex) = simplifile.read("data/latex/unicode-math.tex")
+  let assert Ok(math_symbols) = latex.parse_math_symbols(tex)
+
+  latex.math_symbols_to_notation_table(math_symbols)
+  |> notation_table.to_string
+  |> birdie.snap(title: "LaTeX3 Unicode Math from codepoints")
 }
 // END
