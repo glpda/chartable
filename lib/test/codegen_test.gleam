@@ -115,4 +115,13 @@ pub fn latex_symbols_test() {
   |> notation_table.to_string
   |> birdie.snap(title: "LaTeX3 Unicode Math from codepoints")
 }
+
+pub fn lucr_unimath_test() {
+  let assert Ok(txt) = simplifile.read("data/latex/lucr-unimath.txt")
+  let assert Ok(lucr_unimath) = latex.parse_lucr_unimath(txt)
+
+  latex.lucr_unimath_to_notation_table(lucr_unimath)
+  |> notation_table.to_string
+  |> birdie.snap(title: "LUCR Unicode Math from codepoints")
+}
 // END

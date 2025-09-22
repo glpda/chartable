@@ -1,0 +1,2570 @@
+---
+version: 1.4.0
+title: LUCR Unicode Math from codepoints
+file: ./test/codegen_test.gleam
+test_name: lucr_unimath_test
+---
+0021 (!): !, \exclam
+0023 (#): \#, \octothorpe
+0024 ($): \$, \mathdollar
+0025 (%): \%, \percent
+0026 (&): \&, \ampersand
+0028 ((): (, \lparen
+0029 ()): ), \rparen
+002A (*): *
+002B (+): +, \plus
+002C (,): ,, \comma
+002E (.): ., \period
+002F (/): /, \mathslash
+0030 (0): 0
+0031 (1): 1
+0032 (2): 2
+0033 (3): 3
+0034 (4): 4
+0035 (5): 5
+0036 (6): 6
+0037 (7): 7
+0038 (8): 8
+0039 (9): 9
+003A (:): :, \mathcolon
+003B (;): ;, \semicolon
+003C (<): <, \less
+003D (=): =, \equal
+003E (>): >, \greater
+003F (?): ?, \question
+0040 (@): @, \atsign
+0041 (A): A
+0042 (B): B
+0043 (C): C
+0044 (D): D
+0045 (E): E
+0046 (F): F
+0047 (G): G
+0048 (H): H
+0049 (I): I
+004A (J): J
+004B (K): K
+004C (L): L
+004D (M): M
+004E (N): N
+004F (O): O
+0050 (P): P
+0051 (Q): Q
+0052 (R): R
+0053 (S): S
+0054 (T): T
+0055 (U): U
+0056 (V): V
+0057 (W): W
+0058 (X): X
+0059 (Y): Y
+005A (Z): Z
+005B ([): \lbrack, \lbrack
+005C (\): \backslash, \backslash
+005D (]): \rbrack, \rbrack
+005E (^): \sphat
+005F (_): \_
+0061 (a): a
+0062 (b): b
+0063 (c): c
+0064 (d): d
+0065 (e): e
+0066 (f): f
+0067 (g): g
+0068 (h): h
+0069 (i): i
+006A (j): j
+006B (k): k
+006C (l): l
+006D (m): m
+006E (n): n
+006F (o): o
+0070 (p): p
+0071 (q): q
+0072 (r): r
+0073 (s): s
+0074 (t): t
+0075 (u): u
+0076 (v): v
+0077 (w): w
+0078 (x): x
+0079 (y): y
+007A (z): z
+007B ({): \lbrace, \{
+007C (|): \vert, |
+007D (}): \rbrace, \}
+007E (~): \sptilde
+00A2 (¢): \cent
+00A3 (£): \pounds, \sterling
+00A5 (¥): \yen, \yen
+00A8 (¨): \spddot
+00AC (¬): \neg, \neg
+00AE (®): \circledR
+00B1 (±): \pm, \pm
+00B5 (µ): \Micro
+00B7 (·): \cdotp
+00D7 (×): \times, \times
+00F0 (ð): \eth, \matheth
+00F7 (÷): \div, \div
+0131 (ı): \imath
+01B5 (Ƶ): \Zbar
+0237 (ȷ): \jmath
+0300 (̀): \grave, \grave
+0301 (́): \acute, \acute
+0302 (̂): \hat, \hat
+0303 (̃): \tilde, \tilde
+0304 (̄): \bar, \bar
+0305 (̅): \overbar, \overline
+0306 (̆): \breve, \breve
+0307 (̇): \dot, \dot
+0308 (̈): \ddot, \ddot
+0309 (̉): \ovhook
+030A (̊): \mathring, \ocirc
+030C (̌): \check, \check
+0310 (̐): \candra
+0312 (̒): \oturnedcomma
+0315 (̕): \ocommatopright
+031A (̚): \droang
+0330 (̰): \utilde, \wideutilde
+0331 (̱): \underbar, \underbar
+0332 (̲): \underline
+0338 (̸): \not, \not
+0391 (Α): \upAlpha
+0392 (Β): \upBeta
+0393 (Γ): \Gamma, \upGamma
+0394 (Δ): \Delta, \upDelta
+0395 (Ε): \upEpsilon
+0396 (Ζ): \upZeta
+0397 (Η): \upEta
+0398 (Θ): \Theta, \upTheta
+0399 (Ι): \upIota
+039A (Κ): \upKappa
+039B (Λ): \Lambda, \upLambda
+039C (Μ): \upMu
+039D (Ν): \upNu
+039E (Ξ): \Xi, \upXi
+039F (Ο): \upOmicron
+03A0 (Π): \Pi, \upPi
+03A1 (Ρ): \upRho
+03A3 (Σ): \Sigma, \upSigma
+03A4 (Τ): \upTau
+03A5 (Υ): \Upsilon, \upUpsilon
+03A6 (Φ): \Phi, \upPhi
+03A7 (Χ): \upChi
+03A8 (Ψ): \Psi, \upPsi
+03A9 (Ω): \Omega, \upOmega
+03B1 (α): \alpha, \upalpha
+03B2 (β): \beta, \upbeta
+03B3 (γ): \gamma, \upgamma
+03B4 (δ): \delta, \updelta
+03B5 (ε): \upepsilon, \varepsilon
+03B6 (ζ): \upzeta, \zeta
+03B7 (η): \eta, \upeta
+03B8 (θ): \theta, \uptheta
+03B9 (ι): \iota, \upiota
+03BA (κ): \kappa, \upkappa
+03BB (λ): \lambda, \uplambda
+03BC (μ): \mu, \upmu
+03BD (ν): \nu, \upnu
+03BE (ξ): \upxi, \xi
+03BF (ο): \upomicron
+03C0 (π): \pi, \uppi
+03C1 (ρ): \rho, \uprho
+03C2 (ς): \upvarsigma, \varsigma
+03C3 (σ): \sigma, \upsigma
+03C4 (τ): \tau, \uptau
+03C5 (υ): \upsilon, \upupsilon
+03C6 (φ): \upvarphi, \varphi
+03C7 (χ): \chi, \upchi
+03C8 (ψ): \psi, \uppsi
+03C9 (ω): \omega, \upomega
+03D0 (ϐ): \upvarbeta, \varbeta
+03D1 (ϑ): \upvartheta, \vartheta
+03D2 (ϒ): \upUpsilon
+03D5 (ϕ): \phi, \upphi
+03D6 (ϖ): \upvarpi, \varpi
+03D8 (Ϙ): \Qoppa, \upoldKoppa
+03D9 (ϙ): \qoppa, \upoldkoppa
+03DA (Ϛ): \Stigma, \upStigma
+03DB (ϛ): \stigma, \upstigma
+03DC (Ϝ): \Digamma, \upDigamma
+03DD (ϝ): \digamma, \updigamma
+03DE (Ϟ): \Koppa, \upKoppa
+03DF (ϟ): \koppa, \upkoppa
+03E0 (Ϡ): \Sampi, \upSampi
+03E1 (ϡ): \sampi, \upsampi
+03F0 (ϰ): \upvarkappa, \varkappa
+03F1 (ϱ): \upvarrho, \varrho
+03F4 (ϴ): \upvarTheta
+03F5 (ϵ): \epsilon, \upvarepsilon
+03F6 (϶): \backepsilon, \upbackepsilon
+2001 ( ): \quad
+2015 (―): \horizbar
+2016 (‖): \Vert, \|
+2017 (‗): \twolowline
+2020 (†): \dagger, \dagger
+2021 (‡): \ddagger, \ddagger
+2022 (•): \bullet, \smblkcircle
+2025 (‥): \enleadertwodots
+2026 (…): \ldots, \unicodeellipsis
+2032 (′): \prime, \prime
+2033 (″): \dprime, \second
+2034 (‴): \third, \trprime
+2035 (‵): \backprime, \backprime
+2036 (‶): \backdprime
+2037 (‷): \backtrprime
+2038 (‸): \caretinsert
+203C (‼): \Exclam
+2040 (⁀): \cat, \tieconcat
+2043 (⁃): \hyphenbullet
+2044 (⁄): \fracslash
+2047 (⁇): \Question
+2050 (⁐): \closure
+2057 (⁗): \fourth, \qprime
+205F ( ): \:
+20AC (€): \euro
+20D0 (⃐): \leftharpoonaccent, \lvec
+20D1 (⃑): \rightharpoonaccent, \vec
+20D2 (⃒): \vertoverlay
+20D6 (⃖): \LVec, \overleftarrow
+20D7 (⃗): \vec, \vec
+20DB (⃛): \dddot, \dddot
+20DC (⃜): \ddddot, \ddddot
+20DD (⃝): \enclosecircle
+20DE (⃞): \enclosesquare
+20DF (⃟): \enclosediamond
+20E1 (⃡): \overleftrightarrow, \overleftrightarrow
+20E4 (⃤): \enclosetriangle
+20E7 (⃧): \annuity
+20E8 (⃨): \threeunderdot
+20E9 (⃩): \widebridgeabove
+20EC (⃬): \underrightharpoondown
+20ED (⃭): \underleftharpoondown
+20EE (⃮): \underleftarrow, \underleftarrow
+20EF (⃯): \underrightarrow, \underrightarrow
+20F0 (⃰): \asteraccent
+2102 (ℂ): \BbbC, \mathbb{C}
+2107 (ℇ): \Euler, \Eulerconst
+210A (ℊ): \mathcal{g}, \mscrg
+210B (ℋ): \mathcal{H}, \mscrH
+210C (ℌ): \mathfrak{H}, \mfrakH
+210D (ℍ): \BbbH, \mathbb{H}
+210E (ℎ): \Planckconst
+210F (ℏ): \hslash, \hslash
+2110 (ℐ): \mathcal{I}, \mscrI
+2111 (ℑ): \Im, \Im
+2112 (ℒ): \mathcal{L}, \mscrL
+2113 (ℓ): \ell, \ell
+2115 (ℕ): \BbbN, \mathbb{N}
+2118 (℘): \wp, \wp
+2119 (ℙ): \BbbP, \mathbb{P}
+211A (ℚ): \BbbQ, \mathbb{Q}
+211B (ℛ): \mathcal{R}, \mscrR
+211C (ℜ): \Re, \Re
+211D (ℝ): \BbbR, \mathbb{R}
+2124 (ℤ): \BbbZ, \mathbb{Z}
+2126 (Ω): \tcohm
+2127 (℧): \mho, \mho
+2128 (ℨ): \mathfrak{Z}, \mfrakZ
+2129 (℩): \turnediota
+212B (Å): \Angstroem, \Angstrom
+212C (ℬ): \mathcal{B}, \mscrB
+212D (ℭ): \mathfrak{C}, \mfrakC
+212F (ℯ): \mathcal{e}, \mscre
+2130 (ℰ): \mathcal{E}, \mscrE
+2131 (ℱ): \mathcal{F}, \mscrF
+2132 (Ⅎ): \Finv, \Finv
+2133 (ℳ): \mathcal{M}, \mscrM
+2134 (ℴ): \mathcal{o}, \mscro
+2135 (ℵ): \aleph, \aleph
+2136 (ℶ): \beth, \beth
+2137 (ℷ): \gimel, \gimel
+2138 (ℸ): \daleth, \daleth
+213C (ℼ): \Bbbpi, \mathbb{\pi}
+213D (ℽ): \Bbbgamma, \mathbb{\gamma}
+213E (ℾ): \BbbGamma, \mathbb{\Gamma}
+213F (ℿ): \BbbPi, \mathbb{\Pi}
+2140 (⅀): \Bbbsum, \mathbb{\Sigma}
+2141 (⅁): \Game
+2142 (⅂): \sansLturned
+2143 (⅃): \sansLmirrored
+2144 (⅄): \Yup, \Yup
+2145 (ⅅ): \CapitalDifferentialD, \mitBbbD
+2146 (ⅆ): \DifferentialD, \mitBbbd
+2147 (ⅇ): \ExponetialE, \mitBbbe
+2148 (ⅈ): \ComplexI, \mitBbbi
+2149 (ⅉ): \ComplexJ, \mitBbbj
+214A (⅊): \PropertyLine
+214B (⅋): \invamp, \upand
+2190 (←): \leftarrow, \leftarrow
+2191 (↑): \uparrow, \uparrow
+2192 (→): \rightarrow, \rightarrow
+2193 (↓): \downarrow, \downarrow
+2194 (↔): \leftrightarrow, \leftrightarrow
+2195 (↕): \updownarrow, \updownarrow
+2196 (↖): \nwarrow, \nwarrow
+2197 (↗): \nearrow, \nearrow
+2198 (↘): \searrow, \searrow
+2199 (↙): \swarrow, \swarrow
+219A (↚): \nleftarrow, \nleftarrow
+219B (↛): \nrightarrow, \nrightarrow
+219C (↜): \leftwavearrow
+219D (↝): \rightwavearrow
+219E (↞): \twoheadleftarrow, \twoheadleftarrow
+219F (↟): \twoheaduparrow
+21A0 (↠): \twoheadrightarrow, \twoheadrightarrow
+21A1 (↡): \twoheaddownarrow
+21A2 (↢): \leftarrowtail, \leftarrowtail
+21A3 (↣): \rightarrowtail, \rightarrowtail
+21A4 (↤): \mapsfrom, \mapsfrom
+21A5 (↥): \MapsUp, \mapsup
+21A6 (↦): \mapsto, \mapsto
+21A7 (↧): \MapsDown, \mapsdown
+21A8 (↨): \updownarrowbar
+21A9 (↩): \hookleftarrow, \hookleftarrow
+21AA (↪): \hookrightarrow, \hookrightarrow
+21AB (↫): \looparrowleft, \looparrowleft
+21AC (↬): \looparrowright, \looparrowright
+21AD (↭): \leftrightsquigarrow, \leftrightsquigarrow
+21AE (↮): \nleftrightarrow, \nleftrightarrow
+21AF (↯): \downzigzagarrow, \lightning
+21B0 (↰): \Lsh, \Lsh
+21B1 (↱): \Rsh, \Rsh
+21B2 (↲): \Ldsh, \dlsh
+21B3 (↳): \Rdsh, \drsh
+21B4 (↴): \linefeed
+21B5 (↵): \carriagereturn
+21B6 (↶): \curvearrowleft, \curvearrowleft
+21B7 (↷): \curvearrowright, \curvearrowright
+21B8 (↸): \barovernorthwestarrow
+21B9 (↹): \barleftarrowrightarrowba
+21BA (↺): \acwopencirclearrow, \circlearrowleft
+21BB (↻): \circlearrowright, \cwopencirclearrow
+21BC (↼): \leftharpoonup, \leftharpoonup
+21BD (↽): \leftharpoondown, \leftharpoondown
+21BE (↾): \upharpoonright, \upharpoonright
+21BF (↿): \upharpoonleft, \upharpoonleft
+21C0 (⇀): \rightharpoonup, \rightharpoonup
+21C1 (⇁): \rightharpoondown, \rightharpoondown
+21C2 (⇂): \downharpoonright, \downharpoonright
+21C3 (⇃): \downharpoonleft, \downharpoonleft
+21C4 (⇄): \rightleftarrows, \rightleftarrows
+21C5 (⇅): \updownarrows, \updownarrows
+21C6 (⇆): \leftrightarrows, \leftrightarrows
+21C7 (⇇): \leftleftarrows, \leftleftarrows
+21C8 (⇈): \upuparrows, \upuparrows
+21C9 (⇉): \rightrightarrows, \rightrightarrows
+21CA (⇊): \downdownarrows, \downdownarrows
+21CB (⇋): \leftrightharpoons, \leftrightharpoons
+21CC (⇌): \rightleftharpoons, \rightleftharpoons
+21CD (⇍): \nLeftarrow, \nLeftarrow
+21CE (⇎): \nLeftrightarrow, \nLeftrightarrow
+21CF (⇏): \nRightarrow, \nRightarrow
+21D0 (⇐): \Leftarrow, \Leftarrow
+21D1 (⇑): \Uparrow, \Uparrow
+21D2 (⇒): \Rightarrow, \Rightarrow
+21D3 (⇓): \Downarrow, \Downarrow
+21D4 (⇔): \Leftrightarrow, \Leftrightarrow
+21D5 (⇕): \Updownarrow, \Updownarrow
+21D6 (⇖): \Nwarrow, \Nwarrow
+21D7 (⇗): \Nearrow, \Nearrow
+21D8 (⇘): \Searrow, \Searrow
+21D9 (⇙): \Swarrow, \Swarrow
+21DA (⇚): \Lleftarrow, \Lleftarrow
+21DB (⇛): \Rrightarrow, \Rrightarrow
+21DC (⇜): \leftsquigarrow, \leftsquigarrow
+21DD (⇝): \rightsquigarrow, \rightsquigarrow
+21DE (⇞): \nHuparrow
+21DF (⇟): \nHdownarrow
+21E0 (⇠): \dashleftarrow, \leftdasharrow
+21E1 (⇡): \updasharrow
+21E2 (⇢): \dashrightarrow, \rightdasharrow
+21E3 (⇣): \downdasharrow
+21E4 (⇤): \LeftArrowBar, \barleftarrow
+21E5 (⇥): \RightArrowBar, \rightarrowbar
+21E6 (⇦): \leftwhitearrow
+21E7 (⇧): \upwhitearrow
+21E8 (⇨): \rightwhitearrow
+21E9 (⇩): \downwhitearrow
+21EA (⇪): \whitearrowupfrombar
+21F4 (⇴): \circleonrightarrow
+21F5 (⇵): \downuparrows, \downuparrows
+21F6 (⇶): \rightthreearrows
+21F7 (⇷): \nvleftarrow
+21F8 (⇸): \nvrightarrow, \pfun
+21F9 (⇹): \nvleftrightarrow
+21FA (⇺): \nVleftarrow
+21FB (⇻): \ffun, \nVrightarrow
+21FC (⇼): \nVleftrightarrow
+21FD (⇽): \leftarrowtriangle, \leftarrowtriangle
+21FE (⇾): \rightarrowtriangle, \rightarrowtriangle
+21FF (⇿): \leftrightarrowtriangle, \leftrightarrowtriangle
+2200 (∀): \forall, \forall
+2201 (∁): \complement, \complement
+2202 (∂): \partial, \partial
+2203 (∃): \exists, \exists
+2204 (∄): \nexists, \nexists
+2205 (∅): \varnothing, \varnothing
+2206 (∆): \increment
+2207 (∇): \nabla, \nabla
+2208 (∈): \in, \in
+2209 (∉): \notin, \notin
+220A (∊): \smallin
+220B (∋): \ni, \ni
+220C (∌): \nni, \nni
+220D (∍): \smallni
+220E (∎): \QED
+220F (∏): \prod, \prod
+2210 (∐): \coprod, \coprod
+2211 (∑): \sum, \sum
+2212 (−): -, \minus
+2213 (∓): \mp, \mp
+2214 (∔): \dotplus, \dotplus
+2215 (∕): \divslash, \slash
+2216 (∖): \smallsetminus, \smallsetminus
+2217 (∗): \ast, \ast
+2218 (∘): \circ, \vysmwhtcircle
+2219 (∙): \bullet, \vysmblkcircle
+221A (√): \sqrt, \sqrt
+221B (∛): \cuberoot, \sqrt[3]
+221C (∜): \fourthroot, \sqrt[4]
+221D (∝): \propto, \propto
+221E (∞): \infty, \infty
+221F (∟): \rightangle, \rightangle
+2220 (∠): \angle, \angle
+2221 (∡): \measuredangle, \measuredangle
+2222 (∢): \sphericalangle, \sphericalangle
+2223 (∣): \mid, \mid
+2224 (∤): \nmid, \nmid
+2225 (∥): \parallel, \parallel
+2226 (∦): \nparallel, \nparallel
+2227 (∧): \wedge, \wedge
+2228 (∨): \vee, \vee
+2229 (∩): \cap, \cap
+222A (∪): \cup, \cup
+222B (∫): \int, \int
+222C (∬): \iint, \iint
+222D (∭): \iiint, \iiint
+222E (∮): \oint, \oint
+222F (∯): \oiint, \oiint
+2230 (∰): \oiiint, \oiiint
+2231 (∱): \intclockwise
+2232 (∲): \varointclockwise, \varointclockwise
+2233 (∳): \ointctrclockwise, \ointctrclockwise
+2234 (∴): \therefore, \therefore
+2235 (∵): \because, \because
+2236 (∶): :, \mathratio
+2237 (∷): \Colon, \Proportion
+2238 (∸): \dotminus
+2239 (∹): \dashcolon, \eqcolon
+223A (∺): \dotsminusdots
+223B (∻): \kernelcontraction
+223C (∼): \sim, \sim
+223D (∽): \backsim, \backsim
+223E (∾): \invlazys
+223F (∿): \AC, \sinewave
+2240 (≀): \wr, \wr
+2241 (≁): \nsim, \nsim
+2242 (≂): \eqsim, \eqsim
+2243 (≃): \simeq, \simeq
+2244 (≄): \nsime, \nsimeq
+2245 (≅): \cong, \cong
+2246 (≆): \simneqq
+2247 (≇): \ncong, \ncong
+2248 (≈): \approx, \approx
+2249 (≉): \napprox, \napprox
+224A (≊): \approxeq, \approxeq
+224B (≋): \approxident
+224C (≌): \backcong
+224D (≍): \asymp, \asymp
+224E (≎): \Bumpeq, \Bumpeq
+224F (≏): \bumpeq, \bumpeq
+2250 (≐): \doteq, \doteq
+2251 (≑): \Doteq, \Doteq
+2252 (≒): \fallingdotseq, \fallingdotseq
+2253 (≓): \risingdotseq, \risingdotseq
+2254 (≔): \coloneq, \coloneq
+2255 (≕): \eqcolon, \eqcolon
+2256 (≖): \eqcirc, \eqcirc
+2257 (≗): \circeq, \circeq
+2258 (≘): \arceq
+2259 (≙): \corresponds, \wedgeq
+225A (≚): \veeeq
+225B (≛): \stareq
+225C (≜): \triangleq, \triangleq
+225D (≝): \eqdef
+225E (≞): \measeq
+225F (≟): \questeq
+2260 (≠): \ne, \neq
+2261 (≡): \equiv, \equiv
+2262 (≢): \nequiv, \nequiv
+2263 (≣): \Equiv
+2264 (≤): \leq, \leq
+2265 (≥): \geq, \geq
+2266 (≦): \leqq, \leqq
+2267 (≧): \geqq, \geqq
+2268 (≨): \lneqq, \lneqq
+2269 (≩): \gneqq, \gneqq
+226A (≪): \ll, \ll
+226B (≫): \gg, \gg
+226C (≬): \between, \between
+226D (≭): \nasymp, \notasymp
+226E (≮): \nless, \nless
+226F (≯): \ngtr, \ngtr
+2270 (≰): \nleq, \nleq
+2271 (≱): \ngeq, \ngeq
+2272 (≲): \lesssim, \lesssim
+2273 (≳): \gtrsim, \gtrsim
+2274 (≴): \NotLessTilde, \nlesssim
+2275 (≵): \NotGreaterTilde, \ngtrsim
+2276 (≶): \lessgtr, \lessgtr
+2277 (≷): \gtrless, \gtrless
+2278 (≸): \nlessgtr
+2279 (≹): \NotGreaterLess, \ngtrless
+227A (≺): \prec, \prec
+227B (≻): \succ, \succ
+227C (≼): \preccurlyeq, \preccurlyeq
+227D (≽): \succcurlyeq, \succcurlyeq
+227E (≾): \precsim, \precsim
+227F (≿): \succsim, \succsim
+2280 (⊀): \nprec, \nprec
+2281 (⊁): \nsucc, \nsucc
+2282 (⊂): \subset, \subset
+2283 (⊃): \supset, \supset
+2284 (⊄): \nsubset, \nsubset
+2285 (⊅): \nsupset, \nsupset
+2286 (⊆): \subseteq, \subseteq
+2287 (⊇): \supseteq, \supseteq
+2288 (⊈): \nsubseteq, \nsubseteq
+2289 (⊉): \nsupseteq, \nsupseteq
+228A (⊊): \subsetneq, \subsetneq
+228B (⊋): \supsetneq, \supsetneq
+228C (⊌): \cupleftarrow
+228D (⊍): \cupdot
+228E (⊎): \uplus, \uplus
+228F (⊏): \sqsubset, \sqsubset
+2290 (⊐): \sqsupset, \sqsupset
+2291 (⊑): \sqsubseteq, \sqsubseteq
+2292 (⊒): \sqsupseteq, \sqsupseteq
+2293 (⊓): \sqcap, \sqcap
+2294 (⊔): \sqcup, \sqcup
+2295 (⊕): \oplus, \oplus
+2296 (⊖): \ominus, \ominus
+2297 (⊗): \otimes, \otimes
+2298 (⊘): \oslash, \oslash
+2299 (⊙): \odot, \odot
+229A (⊚): \circledcirc, \circledcirc
+229B (⊛): \circledast, \circledast
+229C (⊜): \circledequal
+229D (⊝): \circleddash, \circleddash
+229E (⊞): \boxplus, \boxplus
+229F (⊟): \boxminus, \boxminus
+22A0 (⊠): \boxtimes, \boxtimes
+22A1 (⊡): \boxdot, \boxdot
+22A2 (⊢): \vdash, \vdash
+22A3 (⊣): \dashv, \dashv
+22A4 (⊤): \top, \top
+22A5 (⊥): \bot, \bot
+22A6 (⊦): \assert
+22A7 (⊧): \models, \models
+22A8 (⊨): \vDash, \vDash
+22A9 (⊩): \Vdash, \Vdash
+22AA (⊪): \Vvdash, \Vvdash
+22AB (⊫): \VDash, \VDash
+22AC (⊬): \nvdash, \nvdash
+22AD (⊭): \nvDash, \nvDash
+22AE (⊮): \nVdash, \nVdash
+22AF (⊯): \nVDash, \nVDash
+22B0 (⊰): \prurel
+22B1 (⊱): \scurel
+22B2 (⊲): \vartriangleleft, \vartriangleleft
+22B3 (⊳): \vartriangleright, \vartriangleright
+22B4 (⊴): \trianglelefteq, \trianglelefteq
+22B5 (⊵): \trianglerighteq, \trianglerighteq
+22B6 (⊶): \multimapdotbothA, \origof
+22B7 (⊷): \imageof, \multimapdotbothB
+22B8 (⊸): \multimap, \multimap
+22B9 (⊹): \hermitmatrix
+22BA (⊺): \intercal, \intercal
+22BB (⊻): \veebar, \veebar
+22BC (⊼): \barwedge, \barwedge
+22BD (⊽): \barvee
+22BE (⊾): \measuredrightangle
+22BF (⊿): \varlrtriangle
+22C0 (⋀): \bigwedge, \bigwedge
+22C1 (⋁): \bigvee, \bigvee
+22C2 (⋂): \bigcap, \bigcap
+22C3 (⋃): \bigcup, \bigcup
+22C4 (⋄): \diamond, \smwhtdiamond
+22C5 (⋅): \cdot, \cdot
+22C6 (⋆): \star, \star
+22C7 (⋇): \divideontimes, \divideontimes
+22C8 (⋈): \bowtie, \bowtie
+22C9 (⋉): \ltimes, \ltimes
+22CA (⋊): \rtimes, \rtimes
+22CB (⋋): \leftthreetimes, \leftthreetimes
+22CC (⋌): \rightthreetimes, \rightthreetimes
+22CD (⋍): \backsimeq, \backsimeq
+22CE (⋎): \curlyvee, \curlyvee
+22CF (⋏): \curlywedge, \curlywedge
+22D0 (⋐): \Subset, \Subset
+22D1 (⋑): \Supset, \Supset
+22D2 (⋒): \Cap, \Cap
+22D3 (⋓): \Cup, \Cup
+22D4 (⋔): \pitchfork, \pitchfork
+22D5 (⋕): \equalparallel, \hash
+22D6 (⋖): \lessdot, \lessdot
+22D7 (⋗): \gtrdot, \gtrdot
+22D8 (⋘): \lll, \lll
+22D9 (⋙): \ggg, \ggg
+22DA (⋚): \lesseqgtr, \lesseqgtr
+22DB (⋛): \gtreqless, \gtreqless
+22DC (⋜): \eqless
+22DD (⋝): \eqgtr
+22DE (⋞): \curlyeqprec, \curlyeqprec
+22DF (⋟): \curlyeqsucc, \curlyeqsucc
+22E0 (⋠): \npreccurlyeq, \npreceq
+22E1 (⋡): \nsucccurlyeq, \nsucceq
+22E2 (⋢): \nsqsubseteq, \nsqsubseteq
+22E3 (⋣): \nsqsupseteq, \nsqsupseteq
+22E4 (⋤): \sqsubsetneq
+22E5 (⋥): \sqsupsetneq
+22E6 (⋦): \lnsim, \lnsim
+22E7 (⋧): \gnsim, \gnsim
+22E8 (⋨): \precnsim, \precnsim
+22E9 (⋩): \succnsim, \succnsim
+22EA (⋪): \ntriangleleft, \ntriangleleft
+22EB (⋫): \ntriangleright, \ntriangleright
+22EC (⋬): \ntrianglelefteq, \ntrianglelefteq
+22ED (⋭): \ntrianglerighteq, \ntrianglerighteq
+22EE (⋮): \vdots, \vdots
+22EF (⋯): \cdots, \unicodecdots
+22F0 (⋰): \adots, \iddots
+22F1 (⋱): \ddots, \ddots
+22F2 (⋲): \disin
+22F3 (⋳): \varisins
+22F4 (⋴): \isins
+22F5 (⋵): \isindot
+22F6 (⋶): \barin, \varisinobar
+22F7 (⋷): \isinobar
+22F8 (⋸): \isinvb
+22F9 (⋹): \isinE
+22FA (⋺): \nisd
+22FB (⋻): \varnis
+22FC (⋼): \nis
+22FD (⋽): \varniobar
+22FE (⋾): \niobar
+22FF (⋿): \bagmember
+2300 (⌀): \diameter, \diameter
+2302 (⌂): \house
+2305 (⌅): \varbarwedge
+2306 (⌆): \vardoublebarwedge
+2308 (⌈): \lceil, \lceil
+2309 (⌉): \rceil, \rceil
+230A (⌊): \lfloor, \lfloor
+230B (⌋): \rfloor, \rfloor
+2310 (⌐): \invneg, \invnot
+2311 (⌑): \sqlozenge, \wasylozenge
+2312 (⌒): \profline
+2313 (⌓): \profsurf
+2317 (⌗): \viewdata
+2319 (⌙): \turnednot
+231C (⌜): \ulcorner, \ulcorner
+231D (⌝): \urcorner, \urcorner
+231E (⌞): \llcorner, \llcorner
+231F (⌟): \lrcorner, \lrcorner
+2320 (⌠): \inttop
+2321 (⌡): \intbottom
+2322 (⌢): \frown, \frown
+2323 (⌣): \smile, \smile
+232C (⌬): \varhexagonlrbonds
+2332 (⌲): \conictaper
+2336 (⌶): \topbot
+2339 (⌹): \APLinv
+233D (⌽): \obar
+233F (⌿): \APLnotslash, \notslash
+2340 (⍀): \APLnotbackslash, \notbackslash
+2347 (⍇): \APLleftarrowbox
+2348 (⍈): \APLrightarrowbox
+2349 (⍉): \invdiameter
+2350 (⍐): \APLuparrowbox
+2353 (⍓): \APLboxupcaret
+2357 (⍗): \APLdownarrowbox
+235D (⍝): \APLcomment
+235E (⍞): \APLinput
+235F (⍟): \APLlog
+2370 (⍰): \APLboxquestion
+237C (⍼): \rangledownzigzagarrow
+2394 (⎔): \hexagon
+239B (⎛): \lparenuend
+239C (⎜): \lparenextender
+239D (⎝): \lparenlend
+239E (⎞): \rparenuend
+239F (⎟): \rparenextender
+23A0 (⎠): \rparenlend
+23A1 (⎡): \lbrackuend
+23A2 (⎢): \lbrackextender
+23A3 (⎣): \lbracklend
+23A4 (⎤): \rbrackuend
+23A5 (⎥): \rbrackextender
+23A6 (⎦): \rbracklend
+23A7 (⎧): \lbraceuend
+23A8 (⎨): \lbracemid
+23A9 (⎩): \lbracelend
+23AA (⎪): \vbraceextender
+23AB (⎫): \rbraceuend
+23AC (⎬): \rbracemid
+23AD (⎭): \rbracelend
+23AE (⎮): \intextender
+23AF (⎯): \harrowextender
+23B0 (⎰): \lmoustache
+23B1 (⎱): \rmoustache
+23B2 (⎲): \sumtop
+23B3 (⎳): \sumbottom
+23B4 (⎴): \overbracket
+23B5 (⎵): \underbracket
+23B6 (⎶): \bbrktbrk
+23B7 (⎷): \sqrtbottom
+23B8 (⎸): \lvboxline
+23B9 (⎹): \rvboxline
+23CE (⏎): \varcarriagereturn
+23DC (⏜): \overparen, \overparen
+23DD (⏝): \underparen, \underparen
+23DE (⏞): \overbrace, \overbrace
+23DF (⏟): \underbrace, \underbrace
+23E0 (⏠): \obrbrak
+23E1 (⏡): \ubrbrak
+23E2 (⏢): \trapezium
+23E3 (⏣): \benzenr
+23E4 (⏤): \strns
+23E5 (⏥): \fltns
+23E6 (⏦): \accurrent
+23E7 (⏧): \elinters
+2506 (┆): \bdtriplevdash
+2580 (▀): \blockuphalf
+2584 (▄): \blocklowhalf
+2588 (█): \blockfull
+258C (▌): \blocklefthalf
+2590 (▐): \blockrighthalf
+2591 (░): \blockqtrshaded
+2592 (▒): \blockhalfshaded
+2593 (▓): \blockthreeqtrshaded
+25A0 (■): \mdlgblksquare
+25A1 (□): \mdlgwhtsquare
+25A2 (▢): \squoval
+25A3 (▣): \blackinwhitesquare
+25A4 (▤): \squarehfill
+25A5 (▥): \squarevfill
+25A6 (▦): \squarehvfill
+25A7 (▧): \squarenwsefill
+25A8 (▨): \squareneswfill
+25A9 (▩): \squarecrossfill
+25AA (▪): \smblksquare
+25AB (▫): \smwhtsquare
+25AC (▬): \hrectangleblack
+25AD (▭): \hrectangle
+25AE (▮): \vrectangleblack
+25AF (▯): \vrectangle
+25B0 (▰): \parallelogramblack
+25B1 (▱): \parallelogram
+25B2 (▲): \bigblacktriangleup
+25B3 (△): \bigtriangleup, \bigtriangleup
+25B4 (▴): \blacktriangle, \blacktriangleup
+25B5 (▵): \smalltriangleup, \vartriangle
+25B6 (▶): \RHD, \blacktriangleright
+25B7 (▷): \rhd, \triangleright
+25B8 (▸): \blacktriangleright, \smallblacktriangleright
+25B9 (▹): \smalltriangleright, \smalltriangleright
+25BA (►): \blackpointerright
+25BB (▻): \whitepointerright
+25BC (▼): \bigblacktriangledown
+25BD (▽): \bigtriangledown, \bigtriangledown
+25BE (▾): \blacktriangledown, \blacktriangledown
+25BF (▿): \smalltriangledown, \triangledown
+25C0 (◀): \LHD, \blacktriangleleft
+25C1 (◁): \lhd, \triangleleft
+25C2 (◂): \blacktriangleleft, \smallblacktriangleleft
+25C3 (◃): \smalltriangleleft, \smalltriangleleft
+25C4 (◄): \blackpointerleft
+25C5 (◅): \whitepointerleft
+25C6 (◆): \Diamondblack, \mdlgblkdiamond
+25C7 (◇): \Diamond, \mdlgwhtdiamond
+25C8 (◈): \blackinwhitediamond
+25C9 (◉): \fisheye
+25CA (◊): \lozenge, \mdlgwhtlozenge
+25CB (○): \Circle, \mdlgwhtcircle
+25CC (◌): \dottedcircle
+25CD (◍): \circlevertfill
+25CE (◎): \bullseye
+25CF (●): \CIRCLE, \mdlgblkcircle
+25D0 (◐): \LEFTcircle, \circlelefthalfblack
+25D1 (◑): \RIGHTcircle, \circlerighthalfblack
+25D2 (◒): \circlebottomhalfblack
+25D3 (◓): \circletophalfblack
+25D4 (◔): \circleurquadblack
+25D5 (◕): \blackcircleulquadwhite
+25D6 (◖): \LEFTCIRCLE, \blacklefthalfcircle
+25D7 (◗): \RIGHTCIRCLE, \blackrighthalfcircle
+25D8 (◘): \inversebullet
+25D9 (◙): \inversewhitecircle
+25DA (◚): \invwhiteupperhalfcircle
+25DB (◛): \invwhitelowerhalfcircle
+25DC (◜): \ularc
+25DD (◝): \urarc
+25DE (◞): \lrarc
+25DF (◟): \llarc
+25E0 (◠): \topsemicircle
+25E1 (◡): \botsemicircle
+25E2 (◢): \lrblacktriangle
+25E3 (◣): \llblacktriangle
+25E4 (◤): \ulblacktriangle
+25E5 (◥): \urblacktriangle
+25E6 (◦): \smwhtcircle
+25E7 (◧): \squareleftblack
+25E8 (◨): \squarerightblack
+25E9 (◩): \squareulblack
+25EA (◪): \squarelrblack
+25EB (◫): \boxbar, \boxbar
+25EC (◬): \trianglecdot
+25ED (◭): \triangleleftblack
+25EE (◮): \trianglerightblack
+25EF (◯): \lgwhtcircle
+25F0 (◰): \squareulquad
+25F1 (◱): \squarellquad
+25F2 (◲): \squarelrquad
+25F3 (◳): \squareurquad
+25F4 (◴): \circleulquad
+25F5 (◵): \circlellquad
+25F6 (◶): \circlelrquad
+25F7 (◷): \circleurquad
+25F8 (◸): \ultriangle
+25F9 (◹): \urtriangle
+25FA (◺): \lltriangle
+25FB (◻): \mdwhtsquare, \square
+25FC (◼): \blacksquare, \mdblksquare
+25FD (◽): \mdsmwhtsquare
+25FE (◾): \mdsmblksquare
+25FF (◿): \lrtriangle
+2605 (★): \bigstar, \bigstar
+2606 (☆): \bigwhitestar
+2609 (☉): \Sun, \astrosun
+2610 (☐): \Square
+2611 (☑): \CheckedBox
+2612 (☒): \XBox
+2615 (☕): \steaming
+261E (☞): \pointright
+2620 (☠): \skull
+2621 (☡): \danger
+2622 (☢): \radiation
+2623 (☣): \biohazard
+262F (☯): \yinyang
+2639 (☹): \frownie
+263A (☺): \smiley
+263B (☻): \blacksmiley, \blacksmiley
+263C (☼): \sun, \sun
+263D (☽): \rightmoon, \rightmoon
+263E (☾): \leftmoon, \leftmoon
+263F (☿): \mercury
+2640 (♀): \female, \female
+2641 (♁): \earth
+2642 (♂): \male, \male
+2643 (♃): \jupiter
+2644 (♄): \saturn
+2645 (♅): \uranus
+2646 (♆): \neptune
+2647 (♇): \pluto
+2648 (♈): \aries
+2649 (♉): \taurus
+264A (♊): \gemini
+264B (♋): \cancer
+264C (♌): \leo
+264D (♍): \virgo
+264E (♎): \libra
+264F (♏): \scorpio
+2650 (♐): \sagittarius
+2651 (♑): \capricornus
+2652 (♒): \aquarius
+2653 (♓): \pisces
+2660 (♠): \spadesuit, \spadesuit
+2661 (♡): \heartsuit, \heartsuit
+2662 (♢): \diamondsuit, \diamondsuit
+2663 (♣): \clubsuit, \clubsuit
+2664 (♤): \varspadesuit, \varspadesuit
+2665 (♥): \varheartsuit, \varheartsuit
+2666 (♦): \vardiamondsuit, \vardiamondsuit
+2667 (♧): \varclubsuit, \varclubsuit
+2669 (♩): \quarternote, \quarternote
+266A (♪): \eighthnote, \eighthnote
+266B (♫): \twonotes, \twonotes
+266C (♬): \sixteenthnote
+266D (♭): \flat, \flat
+266E (♮): \natural, \natural
+266F (♯): \sharp, \sharp
+267B (♻): \recycle
+267E (♾): \acidfree
+2680 (⚀): \dicei
+2681 (⚁): \diceii
+2682 (⚂): \diceiii
+2683 (⚃): \diceiv
+2684 (⚄): \dicev
+2685 (⚅): \dicevi
+2686 (⚆): \circledrightdot
+2687 (⚇): \circledtwodots
+2688 (⚈): \blackcircledrightdot
+2689 (⚉): \blackcircledtwodots
+2693 (⚓): \anchor
+2694 (⚔): \swords
+26A0 (⚠): \warning
+26A5 (⚥): \Hermaphrodite
+26AA (⚪): \mdwhtcircle, \medcirc
+26AB (⚫): \mdblkcircle, \medbullet
+26AC (⚬): \mdsmwhtcircle
+26B2 (⚲): \neuter
+270E (✎): \pencil
+2713 (✓): \checkmark, \checkmark
+2717 (✗): \ballotx
+2720 (✠): \maltese, \maltese
+272A (✪): \circledstar
+2736 (✶): \varstar
+273D (✽): \dingasterisk
+2772 (❲): \lbrbrak
+2773 (❳): \rbrbrak
+279B (➛): \draftingarrow
+27A2 (➢): \arrowbullet
+27C0 (⟀): \threedangle
+27C1 (⟁): \whiteinwhitetriangle
+27C2 (⟂): \perp, \perp
+27C3 (⟃): \subsetcirc
+27C4 (⟄): \supsetcirc
+27C5 (⟅): \Lbag, \lbag
+27C6 (⟆): \Rbag, \rbag
+27C7 (⟇): \veedot
+27C8 (⟈): \bsolhsub
+27C9 (⟉): \suphsol
+27CC (⟌): \longdivision
+27D0 (⟐): \Diamonddot, \diamondcdot
+27D1 (⟑): \wedgedot
+27D2 (⟒): \upin
+27D3 (⟓): \pullback
+27D4 (⟔): \pushout
+27D5 (⟕): \leftouterjoin
+27D6 (⟖): \rightouterjoin
+27D7 (⟗): \fullouterjoin
+27D8 (⟘): \bigbot
+27D9 (⟙): \bigtop
+27DA (⟚): \DashVDash
+27DB (⟛): \dashVdash
+27DC (⟜): \multimapinv, \multimapinv
+27DD (⟝): \vlongdash
+27DE (⟞): \longdashv
+27DF (⟟): \cirbot
+27E0 (⟠): \lozengeminus
+27E1 (⟡): \concavediamond
+27E2 (⟢): \concavediamondtickleft
+27E3 (⟣): \concavediamondtickright
+27E4 (⟤): \whitesquaretickleft
+27E5 (⟥): \whitesquaretickright
+27E6 (⟦): \lBrack, \llbracket
+27E7 (⟧): \rBrack, \rrbracket
+27E8 (⟨): \langle, \langle
+27E9 (⟩): \rangle, \rangle
+27EA (⟪): \lAngle, \lang
+27EB (⟫): \rAngle, \rang
+27EC (⟬): \Lbrbrak
+27ED (⟭): \Rbrbrak
+27EE (⟮): \lgroup
+27EF (⟯): \rgroup
+27F0 (⟰): \UUparrow
+27F1 (⟱): \DDownarrow
+27F2 (⟲): \acwgapcirclearrow
+27F3 (⟳): \cwgapcirclearrow
+27F4 (⟴): \rightarrowonoplus
+27F5 (⟵): \longleftarrow, \longleftarrow
+27F6 (⟶): \longrightarrow, \longrightarrow
+27F7 (⟷): \longleftrightarrow, \longleftrightarrow
+27F8 (⟸): \Longleftarrow, \Longleftarrow
+27F9 (⟹): \Longrightarrow, \Longrightarrow
+27FA (⟺): \Longleftrightarrow, \Longleftrightarrow
+27FB (⟻): \longmapsfrom, \longmapsfrom
+27FC (⟼): \longmapsto, \longmapsto
+27FD (⟽): \Longmapsfrom, \Longmapsfrom
+27FE (⟾): \Longmapsto, \Longmapsto
+27FF (⟿): \longrightsquigarrow
+2900 (⤀): \nvtwoheadrightarrow, \psur
+2901 (⤁): \nVtwoheadrightarrow
+2902 (⤂): \nvLeftarrow
+2903 (⤃): \nvRightarrow
+2904 (⤄): \nvLeftrightarrow
+2905 (⤅): \twoheadmapsto
+2906 (⤆): \Mapsfrom, \Mapsfrom
+2907 (⤇): \Mapsto, \Mapsto
+2908 (⤈): \downarrowbarred
+2909 (⤉): \uparrowbarred
+290A (⤊): \Uuparrow
+290B (⤋): \Ddownarrow
+290C (⤌): \leftbkarrow
+290D (⤍): \rightbkarrow
+290E (⤎): \leftdbkarrow
+290F (⤏): \dbkarow
+2910 (⤐): \drbkarow
+2911 (⤑): \rightdotarrow
+2912 (⤒): \UpArrowBar, \baruparrow
+2913 (⤓): \DownArrowBar, \downarrowbar
+2914 (⤔): \nvrightarrowtail, \pinj
+2915 (⤕): \finj, \nVrightarrowtail
+2916 (⤖): \bij, \twoheadrightarrowtail
+2917 (⤗): \nvtwoheadrightarrowtail
+2918 (⤘): \nVtwoheadrightarrowtail
+2919 (⤙): \lefttail
+291A (⤚): \righttail
+291B (⤛): \leftdbltail
+291C (⤜): \rightdbltail
+291D (⤝): \diamondleftarrow
+291E (⤞): \rightarrowdiamond
+291F (⤟): \diamondleftarrowbar
+2920 (⤠): \barrightarrowdiamond
+2921 (⤡): \nwsearrow
+2922 (⤢): \neswarrow
+2923 (⤣): \hknwarrow
+2924 (⤤): \hknearrow
+2925 (⤥): \hksearow
+2926 (⤦): \hkswarow
+2927 (⤧): \tona
+2928 (⤨): \toea
+2929 (⤩): \tosa
+292A (⤪): \towa
+292B (⤫): \rdiagovfdiag
+292C (⤬): \fdiagovrdiag
+292D (⤭): \seovnearrow
+292E (⤮): \neovsearrow
+292F (⤯): \fdiagovnearrow
+2930 (⤰): \rdiagovsearrow
+2931 (⤱): \neovnwarrow
+2932 (⤲): \nwovnearrow
+2933 (⤳): \leadsto, \rightcurvedarrow
+2934 (⤴): \uprightcurvearrow
+2935 (⤵): \downrightcurvedarrow
+2936 (⤶): \leftdowncurvedarrow
+2937 (⤷): \rightdowncurvedarrow
+2938 (⤸): \cwrightarcarrow
+2939 (⤹): \acwleftarcarrow
+293A (⤺): \acwoverarcarrow
+293B (⤻): \acwunderarcarrow
+293C (⤼): \curvearrowrightminus
+293D (⤽): \curvearrowleftplus
+293E (⤾): \cwundercurvearrow
+293F (⤿): \ccwundercurvearrow
+2940 (⥀): \acwcirclearrow
+2941 (⥁): \cwcirclearrow
+2942 (⥂): \rightarrowshortleftarrow
+2943 (⥃): \leftarrowshortrightarrow
+2944 (⥄): \shortrightarrowleftarrow
+2945 (⥅): \rightarrowplus
+2946 (⥆): \leftarrowplus
+2947 (⥇): \rightarrowx
+2948 (⥈): \leftrightarrowcircle
+2949 (⥉): \twoheaduparrowcircle
+294A (⥊): \leftrightharpoon, \leftrightharpoonupdown
+294B (⥋): \leftrightharpoondownup, \rightleftharpoon
+294C (⥌): \updownharpoonrightleft
+294D (⥍): \updownharpoonleftright
+294E (⥎): \leftrightharpoonup, \leftrightharpoonupup
+294F (⥏): \rightupdownharpoon, \updownharpoonrightright
+2950 (⥐): \leftrightharpoondown, \leftrightharpoondowndown
+2951 (⥑): \leftupdownharpoon, \updownharpoonleftleft
+2952 (⥒): \LeftVectorBar, \barleftharpoonup
+2953 (⥓): \RightVectorBar, \rightharpoonupbar
+2954 (⥔): \RightUpVectorBar, \barupharpoonright
+2955 (⥕): \RightDownVectorBar, \downharpoonrightbar
+2956 (⥖): \DownLeftVectorBar, \barleftharpoondown
+2957 (⥗): \DownRightVectorBar, \rightharpoondownbar
+2958 (⥘): \LeftUpVectorBar, \barupharpoonleft
+2959 (⥙): \LeftDownVectorBar, \downharpoonleftbar
+295A (⥚): \LeftTeeVector, \leftharpoonupbar
+295B (⥛): \RightTeeVector, \barrightharpoonup
+295C (⥜): \RightUpTeeVector, \upharpoonrightbar
+295D (⥝): \RightDownTeeVector, \bardownharpoonright
+295E (⥞): \DownLeftTeeVector, \leftharpoondownbar
+295F (⥟): \DownRightTeeVector, \barrightharpoondown
+2960 (⥠): \LeftUpTeeVector, \upharpoonleftbar
+2961 (⥡): \LeftDownTeeVector, \bardownharpoonleft
+2962 (⥢): \leftharpoonsupdown, \leftleftharpoons
+2963 (⥣): \upharpoonsleftright, \upupharpoons
+2964 (⥤): \rightharpoonsupdown, \rightrightharpoons
+2965 (⥥): \downdownharpoons, \downharpoonsleftright
+2966 (⥦): \leftrightharpoonsup
+2967 (⥧): \leftrightharpoonsdown
+2968 (⥨): \rightleftharpoonsup
+2969 (⥩): \rightleftharpoonsdown
+296A (⥪): \leftbarharpoon, \leftharpoonupdash
+296B (⥫): \barleftharpoon, \dashleftharpoondown
+296C (⥬): \rightbarharpoon, \rightharpoonupdash
+296D (⥭): \barrightharpoon, \dashrightharpoondown
+296E (⥮): \updownharpoons, \updownharpoonsleftright
+296F (⥯): \downupharpoons, \downupharpoonsleftright
+2970 (⥰): \rightimply
+2971 (⥱): \equalrightarrow
+2972 (⥲): \similarrightarrow
+2973 (⥳): \leftarrowsimilar
+2974 (⥴): \rightarrowsimilar
+2975 (⥵): \rightarrowapprox
+2976 (⥶): \ltlarr
+2977 (⥷): \leftarrowless
+2978 (⥸): \gtrarr
+2979 (⥹): \subrarr
+297A (⥺): \leftarrowsubset
+297B (⥻): \suplarr
+297C (⥼): \leftfishtail, \strictfi
+297D (⥽): \rightfishtail, \strictif
+297E (⥾): \upfishtail
+297F (⥿): \downfishtail
+2980 (⦀): \VERT, \Vvert
+2981 (⦁): \mdsmblkcircle, \spot
+2982 (⦂): \typecolon
+2983 (⦃): \lBrace
+2984 (⦄): \rBrace
+2985 (⦅): \Lparen, \lParen
+2986 (⦆): \Rparen, \rParen
+2987 (⦇): \limg, \llparenthesis
+2988 (⦈): \rimg, \rrparenthesis
+2989 (⦉): \lblot, \llangle
+298A (⦊): \rblot, \rrangle
+298B (⦋): \lbrackubar
+298C (⦌): \rbrackubar
+298D (⦍): \lbrackultick
+298E (⦎): \rbracklrtick
+298F (⦏): \lbracklltick
+2990 (⦐): \rbrackurtick
+2991 (⦑): \langledot
+2992 (⦒): \rangledot
+2993 (⦓): \lparenless
+2994 (⦔): \rparengtr
+2995 (⦕): \Lparengtr
+2996 (⦖): \Rparenless
+2997 (⦗): \lblkbrbrak
+2998 (⦘): \rblkbrbrak
+2999 (⦙): \fourvdots
+299A (⦚): \vzigzag
+299B (⦛): \measuredangleleft
+299C (⦜): \rightanglesqr
+299D (⦝): \rightanglemdot
+299E (⦞): \angles
+299F (⦟): \angdnr
+29A0 (⦠): \gtlpar
+29A1 (⦡): \sphericalangleup
+29A2 (⦢): \turnangle
+29A3 (⦣): \revangle
+29A4 (⦤): \angleubar
+29A5 (⦥): \revangleubar
+29A6 (⦦): \wideangledown
+29A7 (⦧): \wideangleup
+29A8 (⦨): \measanglerutone
+29A9 (⦩): \measanglelutonw
+29AA (⦪): \measanglerdtose
+29AB (⦫): \measangleldtosw
+29AC (⦬): \measangleurtone
+29AD (⦭): \measangleultonw
+29AE (⦮): \measangledrtose
+29AF (⦯): \measangledltosw
+29B0 (⦰): \revemptyset
+29B1 (⦱): \emptysetobar
+29B2 (⦲): \emptysetocirc
+29B3 (⦳): \emptysetoarr
+29B4 (⦴): \emptysetoarrl
+29B5 (⦵): \circlehbar
+29B6 (⦶): \circledvert
+29B7 (⦷): \circledparallel
+29B8 (⦸): \circledbslash, \obslash
+29B9 (⦹): \operp
+29BA (⦺): \obot
+29BB (⦻): \olcross
+29BC (⦼): \odotslashdot
+29BD (⦽): \uparrowoncircle
+29BE (⦾): \circledwhitebullet
+29BF (⦿): \circledbullet
+29C0 (⧀): \circledless, \olessthan
+29C1 (⧁): \circledgtr, \ogreaterthan
+29C2 (⧂): \cirscir
+29C3 (⧃): \cirE
+29C4 (⧄): \boxdiag, \boxslash
+29C5 (⧅): \boxbslash, \boxbslash
+29C6 (⧆): \boxast, \boxast
+29C7 (⧇): \boxcircle, \boxcircle
+29C8 (⧈): \boxbox, \boxbox
+29C9 (⧉): \boxonbox
+29CA (⧊): \triangleodot
+29CB (⧋): \triangleubar
+29CC (⧌): \triangles
+29CD (⧍): \triangleserifs
+29CE (⧎): \rtriltri
+29CF (⧏): \LeftTriangleBar, \ltrivb
+29D0 (⧐): \RightTriangleBar, \vbrtri
+29D1 (⧑): \lfbowtie
+29D2 (⧒): \rfbowtie
+29D3 (⧓): \fbowtie
+29D4 (⧔): \lftimes
+29D5 (⧕): \rftimes
+29D6 (⧖): \hourglass
+29D7 (⧗): \blackhourglass
+29D8 (⧘): \lvzigzag
+29D9 (⧙): \rvzigzag
+29DA (⧚): \Lvzigzag
+29DB (⧛): \Rvzigzag
+29DC (⧜): \iinfin
+29DD (⧝): \tieinfty
+29DE (⧞): \nvinfty
+29DF (⧟): \dualmap, \multimapboth
+29E0 (⧠): \laplac
+29E1 (⧡): \lrtriangleeq
+29E2 (⧢): \shuffle
+29E3 (⧣): \eparsl
+29E4 (⧤): \smeparsl
+29E5 (⧥): \eqvparsl
+29E6 (⧦): \gleichstark
+29E7 (⧧): \thermod
+29E8 (⧨): \downtriangleleftblack
+29E9 (⧩): \downtrianglerightblack
+29EA (⧪): \blackdiamonddownarrow
+29EB (⧫): \blacklozenge, \mdlgblklozenge
+29EC (⧬): \circledownarrow
+29ED (⧭): \blackcircledownarrow
+29EE (⧮): \errbarsquare
+29EF (⧯): \errbarblacksquare
+29F0 (⧰): \errbardiamond
+29F1 (⧱): \errbarblackdiamond
+29F2 (⧲): \errbarcircle
+29F3 (⧳): \errbarblackcircle
+29F4 (⧴): \ruledelayed
+29F5 (⧵): \setminus, \setminus
+29F6 (⧶): \dsol
+29F7 (⧷): \rsolbar
+29F8 (⧸): \xsol
+29F9 (⧹): \xbsol, \zhide
+29FA (⧺): \doubleplus
+29FB (⧻): \tripleplus
+29FC (⧼): \lcurvyangle
+29FD (⧽): \rcurvyangle
+29FE (⧾): \tplus
+29FF (⧿): \tminus
+2A00 (⨀): \bigodot, \bigodot
+2A01 (⨁): \bigoplus, \bigoplus
+2A02 (⨂): \bigotimes, \bigotimes
+2A03 (⨃): \bigcupdot
+2A04 (⨄): \biguplus, \biguplus
+2A05 (⨅): \bigsqcap, \bigsqcap
+2A06 (⨆): \bigsqcup, \bigsqcup
+2A07 (⨇): \conjquant
+2A08 (⨈): \disjquant
+2A09 (⨉): \bigtimes, \varprod
+2A0A (⨊): \modtwosum
+2A0B (⨋): \sumint
+2A0C (⨌): \iiiint, \iiiint
+2A0D (⨍): \intbar
+2A0E (⨎): \intBar
+2A0F (⨏): \fint, \fint
+2A10 (⨐): \cirfnint
+2A11 (⨑): \awint
+2A12 (⨒): \rppolint
+2A13 (⨓): \scpolint
+2A14 (⨔): \npolint
+2A15 (⨕): \pointint
+2A16 (⨖): \sqint, \sqint
+2A17 (⨗): \intlarhk
+2A18 (⨘): \intx
+2A19 (⨙): \intcap
+2A1A (⨚): \intcup
+2A1B (⨛): \upint
+2A1C (⨜): \lowint
+2A1D (⨝): \Join, \Join
+2A1E (⨞): \bigtriangleleft
+2A1F (⨟): \zcmp, \zcmp
+2A20 (⨠): \zpipe, \zpipe
+2A21 (⨡): \zproject, \zproject
+2A22 (⨢): \ringplus
+2A23 (⨣): \plushat
+2A24 (⨤): \simplus
+2A25 (⨥): \plusdot
+2A26 (⨦): \plussim
+2A27 (⨧): \plussubtwo
+2A28 (⨨): \plustrif
+2A29 (⨩): \commaminus
+2A2A (⨪): \minusdot
+2A2B (⨫): \minusfdots
+2A2C (⨬): \minusrdots
+2A2D (⨭): \opluslhrim
+2A2E (⨮): \oplusrhrim
+2A2F (⨯): \vectimes
+2A30 (⨰): \dottimes
+2A31 (⨱): \timesbar
+2A32 (⨲): \btimes
+2A33 (⨳): \smashtimes
+2A34 (⨴): \otimeslhrim
+2A35 (⨵): \otimesrhrim
+2A36 (⨶): \otimeshat
+2A37 (⨷): \Otimes
+2A38 (⨸): \odiv
+2A39 (⨹): \triangleplus
+2A3A (⨺): \triangleminus
+2A3B (⨻): \triangletimes
+2A3C (⨼): \intprod
+2A3D (⨽): \intprodr
+2A3E (⨾): \fcmp, \fcmp
+2A3F (⨿): \amalg, \amalg
+2A40 (⩀): \capdot
+2A41 (⩁): \uminus
+2A42 (⩂): \barcup
+2A43 (⩃): \barcap
+2A44 (⩄): \capwedge
+2A45 (⩅): \cupvee
+2A46 (⩆): \cupovercap
+2A47 (⩇): \capovercup
+2A48 (⩈): \cupbarcap
+2A49 (⩉): \capbarcup
+2A4A (⩊): \twocups
+2A4B (⩋): \twocaps
+2A4C (⩌): \closedvarcup
+2A4D (⩍): \closedvarcap
+2A4E (⩎): \Sqcap
+2A4F (⩏): \Sqcup
+2A50 (⩐): \closedvarcupsmashprod
+2A51 (⩑): \wedgeodot
+2A52 (⩒): \veeodot
+2A53 (⩓): \Wedge
+2A54 (⩔): \Vee
+2A55 (⩕): \wedgeonwedge
+2A56 (⩖): \veeonvee
+2A57 (⩗): \bigslopedvee
+2A58 (⩘): \bigslopedwedge
+2A59 (⩙): \veeonwedge
+2A5A (⩚): \wedgemidvert
+2A5B (⩛): \veemidvert
+2A5C (⩜): \midbarwedge
+2A5D (⩝): \midbarvee
+2A5E (⩞): \doublebarwedge, \doublebarwedge
+2A5F (⩟): \wedgebar
+2A60 (⩠): \wedgedoublebar
+2A61 (⩡): \varveebar
+2A62 (⩢): \doublebarvee
+2A63 (⩣): \veedoublebar
+2A64 (⩤): \dsub, \dsub
+2A65 (⩥): \rsub, \rsub
+2A66 (⩦): \eqdot
+2A67 (⩧): \dotequiv
+2A68 (⩨): \equivVert
+2A69 (⩩): \equivVvert
+2A6A (⩪): \dotsim
+2A6B (⩫): \simrdots
+2A6C (⩬): \simminussim
+2A6D (⩭): \congdot
+2A6E (⩮): \asteq
+2A6F (⩯): \hatapprox
+2A70 (⩰): \approxeqq
+2A71 (⩱): \eqqplus
+2A72 (⩲): \pluseqq
+2A73 (⩳): \eqqsim
+2A74 (⩴): \Coloneq, \Coloneqq
+2A75 (⩵): \Equal, \eqeq
+2A76 (⩶): \Same, \eqeqeq
+2A77 (⩷): \ddotseq
+2A78 (⩸): \equivDD
+2A79 (⩹): \ltcir
+2A7A (⩺): \gtcir
+2A7B (⩻): \ltquest
+2A7C (⩼): \gtquest
+2A7D (⩽): \leqslant, \leqslant
+2A7E (⩾): \geqslant, \geqslant
+2A7F (⩿): \lesdot
+2A80 (⪀): \gesdot
+2A81 (⪁): \lesdoto
+2A82 (⪂): \gesdoto
+2A83 (⪃): \lesdotor
+2A84 (⪄): \gesdotol
+2A85 (⪅): \lessapprox, \lessapprox
+2A86 (⪆): \gtrapprox, \gtrapprox
+2A87 (⪇): \lneq, \lneq
+2A88 (⪈): \gneq, \gneq
+2A89 (⪉): \lnapprox, \lnapprox
+2A8A (⪊): \gnapprox, \gnapprox
+2A8B (⪋): \lesseqqgtr, \lesseqqgtr
+2A8C (⪌): \gtreqqless, \gtreqqless
+2A8D (⪍): \lsime
+2A8E (⪎): \gsime
+2A8F (⪏): \lsimg
+2A90 (⪐): \gsiml
+2A91 (⪑): \lgE
+2A92 (⪒): \glE
+2A93 (⪓): \lesges
+2A94 (⪔): \gesles
+2A95 (⪕): \eqslantless, \eqslantless
+2A96 (⪖): \eqslantgtr, \eqslantgtr
+2A97 (⪗): \elsdot
+2A98 (⪘): \egsdot
+2A99 (⪙): \eqqless
+2A9A (⪚): \eqqgtr
+2A9B (⪛): \eqqslantless
+2A9C (⪜): \eqqslantgtr
+2A9D (⪝): \simless
+2A9E (⪞): \simgtr
+2A9F (⪟): \simlE
+2AA0 (⪠): \simgE
+2AA1 (⪡): \Lt, \NestedLessLess
+2AA2 (⪢): \Gt, \NestedGreaterGreater
+2AA3 (⪣): \partialmeetcontraction
+2AA4 (⪤): \glj
+2AA5 (⪥): \gla
+2AA6 (⪦): \leftslice, \ltcc
+2AA7 (⪧): \gtcc, \rightslice
+2AA8 (⪨): \lescc
+2AA9 (⪩): \gescc
+2AAA (⪪): \smt
+2AAB (⪫): \lat
+2AAC (⪬): \smte
+2AAD (⪭): \late
+2AAE (⪮): \bumpeqq
+2AAF (⪯): \preceq, \preceq
+2AB0 (⪰): \succeq, \succeq
+2AB1 (⪱): \precneq
+2AB2 (⪲): \succneq
+2AB3 (⪳): \preceqq, \preceqq
+2AB4 (⪴): \succeqq, \succeqq
+2AB5 (⪵): \precneqq
+2AB6 (⪶): \succneqq
+2AB7 (⪷): \precapprox, \precapprox
+2AB8 (⪸): \succapprox, \succapprox
+2AB9 (⪹): \precnapprox, \precnapprox
+2ABA (⪺): \succnapprox, \succnapprox
+2ABB (⪻): \Prec, \llcurly
+2ABC (⪼): \Succ, \ggcurly
+2ABD (⪽): \subsetdot
+2ABE (⪾): \supsetdot
+2ABF (⪿): \subsetplus
+2AC0 (⫀): \supsetplus
+2AC1 (⫁): \submult
+2AC2 (⫂): \supmult
+2AC3 (⫃): \subedot
+2AC4 (⫄): \supedot
+2AC5 (⫅): \subseteqq, \subseteqq
+2AC6 (⫆): \supseteqq, \supseteqq
+2AC7 (⫇): \subsim
+2AC8 (⫈): \supsim
+2AC9 (⫉): \subsetapprox
+2ACA (⫊): \supsetapprox
+2ACB (⫋): \subsetneqq, \subsetneqq
+2ACC (⫌): \supsetneqq, \supsetneqq
+2ACD (⫍): \lsqhook
+2ACE (⫎): \rsqhook
+2ACF (⫏): \csub
+2AD0 (⫐): \csup
+2AD1 (⫑): \csube
+2AD2 (⫒): \csupe
+2AD3 (⫓): \subsup
+2AD4 (⫔): \supsub
+2AD5 (⫕): \subsub
+2AD6 (⫖): \supsup
+2AD7 (⫗): \suphsub
+2AD8 (⫘): \supdsub
+2AD9 (⫙): \forkv
+2ADA (⫚): \topfork
+2ADB (⫛): \mlcp
+2ADC (⫝̸): \forks
+2ADD (⫝): \forksnot
+2ADE (⫞): \shortlefttack
+2ADF (⫟): \shortdowntack
+2AE0 (⫠): \shortuptack
+2AE1 (⫡): \perps
+2AE2 (⫢): \vDdash
+2AE3 (⫣): \dashV
+2AE4 (⫤): \Dashv
+2AE5 (⫥): \DashV
+2AE6 (⫦): \varVdash
+2AE7 (⫧): \Barv
+2AE8 (⫨): \vBar
+2AE9 (⫩): \vBarv
+2AEA (⫪): \Top, \barV
+2AEB (⫫): \Bot, \Vbar
+2AEC (⫬): \Not
+2AED (⫭): \bNot
+2AEE (⫮): \revnmid
+2AEF (⫯): \cirmid
+2AF0 (⫰): \midcir
+2AF1 (⫱): \topcir
+2AF2 (⫲): \nhpar
+2AF3 (⫳): \parsim
+2AF4 (⫴): \interleave, \interleave
+2AF5 (⫵): \nhVvert
+2AF6 (⫶): \threedotcolon
+2AF7 (⫷): \lllnest
+2AF8 (⫸): \gggnest
+2AF9 (⫹): \leqqslant
+2AFA (⫺): \geqqslant
+2AFB (⫻): \trslash
+2AFC (⫼): \biginterleave, \biginterleave
+2AFD (⫽): \sslash, \sslash
+2AFE (⫾): \talloblong, \talloblong
+2AFF (⫿): \bigtalloblong
+2B12 (⬒): \squaretopblack
+2B13 (⬓): \squarebotblack
+2B14 (⬔): \squareurblack
+2B15 (⬕): \squarellblack
+2B16 (⬖): \diamondleftblack
+2B17 (⬗): \diamondrightblack
+2B18 (⬘): \diamondtopblack
+2B19 (⬙): \diamondbotblack
+2B1A (⬚): \dottedsquare
+2B1B (⬛): \blacksquare, \lgblksquare
+2B1C (⬜): \lgwhtsquare, \square
+2B1D (⬝): \vysmblksquare
+2B1E (⬞): \vysmwhtsquare
+2B1F (⬟): \pentagonblack
+2B20 (⬠): \pentagon
+2B21 (⬡): \varhexagon
+2B22 (⬢): \varhexagonblack
+2B23 (⬣): \hexagonblack
+2B24 (⬤): \lgblkcircle
+2B25 (⬥): \mdblkdiamond
+2B26 (⬦): \mdwhtdiamond
+2B27 (⬧): \mdblklozenge
+2B28 (⬨): \mdwhtlozenge
+2B29 (⬩): \smblkdiamond
+2B2A (⬪): \smblklozenge
+2B2B (⬫): \smwhtlozenge
+2B2C (⬬): \blkhorzoval
+2B2D (⬭): \whthorzoval
+2B2E (⬮): \blkvertoval
+2B2F (⬯): \whtvertoval
+2B30 (⬰): \circleonleftarrow
+2B31 (⬱): \leftthreearrows
+2B32 (⬲): \leftarrowonoplus
+2B33 (⬳): \longleftsquigarrow
+2B34 (⬴): \nvtwoheadleftarrow
+2B35 (⬵): \nVtwoheadleftarrow
+2B36 (⬶): \twoheadmapsfrom
+2B37 (⬷): \twoheadleftdbkarrow
+2B38 (⬸): \leftdotarrow
+2B39 (⬹): \nvleftarrowtail
+2B3A (⬺): \nVleftarrowtail
+2B3B (⬻): \twoheadleftarrowtail
+2B3C (⬼): \nvtwoheadleftarrowtail
+2B3D (⬽): \nVtwoheadleftarrowtail
+2B3E (⬾): \leftarrowx
+2B3F (⬿): \leftcurvedarrow
+2B40 (⭀): \equalleftarrow
+2B41 (⭁): \bsimilarleftarrow
+2B42 (⭂): \leftarrowbackapprox
+2B43 (⭃): \rightarrowgtr
+2B44 (⭄): \rightarrowsupset
+2B45 (⭅): \LLeftarrow
+2B46 (⭆): \RRightarrow
+2B47 (⭇): \bsimilarrightarrow
+2B48 (⭈): \rightarrowbackapprox
+2B49 (⭉): \similarleftarrow
+2B4A (⭊): \leftarrowapprox
+2B4B (⭋): \leftarrowbsimilar
+2B4C (⭌): \rightarrowbsimilar
+2B50 (⭐): \medwhitestar
+2B51 (⭑): \medblackstar
+2B52 (⭒): \smwhitestar
+2B53 (⭓): \rightpentagonblack
+2B54 (⭔): \rightpentagon
+3012 (〒): \postalmark
+3014 (〔): \lbrbrak
+3015 (〕): \rbrbrak
+3018 (〘): \Lbrbrak
+3019 (〙): \Rbrbrak
+3030 (〰): \hzigzag
+1D400 (𝐀): \mathbf{A}, \mbfA
+1D401 (𝐁): \mathbf{B}, \mbfB
+1D402 (𝐂): \mathbf{C}, \mbfC
+1D403 (𝐃): \mathbf{D}, \mbfD
+1D404 (𝐄): \mathbf{E}, \mbfE
+1D405 (𝐅): \mathbf{F}, \mbfF
+1D406 (𝐆): \mathbf{G}, \mbfG
+1D407 (𝐇): \mathbf{H}, \mbfH
+1D408 (𝐈): \mathbf{I}, \mbfI
+1D409 (𝐉): \mathbf{J}, \mbfJ
+1D40A (𝐊): \mathbf{K}, \mbfK
+1D40B (𝐋): \mathbf{L}, \mbfL
+1D40C (𝐌): \mathbf{M}, \mbfM
+1D40D (𝐍): \mathbf{N}, \mbfN
+1D40E (𝐎): \mathbf{O}, \mbfO
+1D40F (𝐏): \mathbf{P}, \mbfP
+1D410 (𝐐): \mathbf{Q}, \mbfQ
+1D411 (𝐑): \mathbf{R}, \mbfR
+1D412 (𝐒): \mathbf{S}, \mbfS
+1D413 (𝐓): \mathbf{T}, \mbfT
+1D414 (𝐔): \mathbf{U}, \mbfU
+1D415 (𝐕): \mathbf{V}, \mbfV
+1D416 (𝐖): \mathbf{W}, \mbfW
+1D417 (𝐗): \mathbf{X}, \mbfX
+1D418 (𝐘): \mathbf{Y}, \mbfY
+1D419 (𝐙): \mathbf{Z}, \mbfZ
+1D41A (𝐚): \mathbf{a}, \mbfa
+1D41B (𝐛): \mathbf{b}, \mbfb
+1D41C (𝐜): \mathbf{c}, \mbfc
+1D41D (𝐝): \mathbf{d}, \mbfd
+1D41E (𝐞): \mathbf{e}, \mbfe
+1D41F (𝐟): \mathbf{f}, \mbff
+1D420 (𝐠): \mathbf{g}, \mbfg
+1D421 (𝐡): \mathbf{h}, \mbfh
+1D422 (𝐢): \mathbf{i}, \mbfi
+1D423 (𝐣): \mathbf{j}, \mbfj
+1D424 (𝐤): \mathbf{k}, \mbfk
+1D425 (𝐥): \mathbf{l}, \mbfl
+1D426 (𝐦): \mathbf{m}, \mbfm
+1D427 (𝐧): \mathbf{n}, \mbfn
+1D428 (𝐨): \mathbf{o}, \mbfo
+1D429 (𝐩): \mathbf{p}, \mbfp
+1D42A (𝐪): \mathbf{q}, \mbfq
+1D42B (𝐫): \mathbf{r}, \mbfr
+1D42C (𝐬): \mathbf{s}, \mbfs
+1D42D (𝐭): \mathbf{t}, \mbft
+1D42E (𝐮): \mathbf{u}, \mbfu
+1D42F (𝐯): \mathbf{v}, \mbfv
+1D430 (𝐰): \mathbf{w}, \mbfw
+1D431 (𝐱): \mathbf{x}, \mbfx
+1D432 (𝐲): \mathbf{y}, \mbfy
+1D433 (𝐳): \mathbf{z}, \mbfz
+1D434 (𝐴): A, \mitA
+1D435 (𝐵): B, \mitB
+1D436 (𝐶): C, \mitC
+1D437 (𝐷): D, \mitD
+1D438 (𝐸): E, \mitE
+1D439 (𝐹): F, \mitF
+1D43A (𝐺): G, \mitG
+1D43B (𝐻): H, \mitH
+1D43C (𝐼): I, \mitI
+1D43D (𝐽): J, \mitJ
+1D43E (𝐾): K, \mitK
+1D43F (𝐿): L, \mitL
+1D440 (𝑀): M, \mitM
+1D441 (𝑁): N, \mitN
+1D442 (𝑂): O, \mitO
+1D443 (𝑃): P, \mitP
+1D444 (𝑄): Q, \mitQ
+1D445 (𝑅): R, \mitR
+1D446 (𝑆): S, \mitS
+1D447 (𝑇): T, \mitT
+1D448 (𝑈): U, \mitU
+1D449 (𝑉): V, \mitV
+1D44A (𝑊): W, \mitW
+1D44B (𝑋): X, \mitX
+1D44C (𝑌): Y, \mitY
+1D44D (𝑍): Z, \mitZ
+1D44E (𝑎): \mita, a
+1D44F (𝑏): \mitb, b
+1D450 (𝑐): \mitc, c
+1D451 (𝑑): \mitd, d
+1D452 (𝑒): \mite, e
+1D453 (𝑓): \mitf, f
+1D454 (𝑔): \mitg, g
+1D456 (𝑖): \miti, i
+1D457 (𝑗): \mitj, j
+1D458 (𝑘): \mitk, k
+1D459 (𝑙): \mitl, l
+1D45A (𝑚): \mitm, m
+1D45B (𝑛): \mitn, n
+1D45C (𝑜): \mito, o
+1D45D (𝑝): \mitp, p
+1D45E (𝑞): \mitq, q
+1D45F (𝑟): \mitr, r
+1D460 (𝑠): \mits, s
+1D461 (𝑡): \mitt, t
+1D462 (𝑢): \mitu, u
+1D463 (𝑣): \mitv, v
+1D464 (𝑤): \mitw, w
+1D465 (𝑥): \mitx, x
+1D466 (𝑦): \mity, y
+1D467 (𝑧): \mitz, z
+1D468 (𝑨): \mathbfit{A}, \mbfitA
+1D469 (𝑩): \mathbfit{B}, \mbfitB
+1D46A (𝑪): \mathbfit{C}, \mbfitC
+1D46B (𝑫): \mathbfit{D}, \mbfitD
+1D46C (𝑬): \mathbfit{E}, \mbfitE
+1D46D (𝑭): \mathbfit{F}, \mbfitF
+1D46E (𝑮): \mathbfit{G}, \mbfitG
+1D46F (𝑯): \mathbfit{H}, \mbfitH
+1D470 (𝑰): \mathbfit{I}, \mbfitI
+1D471 (𝑱): \mathbfit{J}, \mbfitJ
+1D472 (𝑲): \mathbfit{K}, \mbfitK
+1D473 (𝑳): \mathbfit{L}, \mbfitL
+1D474 (𝑴): \mathbfit{M}, \mbfitM
+1D475 (𝑵): \mathbfit{N}, \mbfitN
+1D476 (𝑶): \mathbfit{O}, \mbfitO
+1D477 (𝑷): \mathbfit{P}, \mbfitP
+1D478 (𝑸): \mathbfit{Q}, \mbfitQ
+1D479 (𝑹): \mathbfit{R}, \mbfitR
+1D47A (𝑺): \mathbfit{S}, \mbfitS
+1D47B (𝑻): \mathbfit{T}, \mbfitT
+1D47C (𝑼): \mathbfit{U}, \mbfitU
+1D47D (𝑽): \mathbfit{V}, \mbfitV
+1D47E (𝑾): \mathbfit{W}, \mbfitW
+1D47F (𝑿): \mathbfit{X}, \mbfitX
+1D480 (𝒀): \mathbfit{Y}, \mbfitY
+1D481 (𝒁): \mathbfit{Z}, \mbfitZ
+1D482 (𝒂): \mathbfit{a}, \mbfita
+1D483 (𝒃): \mathbfit{b}, \mbfitb
+1D484 (𝒄): \mathbfit{c}, \mbfitc
+1D485 (𝒅): \mathbfit{d}, \mbfitd
+1D486 (𝒆): \mathbfit{e}, \mbfite
+1D487 (𝒇): \mathbfit{f}, \mbfitf
+1D488 (𝒈): \mathbfit{g}, \mbfitg
+1D489 (𝒉): \mathbfit{h}, \mbfith
+1D48A (𝒊): \mathbfit{i}, \mbfiti
+1D48B (𝒋): \mathbfit{j}, \mbfitj
+1D48C (𝒌): \mathbfit{k}, \mbfitk
+1D48D (𝒍): \mathbfit{l}, \mbfitl
+1D48E (𝒎): \mathbfit{m}, \mbfitm
+1D48F (𝒏): \mathbfit{n}, \mbfitn
+1D490 (𝒐): \mathbfit{o}, \mbfito
+1D491 (𝒑): \mathbfit{p}, \mbfitp
+1D492 (𝒒): \mathbfit{q}, \mbfitq
+1D493 (𝒓): \mathbfit{r}, \mbfitr
+1D494 (𝒔): \mathbfit{s}, \mbfits
+1D495 (𝒕): \mathbfit{t}, \mbfitt
+1D496 (𝒖): \mathbfit{u}, \mbfitu
+1D497 (𝒗): \mathbfit{v}, \mbfitv
+1D498 (𝒘): \mathbfit{w}, \mbfitw
+1D499 (𝒙): \mathbfit{x}, \mbfitx
+1D49A (𝒚): \mathbfit{y}, \mbfity
+1D49B (𝒛): \mathbfit{z}, \mbfitz
+1D49C (𝒜): \mathcal{A}, \mscrA
+1D49E (𝒞): \mathcal{C}, \mscrC
+1D49F (𝒟): \mathcal{D}, \mscrD
+1D4A2 (𝒢): \mathcal{G}, \mscrG
+1D4A5 (𝒥): \mathcal{J}, \mscrJ
+1D4A6 (𝒦): \mathcal{K}, \mscrK
+1D4A9 (𝒩): \mathcal{N}, \mscrN
+1D4AA (𝒪): \mathcal{O}, \mscrO
+1D4AB (𝒫): \mathcal{P}, \mscrP
+1D4AC (𝒬): \mathcal{Q}, \mscrQ
+1D4AE (𝒮): \mathcal{S}, \mscrS
+1D4AF (𝒯): \mathcal{T}, \mscrT
+1D4B0 (𝒰): \mathcal{U}, \mscrU
+1D4B1 (𝒱): \mathcal{V}, \mscrV
+1D4B2 (𝒲): \mathcal{W}, \mscrW
+1D4B3 (𝒳): \mathcal{X}, \mscrX
+1D4B4 (𝒴): \mathcal{Y}, \mscrY
+1D4B5 (𝒵): \mathcal{Z}, \mscrZ
+1D4B6 (𝒶): \mathcal{a}, \mscra
+1D4B7 (𝒷): \mathcal{b}, \mscrb
+1D4B8 (𝒸): \mathcal{c}, \mscrc
+1D4B9 (𝒹): \mathcal{d}, \mscrd
+1D4BB (𝒻): \mathcal{f}, \mscrf
+1D4BD (𝒽): \mathcal{h}, \mscrh
+1D4BE (𝒾): \mathcal{i}, \mscri
+1D4BF (𝒿): \mathcal{j}, \mscrj
+1D4C0 (𝓀): \mathcal{k}, \mscrk
+1D4C1 (𝓁): \mathcal{l}, \mscrl
+1D4C2 (𝓂): \mathcal{m}, \mscrm
+1D4C3 (𝓃): \mathcal{n}, \mscrn
+1D4C5 (𝓅): \mathcal{p}, \mscrp
+1D4C6 (𝓆): \mathcal{q}, \mscrq
+1D4C7 (𝓇): \mathcal{r}, \mscrr
+1D4C8 (𝓈): \mathcal{s}, \mscrs
+1D4C9 (𝓉): \mathcal{t}, \mscrt
+1D4CA (𝓊): \mathcal{u}, \mscru
+1D4CB (𝓋): \mathcal{v}, \mscrv
+1D4CC (𝓌): \mathcal{w}, \mscrw
+1D4CD (𝓍): \mathcal{x}, \mscrx
+1D4CE (𝓎): \mathcal{y}, \mscry
+1D4CF (𝓏): \mathcal{z}, \mscrz
+1D4D0 (𝓐): \mbfscrA
+1D4D1 (𝓑): \mbfscrB
+1D4D2 (𝓒): \mbfscrC
+1D4D3 (𝓓): \mbfscrD
+1D4D4 (𝓔): \mbfscrE
+1D4D5 (𝓕): \mbfscrF
+1D4D6 (𝓖): \mbfscrG
+1D4D7 (𝓗): \mbfscrH
+1D4D8 (𝓘): \mbfscrI
+1D4D9 (𝓙): \mbfscrJ
+1D4DA (𝓚): \mbfscrK
+1D4DB (𝓛): \mbfscrL
+1D4DC (𝓜): \mbfscrM
+1D4DD (𝓝): \mbfscrN
+1D4DE (𝓞): \mbfscrO
+1D4DF (𝓟): \mbfscrP
+1D4E0 (𝓠): \mbfscrQ
+1D4E1 (𝓡): \mbfscrR
+1D4E2 (𝓢): \mbfscrS
+1D4E3 (𝓣): \mbfscrT
+1D4E4 (𝓤): \mbfscrU
+1D4E5 (𝓥): \mbfscrV
+1D4E6 (𝓦): \mbfscrW
+1D4E7 (𝓧): \mbfscrX
+1D4E8 (𝓨): \mbfscrY
+1D4E9 (𝓩): \mbfscrZ
+1D4EA (𝓪): \mbfscra
+1D4EB (𝓫): \mbfscrb
+1D4EC (𝓬): \mbfscrc
+1D4ED (𝓭): \mbfscrd
+1D4EE (𝓮): \mbfscre
+1D4EF (𝓯): \mbfscrf
+1D4F0 (𝓰): \mbfscrg
+1D4F1 (𝓱): \mbfscrh
+1D4F2 (𝓲): \mbfscri
+1D4F3 (𝓳): \mbfscrj
+1D4F4 (𝓴): \mbfscrk
+1D4F5 (𝓵): \mbfscrl
+1D4F6 (𝓶): \mbfscrm
+1D4F7 (𝓷): \mbfscrn
+1D4F8 (𝓸): \mbfscro
+1D4F9 (𝓹): \mbfscrp
+1D4FA (𝓺): \mbfscrq
+1D4FB (𝓻): \mbfscrr
+1D4FC (𝓼): \mbfscrs
+1D4FD (𝓽): \mbfscrt
+1D4FE (𝓾): \mbfscru
+1D4FF (𝓿): \mbfscrv
+1D500 (𝔀): \mbfscrw
+1D501 (𝔁): \mbfscrx
+1D502 (𝔂): \mbfscry
+1D503 (𝔃): \mbfscrz
+1D504 (𝔄): \mathfrak{A}, \mfrakA
+1D505 (𝔅): \mathfrak{B}, \mfrakB
+1D507 (𝔇): \mathfrak{D}, \mfrakD
+1D508 (𝔈): \mathfrak{E}, \mfrakE
+1D509 (𝔉): \mathfrak{F}, \mfrakF
+1D50A (𝔊): \mathfrak{G}, \mfrakG
+1D50D (𝔍): \mathfrak{J}, \mfrakJ
+1D50E (𝔎): \mathfrak{K}, \mfrakK
+1D50F (𝔏): \mathfrak{L}, \mfrakL
+1D510 (𝔐): \mathfrak{M}, \mfrakM
+1D511 (𝔑): \mathfrak{N}, \mfrakN
+1D512 (𝔒): \mathfrak{O}, \mfrakO
+1D513 (𝔓): \mathfrak{P}, \mfrakP
+1D514 (𝔔): \mathfrak{Q}, \mfrakQ
+1D516 (𝔖): \mathfrak{S}, \mfrakS
+1D517 (𝔗): \mathfrak{T}, \mfrakT
+1D518 (𝔘): \mathfrak{U}, \mfrakU
+1D519 (𝔙): \mathfrak{V}, \mfrakV
+1D51A (𝔚): \mathfrak{W}, \mfrakW
+1D51B (𝔛): \mathfrak{X}, \mfrakX
+1D51C (𝔜): \mathfrak{Y}, \mfrakY
+1D51E (𝔞): \mathfrak{a}, \mfraka
+1D51F (𝔟): \mathfrak{b}, \mfrakb
+1D520 (𝔠): \mathfrak{c}, \mfrakc
+1D521 (𝔡): \mathfrak{d}, \mfrakd
+1D522 (𝔢): \mathfrak{e}, \mfrake
+1D523 (𝔣): \mathfrak{f}, \mfrakf
+1D524 (𝔤): \mathfrak{g}, \mfrakg
+1D525 (𝔥): \mathfrak{h}, \mfrakh
+1D526 (𝔦): \mathfrak{i}, \mfraki
+1D527 (𝔧): \mathfrak{j}, \mfrakj
+1D528 (𝔨): \mathfrak{k}, \mfrakk
+1D529 (𝔩): \mathfrak{l}, \mfrakl
+1D52A (𝔪): \mathfrak{m}, \mfrakm
+1D52B (𝔫): \mathfrak{n}, \mfrakn
+1D52C (𝔬): \mathfrak{o}, \mfrako
+1D52D (𝔭): \mathfrak{p}, \mfrakp
+1D52E (𝔮): \mathfrak{q}, \mfrakq
+1D52F (𝔯): \mathfrak{r}, \mfrakr
+1D530 (𝔰): \mathfrak{s}, \mfraks
+1D531 (𝔱): \mathfrak{t}, \mfrakt
+1D532 (𝔲): \mathfrak{u}, \mfraku
+1D533 (𝔳): \mathfrak{v}, \mfrakv
+1D534 (𝔴): \mathfrak{w}, \mfrakw
+1D535 (𝔵): \mathfrak{x}, \mfrakx
+1D536 (𝔶): \mathfrak{y}, \mfraky
+1D537 (𝔷): \mathfrak{z}, \mfrakz
+1D538 (𝔸): \BbbA, \mathbb{A}
+1D539 (𝔹): \BbbB, \mathbb{B}
+1D53B (𝔻): \BbbD, \mathbb{D}
+1D53C (𝔼): \BbbE, \mathbb{E}
+1D53D (𝔽): \BbbF, \mathbb{F}
+1D53E (𝔾): \BbbG, \mathbb{G}
+1D540 (𝕀): \BbbI, \mathbb{I}
+1D541 (𝕁): \BbbJ, \mathbb{J}
+1D542 (𝕂): \BbbK, \mathbb{K}
+1D543 (𝕃): \BbbL, \mathbb{L}
+1D544 (𝕄): \BbbM, \mathbb{M}
+1D546 (𝕆): \BbbO, \mathbb{O}
+1D54A (𝕊): \BbbS, \mathbb{S}
+1D54B (𝕋): \BbbT, \mathbb{T}
+1D54C (𝕌): \BbbU, \mathbb{U}
+1D54D (𝕍): \BbbV, \mathbb{V}
+1D54E (𝕎): \BbbW, \mathbb{W}
+1D54F (𝕏): \BbbX, \mathbb{X}
+1D550 (𝕐): \BbbY, \mathbb{Y}
+1D552 (𝕒): \Bbba, \mathbb{a}
+1D553 (𝕓): \Bbbb, \mathbb{b}
+1D554 (𝕔): \Bbbc, \mathbb{c}
+1D555 (𝕕): \Bbbd, \mathbb{d}
+1D556 (𝕖): \Bbbe, \mathbb{e}
+1D557 (𝕗): \Bbbf, \mathbb{f}
+1D558 (𝕘): \Bbbg, \mathbb{g}
+1D559 (𝕙): \Bbbh, \mathbb{h}
+1D55A (𝕚): \Bbbi, \mathbb{i}
+1D55B (𝕛): \Bbbj, \mathbb{j}
+1D55C (𝕜): \Bbbk, \mathbb{k}
+1D55D (𝕝): \Bbbl, \mathbb{l}
+1D55E (𝕞): \Bbbm, \mathbb{m}
+1D55F (𝕟): \Bbbn, \mathbb{n}
+1D560 (𝕠): \Bbbo, \mathbb{o}
+1D561 (𝕡): \Bbbp, \mathbb{p}
+1D562 (𝕢): \Bbbq, \mathbb{q}
+1D563 (𝕣): \Bbbr, \mathbb{r}
+1D564 (𝕤): \Bbbs, \mathbb{s}
+1D565 (𝕥): \Bbbt, \mathbb{t}
+1D566 (𝕦): \Bbbu, \mathbb{u}
+1D567 (𝕧): \Bbbv, \mathbb{v}
+1D568 (𝕨): \Bbbw, \mathbb{w}
+1D569 (𝕩): \Bbbx, \mathbb{x}
+1D56A (𝕪): \Bbby, \mathbb{y}
+1D56B (𝕫): \Bbbz, \mathbb{z}
+1D56C (𝕬): \mbffrakA
+1D56D (𝕭): \mbffrakB
+1D56E (𝕮): \mbffrakC
+1D56F (𝕯): \mbffrakD
+1D570 (𝕰): \mbffrakE
+1D571 (𝕱): \mbffrakF
+1D572 (𝕲): \mbffrakG
+1D573 (𝕳): \mbffrakH
+1D574 (𝕴): \mbffrakI
+1D575 (𝕵): \mbffrakJ
+1D576 (𝕶): \mbffrakK
+1D577 (𝕷): \mbffrakL
+1D578 (𝕸): \mbffrakM
+1D579 (𝕹): \mbffrakN
+1D57A (𝕺): \mbffrakO
+1D57B (𝕻): \mbffrakP
+1D57C (𝕼): \mbffrakQ
+1D57D (𝕽): \mbffrakR
+1D57E (𝕾): \mbffrakS
+1D57F (𝕿): \mbffrakT
+1D580 (𝖀): \mbffrakU
+1D581 (𝖁): \mbffrakV
+1D582 (𝖂): \mbffrakW
+1D583 (𝖃): \mbffrakX
+1D584 (𝖄): \mbffrakY
+1D585 (𝖅): \mbffrakZ
+1D586 (𝖆): \mbffraka
+1D587 (𝖇): \mbffrakb
+1D588 (𝖈): \mbffrakc
+1D589 (𝖉): \mbffrakd
+1D58A (𝖊): \mbffrake
+1D58B (𝖋): \mbffrakf
+1D58C (𝖌): \mbffrakg
+1D58D (𝖍): \mbffrakh
+1D58E (𝖎): \mbffraki
+1D58F (𝖏): \mbffrakj
+1D590 (𝖐): \mbffrakk
+1D591 (𝖑): \mbffrakl
+1D592 (𝖒): \mbffrakm
+1D593 (𝖓): \mbffrakn
+1D594 (𝖔): \mbffrako
+1D595 (𝖕): \mbffrakp
+1D596 (𝖖): \mbffrakq
+1D597 (𝖗): \mbffrakr
+1D598 (𝖘): \mbffraks
+1D599 (𝖙): \mbffrakt
+1D59A (𝖚): \mbffraku
+1D59B (𝖛): \mbffrakv
+1D59C (𝖜): \mbffrakw
+1D59D (𝖝): \mbffrakx
+1D59E (𝖞): \mbffraky
+1D59F (𝖟): \mbffrakz
+1D5A0 (𝖠): \mathsf{A}, \msansA
+1D5A1 (𝖡): \mathsf{B}, \msansB
+1D5A2 (𝖢): \mathsf{C}, \msansC
+1D5A3 (𝖣): \mathsf{D}, \msansD
+1D5A4 (𝖤): \mathsf{E}, \msansE
+1D5A5 (𝖥): \mathsf{F}, \msansF
+1D5A6 (𝖦): \mathsf{G}, \msansG
+1D5A7 (𝖧): \mathsf{H}, \msansH
+1D5A8 (𝖨): \mathsf{I}, \msansI
+1D5A9 (𝖩): \mathsf{J}, \msansJ
+1D5AA (𝖪): \mathsf{K}, \msansK
+1D5AB (𝖫): \mathsf{L}, \msansL
+1D5AC (𝖬): \mathsf{M}, \msansM
+1D5AD (𝖭): \mathsf{N}, \msansN
+1D5AE (𝖮): \mathsf{O}, \msansO
+1D5AF (𝖯): \mathsf{P}, \msansP
+1D5B0 (𝖰): \mathsf{Q}, \msansQ
+1D5B1 (𝖱): \mathsf{R}, \msansR
+1D5B2 (𝖲): \mathsf{S}, \msansS
+1D5B3 (𝖳): \mathsf{T}, \msansT
+1D5B4 (𝖴): \mathsf{U}, \msansU
+1D5B5 (𝖵): \mathsf{V}, \msansV
+1D5B6 (𝖶): \mathsf{W}, \msansW
+1D5B7 (𝖷): \mathsf{X}, \msansX
+1D5B8 (𝖸): \mathsf{Y}, \msansY
+1D5B9 (𝖹): \mathsf{Z}, \msansZ
+1D5BA (𝖺): \mathsf{a}, \msansa
+1D5BB (𝖻): \mathsf{b}, \msansb
+1D5BC (𝖼): \mathsf{c}, \msansc
+1D5BD (𝖽): \mathsf{d}, \msansd
+1D5BE (𝖾): \mathsf{e}, \msanse
+1D5BF (𝖿): \mathsf{f}, \msansf
+1D5C0 (𝗀): \mathsf{g}, \msansg
+1D5C1 (𝗁): \mathsf{h}, \msansh
+1D5C2 (𝗂): \mathsf{i}, \msansi
+1D5C3 (𝗃): \mathsf{j}, \msansj
+1D5C4 (𝗄): \mathsf{k}, \msansk
+1D5C5 (𝗅): \mathsf{l}, \msansl
+1D5C6 (𝗆): \mathsf{m}, \msansm
+1D5C7 (𝗇): \mathsf{n}, \msansn
+1D5C8 (𝗈): \mathsf{o}, \msanso
+1D5C9 (𝗉): \mathsf{p}, \msansp
+1D5CA (𝗊): \mathsf{q}, \msansq
+1D5CB (𝗋): \mathsf{r}, \msansr
+1D5CC (𝗌): \mathsf{s}, \msanss
+1D5CD (𝗍): \mathsf{t}, \msanst
+1D5CE (𝗎): \mathsf{u}, \msansu
+1D5CF (𝗏): \mathsf{v}, \msansv
+1D5D0 (𝗐): \mathsf{w}, \msansw
+1D5D1 (𝗑): \mathsf{x}, \msansx
+1D5D2 (𝗒): \mathsf{y}, \msansy
+1D5D3 (𝗓): \mathsf{z}, \msansz
+1D5D4 (𝗔): \mathsfbf{A}, \mbfsansA
+1D5D5 (𝗕): \mathsfbf{B}, \mbfsansB
+1D5D6 (𝗖): \mathsfbf{C}, \mbfsansC
+1D5D7 (𝗗): \mathsfbf{D}, \mbfsansD
+1D5D8 (𝗘): \mathsfbf{E}, \mbfsansE
+1D5D9 (𝗙): \mathsfbf{F}, \mbfsansF
+1D5DA (𝗚): \mathsfbf{G}, \mbfsansG
+1D5DB (𝗛): \mathsfbf{H}, \mbfsansH
+1D5DC (𝗜): \mathsfbf{I}, \mbfsansI
+1D5DD (𝗝): \mathsfbf{J}, \mbfsansJ
+1D5DE (𝗞): \mathsfbf{K}, \mbfsansK
+1D5DF (𝗟): \mathsfbf{L}, \mbfsansL
+1D5E0 (𝗠): \mathsfbf{M}, \mbfsansM
+1D5E1 (𝗡): \mathsfbf{N}, \mbfsansN
+1D5E2 (𝗢): \mathsfbf{O}, \mbfsansO
+1D5E3 (𝗣): \mathsfbf{P}, \mbfsansP
+1D5E4 (𝗤): \mathsfbf{Q}, \mbfsansQ
+1D5E5 (𝗥): \mathsfbf{R}, \mbfsansR
+1D5E6 (𝗦): \mathsfbf{S}, \mbfsansS
+1D5E7 (𝗧): \mathsfbf{T}, \mbfsansT
+1D5E8 (𝗨): \mathsfbf{U}, \mbfsansU
+1D5E9 (𝗩): \mathsfbf{V}, \mbfsansV
+1D5EA (𝗪): \mathsfbf{W}, \mbfsansW
+1D5EB (𝗫): \mathsfbf{X}, \mbfsansX
+1D5EC (𝗬): \mathsfbf{Y}, \mbfsansY
+1D5ED (𝗭): \mathsfbf{Z}, \mbfsansZ
+1D5EE (𝗮): \mathsfbf{a}, \mbfsansa
+1D5EF (𝗯): \mathsfbf{b}, \mbfsansb
+1D5F0 (𝗰): \mathsfbf{c}, \mbfsansc
+1D5F1 (𝗱): \mathsfbf{d}, \mbfsansd
+1D5F2 (𝗲): \mathsfbf{e}, \mbfsanse
+1D5F3 (𝗳): \mathsfbf{f}, \mbfsansf
+1D5F4 (𝗴): \mathsfbf{g}, \mbfsansg
+1D5F5 (𝗵): \mathsfbf{h}, \mbfsansh
+1D5F6 (𝗶): \mathsfbf{i}, \mbfsansi
+1D5F7 (𝗷): \mathsfbf{j}, \mbfsansj
+1D5F8 (𝗸): \mathsfbf{k}, \mbfsansk
+1D5F9 (𝗹): \mathsfbf{l}, \mbfsansl
+1D5FA (𝗺): \mathsfbf{m}, \mbfsansm
+1D5FB (𝗻): \mathsfbf{n}, \mbfsansn
+1D5FC (𝗼): \mathsfbf{o}, \mbfsanso
+1D5FD (𝗽): \mathsfbf{p}, \mbfsansp
+1D5FE (𝗾): \mathsfbf{q}, \mbfsansq
+1D5FF (𝗿): \mathsfbf{r}, \mbfsansr
+1D600 (𝘀): \mathsfbf{s}, \mbfsanss
+1D601 (𝘁): \mathsfbf{t}, \mbfsanst
+1D602 (𝘂): \mathsfbf{u}, \mbfsansu
+1D603 (𝘃): \mathsfbf{v}, \mbfsansv
+1D604 (𝘄): \mathsfbf{w}, \mbfsansw
+1D605 (𝘅): \mathsfbf{x}, \mbfsansx
+1D606 (𝘆): \mathsfbf{y}, \mbfsansy
+1D607 (𝘇): \mathsfbf{z}, \mbfsansz
+1D608 (𝘈): \mathsfit{A}, \mitsansA
+1D609 (𝘉): \mathsfit{B}, \mitsansB
+1D60A (𝘊): \mathsfit{C}, \mitsansC
+1D60B (𝘋): \mathsfit{D}, \mitsansD
+1D60C (𝘌): \mathsfit{E}, \mitsansE
+1D60D (𝘍): \mathsfit{F}, \mitsansF
+1D60E (𝘎): \mathsfit{G}, \mitsansG
+1D60F (𝘏): \mathsfit{H}, \mitsansH
+1D610 (𝘐): \mathsfit{I}, \mitsansI
+1D611 (𝘑): \mathsfit{J}, \mitsansJ
+1D612 (𝘒): \mathsfit{K}, \mitsansK
+1D613 (𝘓): \mathsfit{L}, \mitsansL
+1D614 (𝘔): \mathsfit{M}, \mitsansM
+1D615 (𝘕): \mathsfit{N}, \mitsansN
+1D616 (𝘖): \mathsfit{O}, \mitsansO
+1D617 (𝘗): \mathsfit{P}, \mitsansP
+1D618 (𝘘): \mathsfit{Q}, \mitsansQ
+1D619 (𝘙): \mathsfit{R}, \mitsansR
+1D61A (𝘚): \mathsfit{S}, \mitsansS
+1D61B (𝘛): \mathsfit{T}, \mitsansT
+1D61C (𝘜): \mathsfit{U}, \mitsansU
+1D61D (𝘝): \mathsfit{V}, \mitsansV
+1D61E (𝘞): \mathsfit{W}, \mitsansW
+1D61F (𝘟): \mathsfit{X}, \mitsansX
+1D620 (𝘠): \mathsfit{Y}, \mitsansY
+1D621 (𝘡): \mathsfit{Z}, \mitsansZ
+1D622 (𝘢): \mathsfit{a}, \mitsansa
+1D623 (𝘣): \mathsfit{b}, \mitsansb
+1D624 (𝘤): \mathsfit{c}, \mitsansc
+1D625 (𝘥): \mathsfit{d}, \mitsansd
+1D626 (𝘦): \mathsfit{e}, \mitsanse
+1D627 (𝘧): \mathsfit{f}, \mitsansf
+1D628 (𝘨): \mathsfit{g}, \mitsansg
+1D629 (𝘩): \mathsfit{h}, \mitsansh
+1D62A (𝘪): \mathsfit{i}, \mitsansi
+1D62B (𝘫): \mathsfit{j}, \mitsansj
+1D62C (𝘬): \mathsfit{k}, \mitsansk
+1D62D (𝘭): \mathsfit{l}, \mitsansl
+1D62E (𝘮): \mathsfit{m}, \mitsansm
+1D62F (𝘯): \mathsfit{n}, \mitsansn
+1D630 (𝘰): \mathsfit{o}, \mitsanso
+1D631 (𝘱): \mathsfit{p}, \mitsansp
+1D632 (𝘲): \mathsfit{q}, \mitsansq
+1D633 (𝘳): \mathsfit{r}, \mitsansr
+1D634 (𝘴): \mathsfit{s}, \mitsanss
+1D635 (𝘵): \mathsfit{t}, \mitsanst
+1D636 (𝘶): \mathsfit{u}, \mitsansu
+1D637 (𝘷): \mathsfit{v}, \mitsansv
+1D638 (𝘸): \mathsfit{w}, \mitsansw
+1D639 (𝘹): \mathsfit{x}, \mitsansx
+1D63A (𝘺): \mathsfit{y}, \mitsansy
+1D63B (𝘻): \mathsfit{z}, \mitsansz
+1D63C (𝘼): \mathsfbfit{A}, \mbfitsansA
+1D63D (𝘽): \mathsfbfit{B}, \mbfitsansB
+1D63E (𝘾): \mathsfbfit{C}, \mbfitsansC
+1D63F (𝘿): \mathsfbfit{D}, \mbfitsansD
+1D640 (𝙀): \mathsfbfit{E}, \mbfitsansE
+1D641 (𝙁): \mathsfbfit{F}, \mbfitsansF
+1D642 (𝙂): \mathsfbfit{G}, \mbfitsansG
+1D643 (𝙃): \mathsfbfit{H}, \mbfitsansH
+1D644 (𝙄): \mathsfbfit{I}, \mbfitsansI
+1D645 (𝙅): \mathsfbfit{J}, \mbfitsansJ
+1D646 (𝙆): \mathsfbfit{K}, \mbfitsansK
+1D647 (𝙇): \mathsfbfit{L}, \mbfitsansL
+1D648 (𝙈): \mathsfbfit{M}, \mbfitsansM
+1D649 (𝙉): \mathsfbfit{N}, \mbfitsansN
+1D64A (𝙊): \mathsfbfit{O}, \mbfitsansO
+1D64B (𝙋): \mathsfbfit{P}, \mbfitsansP
+1D64C (𝙌): \mathsfbfit{Q}, \mbfitsansQ
+1D64D (𝙍): \mathsfbfit{R}, \mbfitsansR
+1D64E (𝙎): \mathsfbfit{S}, \mbfitsansS
+1D64F (𝙏): \mathsfbfit{T}, \mbfitsansT
+1D650 (𝙐): \mathsfbfit{U}, \mbfitsansU
+1D651 (𝙑): \mathsfbfit{V}, \mbfitsansV
+1D652 (𝙒): \mathsfbfit{W}, \mbfitsansW
+1D653 (𝙓): \mathsfbfit{X}, \mbfitsansX
+1D654 (𝙔): \mathsfbfit{Y}, \mbfitsansY
+1D655 (𝙕): \mathsfbfit{Z}, \mbfitsansZ
+1D656 (𝙖): \mathsfbfit{a}, \mbfitsansa
+1D657 (𝙗): \mathsfbfit{b}, \mbfitsansb
+1D658 (𝙘): \mathsfbfit{c}, \mbfitsansc
+1D659 (𝙙): \mathsfbfit{d}, \mbfitsansd
+1D65A (𝙚): \mathsfbfit{e}, \mbfitsanse
+1D65B (𝙛): \mathsfbfit{f}, \mbfitsansf
+1D65C (𝙜): \mathsfbfit{g}, \mbfitsansg
+1D65D (𝙝): \mathsfbfit{h}, \mbfitsansh
+1D65E (𝙞): \mathsfbfit{i}, \mbfitsansi
+1D65F (𝙟): \mathsfbfit{j}, \mbfitsansj
+1D660 (𝙠): \mathsfbfit{k}, \mbfitsansk
+1D661 (𝙡): \mathsfbfit{l}, \mbfitsansl
+1D662 (𝙢): \mathsfbfit{m}, \mbfitsansm
+1D663 (𝙣): \mathsfbfit{n}, \mbfitsansn
+1D664 (𝙤): \mathsfbfit{o}, \mbfitsanso
+1D665 (𝙥): \mathsfbfit{p}, \mbfitsansp
+1D666 (𝙦): \mathsfbfit{q}, \mbfitsansq
+1D667 (𝙧): \mathsfbfit{r}, \mbfitsansr
+1D668 (𝙨): \mathsfbfit{s}, \mbfitsanss
+1D669 (𝙩): \mathsfbfit{t}, \mbfitsanst
+1D66A (𝙪): \mathsfbfit{u}, \mbfitsansu
+1D66B (𝙫): \mathsfbfit{v}, \mbfitsansv
+1D66C (𝙬): \mathsfbfit{w}, \mbfitsansw
+1D66D (𝙭): \mathsfbfit{x}, \mbfitsansx
+1D66E (𝙮): \mathsfbfit{y}, \mbfitsansy
+1D66F (𝙯): \mathsfbfit{z}, \mbfitsansz
+1D670 (𝙰): \mathtt{A}, \mttA
+1D671 (𝙱): \mathtt{B}, \mttB
+1D672 (𝙲): \mathtt{C}, \mttC
+1D673 (𝙳): \mathtt{D}, \mttD
+1D674 (𝙴): \mathtt{E}, \mttE
+1D675 (𝙵): \mathtt{F}, \mttF
+1D676 (𝙶): \mathtt{G}, \mttG
+1D677 (𝙷): \mathtt{H}, \mttH
+1D678 (𝙸): \mathtt{I}, \mttI
+1D679 (𝙹): \mathtt{J}, \mttJ
+1D67A (𝙺): \mathtt{K}, \mttK
+1D67B (𝙻): \mathtt{L}, \mttL
+1D67C (𝙼): \mathtt{M}, \mttM
+1D67D (𝙽): \mathtt{N}, \mttN
+1D67E (𝙾): \mathtt{O}, \mttO
+1D67F (𝙿): \mathtt{P}, \mttP
+1D680 (𝚀): \mathtt{Q}, \mttQ
+1D681 (𝚁): \mathtt{R}, \mttR
+1D682 (𝚂): \mathtt{S}, \mttS
+1D683 (𝚃): \mathtt{T}, \mttT
+1D684 (𝚄): \mathtt{U}, \mttU
+1D685 (𝚅): \mathtt{V}, \mttV
+1D686 (𝚆): \mathtt{W}, \mttW
+1D687 (𝚇): \mathtt{X}, \mttX
+1D688 (𝚈): \mathtt{Y}, \mttY
+1D689 (𝚉): \mathtt{Z}, \mttZ
+1D68A (𝚊): \mathtt{a}, \mtta
+1D68B (𝚋): \mathtt{b}, \mttb
+1D68C (𝚌): \mathtt{c}, \mttc
+1D68D (𝚍): \mathtt{d}, \mttd
+1D68E (𝚎): \mathtt{e}, \mtte
+1D68F (𝚏): \mathtt{f}, \mttf
+1D690 (𝚐): \mathtt{g}, \mttg
+1D691 (𝚑): \mathtt{h}, \mtth
+1D692 (𝚒): \mathtt{i}, \mtti
+1D693 (𝚓): \mathtt{j}, \mttj
+1D694 (𝚔): \mathtt{k}, \mttk
+1D695 (𝚕): \mathtt{l}, \mttl
+1D696 (𝚖): \mathtt{m}, \mttm
+1D697 (𝚗): \mathtt{n}, \mttn
+1D698 (𝚘): \mathtt{o}, \mtto
+1D699 (𝚙): \mathtt{p}, \mttp
+1D69A (𝚚): \mathtt{q}, \mttq
+1D69B (𝚛): \mathtt{r}, \mttr
+1D69C (𝚜): \mathtt{s}, \mtts
+1D69D (𝚝): \mathtt{t}, \mttt
+1D69E (𝚞): \mathtt{u}, \mttu
+1D69F (𝚟): \mathtt{v}, \mttv
+1D6A0 (𝚠): \mathtt{w}, \mttw
+1D6A1 (𝚡): \mathtt{x}, \mttx
+1D6A2 (𝚢): \mathtt{y}, \mtty
+1D6A3 (𝚣): \mathtt{z}, \mttz
+1D6A4 (𝚤): \imath, \imath
+1D6A5 (𝚥): \jmath, \jmath
+1D6A8 (𝚨): \mbfAlpha
+1D6A9 (𝚩): \mbfBeta
+1D6AA (𝚪): \mathbf{\Gamma}, \mbfGamma
+1D6AB (𝚫): \mathbf{\Delta}, \mbfDelta
+1D6AC (𝚬): \mbfEpsilon
+1D6AD (𝚭): \mbfZeta
+1D6AE (𝚮): \mbfEta
+1D6AF (𝚯): \mathbf{\Theta}, \mbfTheta
+1D6B0 (𝚰): \mbfIota
+1D6B1 (𝚱): \mbfKappa
+1D6B2 (𝚲): \mathbf{\Lambda}, \mbfLambda
+1D6B3 (𝚳): \mbfMu
+1D6B4 (𝚴): \mbfNu
+1D6B5 (𝚵): \mathbf{\Xi}, \mbfXi
+1D6B6 (𝚶): \mbfOmicron
+1D6B7 (𝚷): \mathbf{\Pi}, \mbfPi
+1D6B8 (𝚸): \mbfRho
+1D6B9 (𝚹): \mbfvarTheta
+1D6BA (𝚺): \mathbf{\Sigma}, \mbfSigma
+1D6BB (𝚻): \mbfTau
+1D6BC (𝚼): \mathbf{\Upsilon}, \mbfUpsilon
+1D6BD (𝚽): \mathbf{\Phi}, \mbfPhi
+1D6BE (𝚾): \mbfChi
+1D6BF (𝚿): \mathbf{\Psi}, \mbfPsi
+1D6C0 (𝛀): \mathbf{\Omega}, \mbfOmega
+1D6C1 (𝛁): \mbfnabla
+1D6C2 (𝛂): \mathbf{\alpha}, \mbfalpha
+1D6C3 (𝛃): \mathbf{\beta}, \mbfbeta
+1D6C4 (𝛄): \mathbf{\gamma}, \mbfgamma
+1D6C5 (𝛅): \mathbf{\delta}, \mbfdelta
+1D6C6 (𝛆): \mathbf{\varepsilon}, \mbfepsilon
+1D6C7 (𝛇): \mathbf{\zeta}, \mbfzeta
+1D6C8 (𝛈): \mathbf{\eta}, \mbfeta
+1D6C9 (𝛉): \mathbf{\theta}, \mbftheta
+1D6CA (𝛊): \mathbf{\iota}, \mbfiota
+1D6CB (𝛋): \mathbf{\kappa}, \mbfkappa
+1D6CC (𝛌): \mathbf{\lambda}, \mbflambda
+1D6CD (𝛍): \mathbf{\mu}, \mbfmu
+1D6CE (𝛎): \mathbf{\nu}, \mbfnu
+1D6CF (𝛏): \mathbf{\xi}, \mbfxi
+1D6D0 (𝛐): \mbfomicron
+1D6D1 (𝛑): \mathbf{\pi}, \mbfpi
+1D6D2 (𝛒): \mathbf{\rho}, \mbfrho
+1D6D3 (𝛓): \mathbf{\varsigma}, \mbfvarsigma
+1D6D4 (𝛔): \mathbf{\sigma}, \mbfsigma
+1D6D5 (𝛕): \mathbf{\tau}, \mbftau
+1D6D6 (𝛖): \mathbf{\upsilon}, \mbfupsilon
+1D6D7 (𝛗): \mathbf{\varphi}, \mbfvarphi
+1D6D8 (𝛘): \mathbf{\chi}, \mbfchi
+1D6D9 (𝛙): \mathbf{\psi}, \mbfpsi
+1D6DA (𝛚): \mathbf{\omega}, \mbfomega
+1D6DB (𝛛): \mbfpartial
+1D6DC (𝛜): \mathbf{\epsilon}, \mbfvarepsilon
+1D6DD (𝛝): \mathbf{\vartheta}, \mbfvartheta
+1D6DE (𝛞): \mbfvarkappa
+1D6DF (𝛟): \mathbf{\phi}, \mbfphi
+1D6E0 (𝛠): \mathbf{\varrho}, \mbfvarrho
+1D6E1 (𝛡): \mathbf{\varpi}, \mbfvarpi
+1D6E2 (𝛢): \mitAlpha
+1D6E3 (𝛣): \mitBeta
+1D6E4 (𝛤): \Gamma, \mitGamma
+1D6E5 (𝛥): \Delta, \mitDelta
+1D6E6 (𝛦): \mitEpsilon
+1D6E7 (𝛧): \mitZeta
+1D6E8 (𝛨): \mitEta
+1D6E9 (𝛩): \Theta, \mitTheta
+1D6EA (𝛪): \mitIota
+1D6EB (𝛫): \mitKappa
+1D6EC (𝛬): \Lambda, \mitLambda
+1D6ED (𝛭): \mitMu
+1D6EE (𝛮): \mitNu
+1D6EF (𝛯): \Xi, \mitXi
+1D6F0 (𝛰): \mitOmicron
+1D6F1 (𝛱): \Pi, \mitPi
+1D6F2 (𝛲): \mitRho
+1D6F3 (𝛳): \mitvarTheta
+1D6F4 (𝛴): \Sigma, \mitSigma
+1D6F5 (𝛵): \mitTau
+1D6F6 (𝛶): \Upsilon, \mitUpsilon
+1D6F7 (𝛷): \Phi, \mitPhi
+1D6F8 (𝛸): \mitChi
+1D6F9 (𝛹): \Psi, \mitPsi
+1D6FA (𝛺): \Omega, \mitOmega
+1D6FB (𝛻): \mitnabla
+1D6FC (𝛼): \alpha, \mitalpha
+1D6FD (𝛽): \beta, \mitbeta
+1D6FE (𝛾): \gamma, \mitgamma
+1D6FF (𝛿): \delta, \mitdelta
+1D700 (𝜀): \mitepsilon, \varepsilon
+1D701 (𝜁): \mitzeta, \zeta
+1D702 (𝜂): \eta, \miteta
+1D703 (𝜃): \mittheta, \theta
+1D704 (𝜄): \iota, \mitiota
+1D705 (𝜅): \kappa, \mitkappa
+1D706 (𝜆): \lambda, \mitlambda
+1D707 (𝜇): \mitmu, \mu
+1D708 (𝜈): \mitnu, \nu
+1D709 (𝜉): \mitxi, \xi
+1D70A (𝜊): \mitomicron
+1D70B (𝜋): \mitpi, \pi
+1D70C (𝜌): \mitrho, \rho
+1D70D (𝜍): \mitvarsigma, \varsigma
+1D70E (𝜎): \mitsigma, \sigma
+1D70F (𝜏): \mittau, \tau
+1D710 (𝜐): \mitupsilon, \upsilon
+1D711 (𝜑): \mitphi, \varphi
+1D712 (𝜒): \chi, \mitchi
+1D713 (𝜓): \mitpsi, \psi
+1D714 (𝜔): \mitomega, \omega
+1D715 (𝜕): \mitpartial, \partial
+1D716 (𝜖): \epsilon, \mitvarepsilon
+1D717 (𝜗): \mitvartheta, \vartheta
+1D718 (𝜘): \mitvarkappa, \varkappa
+1D719 (𝜙): \mitvarphi, \phi
+1D71A (𝜚): \mitvarrho, \varrho
+1D71B (𝜛): \mitvarpi, \varpi
+1D71C (𝜜): \mbfitAlpha
+1D71D (𝜝): \mbfitBeta
+1D71E (𝜞): \mathbfit{\Gamma}, \mbfitGamma
+1D71F (𝜟): \mathbfit{\Delta}, \mbfitDelta
+1D720 (𝜠): \mbfitEpsilon
+1D721 (𝜡): \mbfitZeta
+1D722 (𝜢): \mbfitEta
+1D723 (𝜣): \mathbfit{\Theta}, \mbfitTheta
+1D724 (𝜤): \mbfitIota
+1D725 (𝜥): \mbfitKappa
+1D726 (𝜦): \mathbfit{\Lambda}, \mbfitLambda
+1D727 (𝜧): \mbfitMu
+1D728 (𝜨): \mbfitNu
+1D729 (𝜩): \mathbfit{\Xi}, \mbfitXi
+1D72A (𝜪): \mbfitOmicron
+1D72B (𝜫): \mathbfit{\Pi}, \mbfitPi
+1D72C (𝜬): \mbfitRho
+1D72D (𝜭): \mbfitvarTheta
+1D72E (𝜮): \mathbfit{\Sigma}, \mbfitSigma
+1D72F (𝜯): \mbfitTau
+1D730 (𝜰): \mathbfit{\Upsilon}, \mbfitUpsilon
+1D731 (𝜱): \mathbfit{\Phi}, \mbfitPhi
+1D732 (𝜲): \mbfitChi
+1D733 (𝜳): \mathbfit{\Psi}, \mbfitPsi
+1D734 (𝜴): \mathbfit{\Omega}, \mbfitOmega
+1D735 (𝜵): \mbfitnabla
+1D736 (𝜶): \mathbfit{\alpha}, \mbfitalpha
+1D737 (𝜷): \mathbfit{\beta}, \mbfitbeta
+1D738 (𝜸): \mathbfit{\gamma}, \mbfitgamma
+1D739 (𝜹): \mathbfit{\delta}, \mbfitdelta
+1D73A (𝜺): \mathbfit{\varepsilon}, \mbfitepsilon
+1D73B (𝜻): \mathbfit{\zeta}, \mbfitzeta
+1D73C (𝜼): \mathbfit{\eta}, \mbfiteta
+1D73D (𝜽): \mathbfit{\theta}, \mbfittheta
+1D73E (𝜾): \mathbfit{\iota}, \mbfitiota
+1D73F (𝜿): \mathbfit{\kappa}, \mbfitkappa
+1D740 (𝝀): \mathbfit{\lambda}, \mbfitlambda
+1D741 (𝝁): \mathbfit{\mu}, \mbfitmu
+1D742 (𝝂): \mathbfit{\nu}, \mbfitnu
+1D743 (𝝃): \mathbfit{\xi}, \mbfitxi
+1D744 (𝝄): \mbfitomicron
+1D745 (𝝅): \mathbfit{\pi}, \mbfitpi
+1D746 (𝝆): \mathbfit{\rho}, \mbfitrho
+1D747 (𝝇): \mathbfit{\varsigma}, \mbfitvarsigma
+1D748 (𝝈): \mathbfit{\sigma}, \mbfitsigma
+1D749 (𝝉): \mathbfit{\tau}, \mbfittau
+1D74A (𝝊): \mathbfit{\upsilon}, \mbfitupsilon
+1D74B (𝝋): \mathbfit{\varphi}, \mbfitphi
+1D74C (𝝌): \mathbfit{\chi}, \mbfitchi
+1D74D (𝝍): \mathbfit{\psi}, \mbfitpsi
+1D74E (𝝎): \mathbfit{\omega}, \mbfitomega
+1D74F (𝝏): \mbfitpartial
+1D750 (𝝐): \mathbfit{\epsilon}, \mbfitvarepsilon
+1D751 (𝝑): \mathbfit{\vartheta}, \mbfitvartheta
+1D752 (𝝒): \mbfitvarkappa
+1D753 (𝝓): \mathbfit{\phi}, \mbfitvarphi
+1D754 (𝝔): \mathbfit{\varrho}, \mbfitvarrho
+1D755 (𝝕): \mathbfit{\varpi}, \mbfitvarpi
+1D756 (𝝖): \mbfsansAlpha
+1D757 (𝝗): \mbfsansBeta
+1D758 (𝝘): \mathsfbf{\Gamma}, \mbfsansGamma
+1D759 (𝝙): \mathsfbf{\Delta}, \mbfsansDelta
+1D75A (𝝚): \mbfsansEpsilon
+1D75B (𝝛): \mbfsansZeta
+1D75C (𝝜): \mbfsansEta
+1D75D (𝝝): \mathsfbf{\Theta}, \mbfsansTheta
+1D75E (𝝞): \mbfsansIota
+1D75F (𝝟): \mbfsansKappa
+1D760 (𝝠): \mathsfbf{\Lambda}, \mbfsansLambda
+1D761 (𝝡): \mbfsansMu
+1D762 (𝝢): \mbfsansNu
+1D763 (𝝣): \mathsfbf{\Xi}, \mbfsansXi
+1D764 (𝝤): \mbfsansOmicron
+1D765 (𝝥): \mathsfbf{\Pi}, \mbfsansPi
+1D766 (𝝦): \mbfsansRho
+1D767 (𝝧): \mbfsansvarTheta
+1D768 (𝝨): \mathsfbf{\Sigma}, \mbfsansSigma
+1D769 (𝝩): \mbfsansTau
+1D76A (𝝪): \mathsfbf{\Upsilon}, \mbfsansUpsilon
+1D76B (𝝫): \mathsfbf{\Phi}, \mbfsansPhi
+1D76C (𝝬): \mbfsansChi
+1D76D (𝝭): \mathsfbf{\Psi}, \mbfsansPsi
+1D76E (𝝮): \mathsfbf{\Omega}, \mbfsansOmega
+1D76F (𝝯): \mbfsansnabla
+1D770 (𝝰): \mathsfbf{\alpha}, \mbfsansalpha
+1D771 (𝝱): \mathsfbf{\beta}, \mbfsansbeta
+1D772 (𝝲): \mathsfbf{\gamma}, \mbfsansgamma
+1D773 (𝝳): \mathsfbf{\delta}, \mbfsansdelta
+1D774 (𝝴): \mathsfbf{\varepsilon}, \mbfsansepsilon
+1D775 (𝝵): \mathsfbf{\zeta}, \mbfsanszeta
+1D776 (𝝶): \mathsfbf{\eta}, \mbfsanseta
+1D777 (𝝷): \mathsfbf{\theta}, \mbfsanstheta
+1D778 (𝝸): \mathsfbf{\iota}, \mbfsansiota
+1D779 (𝝹): \mathsfbf{\kappa}, \mbfsanskappa
+1D77A (𝝺): \mathsfbf{\lambda}, \mbfsanslambda
+1D77B (𝝻): \mathsfbf{\mu}, \mbfsansmu
+1D77C (𝝼): \mathsfbf{\nu}, \mbfsansnu
+1D77D (𝝽): \mathsfbf{\xi}, \mbfsansxi
+1D77E (𝝾): \mbfsansomicron
+1D77F (𝝿): \mathsfbf{\pi}, \mbfsanspi
+1D780 (𝞀): \mathsfbf{\rho}, \mbfsansrho
+1D781 (𝞁): \mathsfbf{\varsigma}, \mbfsansvarsigma
+1D782 (𝞂): \mathsfbf{\sigma}, \mbfsanssigma
+1D783 (𝞃): \mathsfbf{\tau}, \mbfsanstau
+1D784 (𝞄): \mathsfbf{\upsilon}, \mbfsansupsilon
+1D785 (𝞅): \mathsfbf{\varphi}, \mbfsansphi
+1D786 (𝞆): \mathsfbf{\chi}, \mbfsanschi
+1D787 (𝞇): \mathsfbf{\psi}, \mbfsanspsi
+1D788 (𝞈): \mathsfbf{\omega}, \mbfsansomega
+1D789 (𝞉): \mbfsanspartial
+1D78A (𝞊): \mathsfbf{\epsilon}, \mbfsansvarepsilon
+1D78B (𝞋): \mathsfbf{\vartheta}, \mbfsansvartheta
+1D78C (𝞌): \mbfsansvarkappa
+1D78D (𝞍): \mathsfbf{\phi}, \mbfsansvarphi
+1D78E (𝞎): \mathsfbf{\varrho}, \mbfsansvarrho
+1D78F (𝞏): \mathsfbf{\varpi}, \mbfsansvarpi
+1D790 (𝞐): \mbfitsansAlpha
+1D791 (𝞑): \mbfitsansBeta
+1D792 (𝞒): \mathsfbfit{\Gamma}, \mbfitsansGamma
+1D793 (𝞓): \mathsfbfit{\Delta}, \mbfitsansDelta
+1D794 (𝞔): \mbfitsansEpsilon
+1D795 (𝞕): \mbfitsansZeta
+1D796 (𝞖): \mbfitsansEta
+1D797 (𝞗): \mathsfbfit{\Theta}, \mbfitsansTheta
+1D798 (𝞘): \mbfitsansIota
+1D799 (𝞙): \mbfitsansKappa
+1D79A (𝞚): \mathsfbfit{\Lambda}, \mbfitsansLambda
+1D79B (𝞛): \mbfitsansMu
+1D79C (𝞜): \mbfitsansNu
+1D79D (𝞝): \mathsfbfit{\Xi}, \mbfitsansXi
+1D79E (𝞞): \mbfitsansOmicron
+1D79F (𝞟): \mathsfbfit{\Pi}, \mbfitsansPi
+1D7A0 (𝞠): \mbfitsansRho
+1D7A1 (𝞡): \mbfitsansvarTheta
+1D7A2 (𝞢): \mathsfbfit{\Sigma}, \mbfitsansSigma
+1D7A3 (𝞣): \mbfitsansTau
+1D7A4 (𝞤): \mathsfbfit{\Upsilon}, \mbfitsansUpsilon
+1D7A5 (𝞥): \mathsfbfit{\Phi}, \mbfitsansPhi
+1D7A6 (𝞦): \mbfitsansChi
+1D7A7 (𝞧): \mathsfbfit{\Psi}, \mbfitsansPsi
+1D7A8 (𝞨): \mathsfbfit{\Omega}, \mbfitsansOmega
+1D7A9 (𝞩): \mbfitsansnabla
+1D7AA (𝞪): \mathsfbfit{\alpha}, \mbfitsansalpha
+1D7AB (𝞫): \mathsfbfit{\beta}, \mbfitsansbeta
+1D7AC (𝞬): \mathsfbfit{\gamma}, \mbfitsansgamma
+1D7AD (𝞭): \mathsfbfit{\delta}, \mbfitsansdelta
+1D7AE (𝞮): \mathsfbfit{\varepsilon}, \mbfitsansepsilon
+1D7AF (𝞯): \mathsfbfit{\zeta}, \mbfitsanszeta
+1D7B0 (𝞰): \mathsfbfit{\eta}, \mbfitsanseta
+1D7B1 (𝞱): \mathsfbfit{\theta}, \mbfitsanstheta
+1D7B2 (𝞲): \mathsfbfit{\iota}, \mbfitsansiota
+1D7B3 (𝞳): \mathsfbfit{\kappa}, \mbfitsanskappa
+1D7B4 (𝞴): \mathsfbfit{\lambda}, \mbfitsanslambda
+1D7B5 (𝞵): \mathsfbfit{\mu}, \mbfitsansmu
+1D7B6 (𝞶): \mathsfbfit{\nu}, \mbfitsansnu
+1D7B7 (𝞷): \mathsfbfit{\xi}, \mbfitsansxi
+1D7B8 (𝞸): \mbfitsansomicron
+1D7B9 (𝞹): \mathsfbfit{\pi}, \mbfitsanspi
+1D7BA (𝞺): \mathsfbfit{\rho}, \mbfitsansrho
+1D7BB (𝞻): \mathsfbfit{\varsigma}, \mbfitsansvarsigma
+1D7BC (𝞼): \mathsfbfit{\sigma}, \mbfitsanssigma
+1D7BD (𝞽): \mathsfbfit{\tau}, \mbfitsanstau
+1D7BE (𝞾): \mathsfbfit{\upsilon}, \mbfitsansupsilon
+1D7BF (𝞿): \mathsfbfit{\varphi}, \mbfitsansphi
+1D7C0 (𝟀): \mathsfbfit{\chi}, \mbfitsanschi
+1D7C1 (𝟁): \mathsfbfit{\psi}, \mbfitsanspsi
+1D7C2 (𝟂): \mathsfbfit{\omega}, \mbfitsansomega
+1D7C3 (𝟃): \mbfitsanspartial
+1D7C4 (𝟄): \mathsfbfit{\epsilon}, \mbfitsansvarepsilon
+1D7C5 (𝟅): \mathsfbfit{\vartheta}, \mbfitsansvartheta
+1D7C6 (𝟆): \mbfitsansvarkappa
+1D7C7 (𝟇): \mathsfbfit{\phi}, \mbfitsansvarphi
+1D7C8 (𝟈): \mathsfbfit{\varrho}, \mbfitsansvarrho
+1D7C9 (𝟉): \mathsfbfit{\varpi}, \mbfitsansvarpi
+1D7CA (𝟊): \mbfDigamma
+1D7CB (𝟋): \mbfdigamma
+1D7CE (𝟎): \mathbf{0}
+1D7CF (𝟏): \mathbf{1}
+1D7D0 (𝟐): \mathbf{2}
+1D7D1 (𝟑): \mathbf{3}
+1D7D2 (𝟒): \mathbf{4}
+1D7D3 (𝟓): \mathbf{5}
+1D7D4 (𝟔): \mathbf{6}
+1D7D5 (𝟕): \mathbf{7}
+1D7D6 (𝟖): \mathbf{8}
+1D7D7 (𝟗): \mathbf{9}
+1D7D8 (𝟘): \Bbbzero, \mathbb{0}
+1D7D9 (𝟙): \Bbbone, \mathbb{1}
+1D7DA (𝟚): \Bbbtwo, \mathbb{2}
+1D7DB (𝟛): \Bbbthree, \mathbb{3}
+1D7DC (𝟜): \Bbbfour, \mathbb{4}
+1D7DD (𝟝): \Bbbfive, \mathbb{5}
+1D7DE (𝟞): \Bbbsix, \mathbb{6}
+1D7DF (𝟟): \Bbbseven, \mathbb{7}
+1D7E0 (𝟠): \Bbbeight, \mathbb{8}
+1D7E1 (𝟡): \Bbbnine, \mathbb{9}
+1D7E2 (𝟢): \mathsf{0}, \msanszero
+1D7E3 (𝟣): \mathsf{1}, \msansone
+1D7E4 (𝟤): \mathsf{2}, \msanstwo
+1D7E5 (𝟥): \mathsf{3}, \msansthree
+1D7E6 (𝟦): \mathsf{4}, \msansfour
+1D7E7 (𝟧): \mathsf{5}, \msansfive
+1D7E8 (𝟨): \mathsf{6}, \msanssix
+1D7E9 (𝟩): \mathsf{7}, \msansseven
+1D7EA (𝟪): \mathsf{8}, \msanseight
+1D7EB (𝟫): \mathsf{9}, \msansnine
+1D7EC (𝟬): \mathsfbf{0}, \mbfsanszero
+1D7ED (𝟭): \mathsfbf{1}, \mbfsansone
+1D7EE (𝟮): \mathsfbf{2}, \mbfsanstwo
+1D7EF (𝟯): \mathsfbf{3}, \mbfsansthree
+1D7F0 (𝟰): \mathsfbf{4}, \mbfsansfour
+1D7F1 (𝟱): \mathsfbf{5}, \mbfsansfive
+1D7F2 (𝟲): \mathsfbf{6}, \mbfsanssix
+1D7F3 (𝟳): \mathsfbf{7}, \mbfsansseven
+1D7F4 (𝟴): \mathsfbf{8}, \mbfsanseight
+1D7F5 (𝟵): \mathsfbf{9}, \mbfsansnine
+1D7F6 (𝟶): \mathtt{0}, \mttzero
+1D7F7 (𝟷): \mathtt{1}, \mttone
+1D7F8 (𝟸): \mathtt{2}, \mtttwo
+1D7F9 (𝟹): \mathtt{3}, \mttthree
+1D7FA (𝟺): \mathtt{4}, \mttfour
+1D7FB (𝟻): \mathtt{5}, \mttfive
+1D7FC (𝟼): \mathtt{6}, \mttsix
+1D7FD (𝟽): \mathtt{7}, \mttseven
+1D7FE (𝟾): \mathtt{8}, \mtteight
+1D7FF (𝟿): \mathtt{9}, \mttnine
