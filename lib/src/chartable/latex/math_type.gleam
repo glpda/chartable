@@ -37,6 +37,9 @@ pub type MathType {
   /// `\mathop`: large operator,
   /// e.g. U+2211 `\sum` ( ∑ )
   LargeOperator
+  /// `\mathradical`: radical signs,
+  /// e.g. U+221A `\sqrt` ( √ )
+  Radical
   /// `\mathopen`: opening delimiters,
   /// e.g. U+007B `\lbrace` ( { )
   Opening
@@ -69,6 +72,7 @@ pub fn from_tex(str: String) -> Result(MathType, Nil) {
     "\\mathbin" -> Ok(BinaryOperation)
     "\\mathrel" -> Ok(Relation)
     "\\mathop" -> Ok(LargeOperator)
+    "\\mathradical" -> Ok(Radical)
     "\\mathopen" -> Ok(Opening)
     "\\mathclose" -> Ok(Closing)
     "\\mathfence" -> Ok(Fencing)
@@ -91,6 +95,7 @@ pub fn to_tex(math_type: MathType) -> String {
     BinaryOperation -> "\\mathbin"
     Relation -> "\\mathrel"
     LargeOperator -> "\\mathop"
+    Radical -> "\\mathradical"
     Opening -> "\\mathopen"
     Closing -> "\\mathclose"
     Fencing -> "\\mathfence"

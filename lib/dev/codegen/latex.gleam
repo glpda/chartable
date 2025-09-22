@@ -1,5 +1,5 @@
 import chartable/internal
-import chartable/internal/latex_math_type.{type MathType}
+import chartable/latex/math_type.{type MathType}
 import codegen/notation_table
 import codegen/parser.{type ParserError}
 import gleam/dict
@@ -33,7 +33,7 @@ pub fn parse_math_symbols(
   let #(notation, _, rest) = splitter.split(curly, rest)
   let #(math_type, _, _) = splitter.split(curly, rest)
   use math_type <- result.map(
-    latex_math_type.from_tex(echo math_type)
+    math_type.from_tex(math_type)
     |> result.replace_error("Invalid MathType"),
   )
   MathSymbol(codepoint:, math_type:, notation: string.trim(notation))
