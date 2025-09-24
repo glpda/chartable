@@ -126,7 +126,7 @@ pub fn make_javascript_map(
   template template: String,
   data_source data_source: String,
 ) -> String {
-  let grapheme_to_notations =
+  let notation_table =
     dict.to_list(table.grapheme_to_notations)
     |> list.sort(fn(lhs, rhs) { string.compare(lhs.0, rhs.0) })
     |> list.map(fn(key_value) {
@@ -137,29 +137,12 @@ pub fn make_javascript_map(
         |> list.map(fn(notation) { "\"" <> notation <> "\"" })
         |> string.join(with: ", ")
 
-      "[\"" <> codepoints <> "\", [" <> notations <> "]]"
-    })
-    |> string.join(",\n")
-
-  let notation_to_grapheme =
-    dict.to_list(table.notation_to_grapheme)
-    |> list.sort(fn(lhs, rhs) { string.compare(lhs.0, rhs.0) })
-    |> list.map(fn(key_value) {
-      let #(notation, grapheme) = key_value
-      let codepoints = grapheme_to_codepoints(grapheme)
-      "[\"" <> notation <> "\", \"" <> codepoints <> "\"]"
+      "[\"" <> codepoints <> "\", " <> notations <> "]"
     })
     |> string.join(",\n")
 
   string.replace(in: template, each: "{{data_source}}", with: data_source)
-  |> string.replace(
-    each: "/*{{grapheme_to_notations}}*/",
-    with: grapheme_to_notations,
-  )
-  |> string.replace(
-    each: "/*{{notation_to_grapheme}}*/",
-    with: notation_to_grapheme,
-  )
+  |> string.replace(each: "/*{{notation_table}}*/", with: notation_table)
 }
 
 fn grapheme_to_codepoints(grapheme: String) -> String {
