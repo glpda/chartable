@@ -1,5 +1,43 @@
 import chartable/latex
 import chartable/latex/math_type
+import gleam/string
+
+pub fn catcode_test() {
+  let catcode_from_grapheme = fn(g) {
+    case string.to_utf_codepoints(g) {
+      [cp] -> latex.catcode_from_codepoint(cp) |> latex.catcode_to_int
+      _ -> 12
+    }
+  }
+  assert catcode_from_grapheme("\\") == 0
+  assert catcode_from_grapheme("{") == 1
+  assert catcode_from_grapheme("}") == 2
+  assert catcode_from_grapheme("$") == 3
+  assert catcode_from_grapheme("&") == 4
+  assert catcode_from_grapheme("\r") == 5
+  // assert catcode_from_grapheme("\n") == 5
+  assert catcode_from_grapheme("#") == 6
+  assert catcode_from_grapheme("^") == 7
+  assert catcode_from_grapheme("\u{0B}") == 7
+  assert catcode_from_grapheme("_") == 8
+  assert catcode_from_grapheme("\u{01}") == 8
+  assert catcode_from_grapheme("\u{00}") == 9
+  assert catcode_from_grapheme(" ") == 10
+  assert catcode_from_grapheme("\t") == 10
+  assert catcode_from_grapheme("A") == 11
+  assert catcode_from_grapheme("G") == 11
+  assert catcode_from_grapheme("Z") == 11
+  assert catcode_from_grapheme("a") == 11
+  assert catcode_from_grapheme("g") == 11
+  assert catcode_from_grapheme("z") == 11
+  assert catcode_from_grapheme("@") == 12
+  assert catcode_from_grapheme("Γ") == 12
+  assert catcode_from_grapheme("⭐") == 12
+  assert catcode_from_grapheme("~") == 13
+  assert catcode_from_grapheme("\f") == 13
+  assert catcode_from_grapheme("%") == 14
+  assert catcode_from_grapheme("\u{7F}") == 15
+}
 
 pub fn unimath_from_grapheme_test() {
   assert latex.unimath_from_grapheme("\u{22C6}") == ["\\star"]
