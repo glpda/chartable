@@ -1,4 +1,5 @@
 import chartable/latex/math_type.{type MathType}
+import gleam/int
 import gleam/list
 import gleam/result
 import gleam/string
@@ -123,6 +124,13 @@ pub fn catcode_from_int(int: Int) -> Result(CatCode, Nil) {
     0xF -> Ok(Invalid)
     _ -> Error(Nil)
   }
+}
+
+/// Returns the TeX escape command `\char<number>` for a given codepoint,
+/// see [TeX wikibook](https://en.wikibooks.org/wiki/TeX/char).
+pub fn char_escape(codepoint: UtfCodepoint) -> String {
+  let cp = string.utf_codepoint_to_int(codepoint)
+  "\\char" <> int.to_string(cp)
 }
 
 @external(javascript, "./latex/unimath_map.mjs", "codepoint_to_notations")

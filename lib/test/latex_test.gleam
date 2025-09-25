@@ -39,6 +39,13 @@ pub fn catcode_test() {
   assert catcode_from_grapheme("\u{7F}") == 15
 }
 
+pub fn char_escape_test() {
+  let assert Ok(cp) = string.utf_codepoint(65)
+  assert latex.char_escape(cp) == "\\char65"
+  let assert Ok(cp) = string.utf_codepoint(0x2B50)
+  assert latex.char_escape(cp) == "\\char11088"
+}
+
 pub fn unimath_from_grapheme_test() {
   assert latex.unimath_from_grapheme("\u{22C6}") == ["\\star"]
   assert latex.unimath_from_grapheme("⭐") == ["\\medwhitestar"]
