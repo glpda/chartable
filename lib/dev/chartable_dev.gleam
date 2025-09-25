@@ -1,4 +1,5 @@
 import codegen/html
+import codegen/latex
 import codegen/typst
 import codegen/unicode
 import simplifile
@@ -74,5 +75,14 @@ pub fn main() {
     simplifile.write(
       to: "src/chartable/html/entity_map.mjs",
       contents: html.make_map(entities:, template:, data_source:),
+    )
+  let assert Ok(template) =
+    simplifile.read("codegen_templates/latex_unimath_map.mjs")
+  let assert Ok(tex) = simplifile.read("data/latex/unicode-math.tex")
+  let assert Ok(unimath_symbols) = latex.parse_unimath_symbols(tex:)
+  let assert Ok(Nil) =
+    simplifile.write(
+      to: "src/chartable/latex/unimath_map.mjs",
+      contents: latex.javascript_unimath_map(unimath_symbols:, template:),
     )
 }

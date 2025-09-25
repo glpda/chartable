@@ -1,8 +1,8 @@
 ---
 version: 1.4.0
-title: LaTeX3 Unicode Math from codepoints
+title: Latex3 Unicode-Math from codepoints
 file: ./test/codegen_test.gleam
-test_name: latex_symbols_test
+test_name: latex_unimath_test
 ---
 0021 (!): \mathexclam
 0023 (#): \mathoctothorpe

@@ -1,10 +1,11 @@
 import birdie
 import chartable/html
 import chartable/internal
+import chartable/latex
 import chartable/typst
 import chartable/unicode
 import codegen/html as html_codegen
-import codegen/latex
+import codegen/latex as latex_codegen
 import codegen/notation_table
 import codegen/typst as typst_codegen
 import codegen/unicode as unicode_codegen
@@ -107,21 +108,18 @@ pub fn html_entity_test() {
 // =============================================================================
 // BEGIN LaTeX Notation Tests
 
-pub fn latex_symbols_test() {
+pub fn latex_unimath_test() {
   let assert Ok(tex) = simplifile.read("data/latex/unicode-math.tex")
-  let assert Ok(math_symbols) = latex.parse_math_symbols(tex)
+  let assert Ok(math_symbols) = latex_codegen.parse_unimath_symbols(tex)
 
-  latex.math_symbols_to_notation_table(math_symbols)
-  |> notation_table.to_string
-  |> birdie.snap(title: "LaTeX3 Unicode Math from codepoints")
-}
+  let table = latex_codegen.unimath_symbols_to_notation_table(math_symbols)
 
-pub fn lucr_unimath_test() {
-  let assert Ok(txt) = simplifile.read("data/latex/lucr-unimath.txt")
-  let assert Ok(lucr_unimath) = latex.parse_lucr_unimath(txt)
+  dict.each(table.notation_to_grapheme, fn(notation, grapheme) {
+    let assert "\\" <> command = notation
+    assert latex.unimath_to_grapheme(command) == Ok(grapheme)
+  })
 
-  latex.lucr_unimath_to_notation_table(lucr_unimath)
-  |> notation_table.to_string
-  |> birdie.snap(title: "LUCR Unicode Math from codepoints")
+  notation_table.to_string(table)
+  |> birdie.snap(title: "Latex3 Unicode-Math from codepoints")
 }
 // END
