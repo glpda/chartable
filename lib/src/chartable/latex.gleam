@@ -129,6 +129,59 @@ pub fn catcode_from_int(int: Int) -> Result(CatCode, Nil) {
 // =============================================================================
 // BEGIN Codepoint/Grapheme -> TeX/LaTeX
 
+/// Get the short control escape of a code point, see
+/// [TeX for the Impatient](https://mirrors.ctan.org/info/impatient/book.pdf)
+/// page 55.
+///
+/// Returns an `Error` if the code point is greater than U+0080.
+///
+/// ## Examples
+///
+/// ```gleam
+/// let assert Ok(cp) = string.utf_codepoint(0x001B)
+/// assert latex.short_control_escape(cp) == Ok("^^[")
+/// ```
+///
+pub fn short_control_escape(codepoint: UtfCodepoint) -> Result(String, Nil) {
+  case string.utf_codepoint_to_int(codepoint) {
+    i if i < 0x40 -> {
+      use cp <- result.map(string.utf_codepoint(i + 0x40))
+      "^^" <> string.from_utf_codepoints([cp])
+    }
+    i if i < 0x80 -> {
+      use cp <- result.map(string.utf_codepoint(i - 0x40))
+      "^^" <> string.from_utf_codepoints([cp])
+    }
+    _ -> Error(Nil)
+  }
+}
+
+/// Get the long control escape of a code point, see
+/// [TeX for the Impatient](https://mirrors.ctan.org/info/impatient/book.pdf)
+/// page 55.
+///
+/// Returns an `Error` if the code point is greater than U+0100.
+///
+/// ## Examples
+///
+/// ```gleam
+/// let assert Ok(cp) = string.utf_codepoint(0x001B)
+/// assert latex.long_control_escape(cp) == Ok("^^1b")
+/// ```
+///
+pub fn long_control_escape(codepoint: UtfCodepoint) -> Result(String, Nil) {
+  case string.utf_codepoint_to_int(codepoint) {
+    i if i < 0x100 -> {
+      let hex =
+        int.to_base16(i)
+        |> string.lowercase
+        |> string.pad_start(to: 2, with: "0")
+      Ok("^^" <> hex)
+    }
+    _ -> Error(Nil)
+  }
+}
+
 /// Returns the TeX escape command `\char<number>` for a given codepoint,
 /// see [TeX wikibook](https://en.wikibooks.org/wiki/TeX/char).
 pub fn char_escape(codepoint: UtfCodepoint) -> String {
@@ -150,6 +203,44 @@ pub fn unimath_from_codepoint(cp: UtfCodepoint) -> List(String) {
 
 // =============================================================================
 // BEGIN TeX/LaTeX -> Grapheme
+
+/// Parses the control escape sequences in a string, see
+/// [TeX for the Impatient](https://mirrors.ctan.org/info/impatient/book.pdf)
+/// page 55.
+///
+pub fn parse_control_escape(str: String) -> Result(String, Nil) {
+  string.to_utf_codepoints(str)
+  |> list.map(string.utf_codepoint_to_int)
+  |> parse_control_escape_loop([])
+  |> list.map(string.utf_codepoint)
+  |> result.all
+  |> result.map(string.from_utf_codepoints)
+}
+
+fn parse_control_escape_loop(
+  codepoints: List(Int),
+  acc acc: List(Int),
+) -> List(Int) {
+  // TODO maybe use BitArray instead of List(Int)
+  case codepoints {
+    // NOTE: 'x' & 'y' must be lowercase letters or numbers
+    [94, 94, x, y, ..rest] if 48 <= x && x < 58 && 48 <= y && y < 58 ->
+      parse_control_escape_loop(rest, [{ x - 48 } * 16 + { y - 48 }, ..acc])
+    [94, 94, x, y, ..rest] if 48 <= x && x < 58 && 97 <= y && y < 103 ->
+      parse_control_escape_loop(rest, [{ x - 48 } * 16 + { y - 87 }, ..acc])
+    [94, 94, x, y, ..rest] if 97 <= x && x < 103 && 48 <= y && y < 58 ->
+      parse_control_escape_loop(rest, [{ x - 87 } * 16 + { y - 48 }, ..acc])
+    [94, 94, x, y, ..rest] if 97 <= x && x < 103 && 97 <= y && y < 103 ->
+      parse_control_escape_loop(rest, [{ x - 87 } * 16 + { y - 87 }, ..acc])
+    [94, 94, x, ..rest] if x < 64 ->
+      parse_control_escape_loop(rest, [x + 64, ..acc])
+    [94, 94, x, ..rest] if x < 128 ->
+      parse_control_escape_loop(rest, [x - 64, ..acc])
+    [94, 94] -> list.reverse(acc)
+    [cp, ..rest] -> parse_control_escape_loop(rest, acc: [cp, ..acc])
+    [] -> list.reverse(acc)
+  }
+}
 
 fn any_to_grapheme(latex: String) -> Result(String, Nil) {
   case latex {
@@ -177,6 +268,7 @@ fn any_command_to_grapheme(command: String) -> Result(String, Nil) {
 /// This is not a TeX parser! Some commands can be directly followed by other
 /// characters without issue, but this function does not handle such cases.
 pub fn text_to_grapheme(latex: String) -> Result(String, Nil) {
+  use latex <- result.try(parse_control_escape(latex))
   use <- result.lazy_or(any_to_grapheme(latex))
   case latex {
     "~" -> Ok("\u{00A0}")
@@ -203,6 +295,7 @@ fn text_command_to_grapheme(command: String) -> Result(String, Nil) {
 /// This is not a TeX parser! Some commands can be directly followed by other
 /// characters without issue, but this function does not handle such cases.
 pub fn math_to_grapheme(latex: String) {
+  use latex <- result.try(parse_control_escape(latex))
   use <- result.lazy_or(any_to_grapheme(latex))
   case latex {
     "'" -> Ok("\u{2032}")
