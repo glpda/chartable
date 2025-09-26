@@ -192,7 +192,8 @@ pub fn char_escape(codepoint: UtfCodepoint) -> String {
 @external(javascript, "./latex/unimath_map.mjs", "codepoint_to_notations")
 fn codepoint_to_unimath_ffi(cp: Int) -> List(String)
 
-/// Get the unicode-math commands outputting a given code point.
+/// Get the [unicode-math](https://ctan.org/pkg/unicode-math) commands
+/// outputting a given code point.
 pub fn unimath_from_codepoint(cp: UtfCodepoint) -> List(String) {
   string.utf_codepoint_to_int(cp)
   |> codepoint_to_unimath_ffi
@@ -324,7 +325,8 @@ fn unimath_to_codepoint_type_ffi(
   notation: String,
 ) -> Result(#(Int, MathType), Nil)
 
-/// Returns the LaTeX math type and code point of a given unicode-math command.
+/// Returns the LaTeX math type and code point of a given
+/// [unicode-math](https://ctan.org/pkg/unicode-math) command.
 pub fn unimath(command: String) -> Result(#(MathType, UtfCodepoint), Nil) {
   use #(cp, math_type) <- result.try(unimath_to_codepoint_type_ffi(command))
   use codepoint <- result.map(string.utf_codepoint(cp))
