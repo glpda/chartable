@@ -126,6 +126,9 @@ pub fn catcode_from_int(int: Int) -> Result(CatCode, Nil) {
   }
 }
 
+// =============================================================================
+// BEGIN Codepoint/Grapheme -> TeX/LaTeX
+
 /// Returns the TeX escape command `\char<number>` for a given codepoint,
 /// see [TeX wikibook](https://en.wikibooks.org/wiki/TeX/char).
 pub fn char_escape(codepoint: UtfCodepoint) -> String {
@@ -134,49 +137,94 @@ pub fn char_escape(codepoint: UtfCodepoint) -> String {
 }
 
 @external(javascript, "./latex/unimath_map.mjs", "codepoint_to_notations")
-fn codepoint_to_notations_ffi(cp: Int) -> List(String)
+fn codepoint_to_unimath_ffi(cp: Int) -> List(String)
 
 /// Get the unicode-math commands outputting a given code point.
 pub fn unimath_from_codepoint(cp: UtfCodepoint) -> List(String) {
   string.utf_codepoint_to_int(cp)
-  |> codepoint_to_notations_ffi
+  |> codepoint_to_unimath_ffi
   |> list.map(string.append(_, to: "\\"))
 }
 
-/// Get the unicode-math commands outputting a given grapheme.
-pub fn unimath_from_grapheme(grapheme: String) -> List(String) {
-  case string.to_utf_codepoints(grapheme) {
-    [cp] -> unimath_from_codepoint(cp)
-    _ -> []
+// END
+
+// =============================================================================
+// BEGIN TeX/LaTeX -> Grapheme
+
+/// Returns the grapheme represented by a TeX/LaTeX command in text mode.
+///
+/// This is not a TeX parser! Some commands can be directly followed by other
+/// characters without issue, but this function does not handle such cases.
+pub fn text_to_grapheme(latex: String) -> Result(String, Nil) {
+  case latex {
+    "~" -> Ok("\u{00A0}")
+    "-" -> Ok(" \u{2010}")
+    "--" -> Ok("\u{2013}")
+    "---" -> Ok("\u{2014}")
+    "`" -> Ok("\u{2018}")
+    "'" -> Ok("\u{2019}")
+    "``" -> Ok("\u{201C}")
+    "''" -> Ok("\u{201D}")
+    "\\" <> command -> text_command_to_grapheme(command)
+    _ -> Error(Nil)
+  }
+}
+
+fn text_command_to_grapheme(command: String) -> Result(String, Nil) {
+  case command {
+    " " -> Ok(" ")
+    "space" -> Ok(" ")
+    "-" -> Ok("\u{00AD}")
+    "char" <> dec -> {
+      use int <- result.try(int.parse(dec))
+      use cp <- result.map(string.utf_codepoint(int))
+      string.from_utf_codepoints([cp])
+    }
+    _ -> Error(Nil)
+  }
+}
+
+/// Returns the grapheme represented by a TeX/LaTeX command in math mode.
+///
+/// This is not a TeX parser! Some commands can be directly followed by other
+/// characters without issue, but this function does not handle such cases.
+pub fn math_to_grapheme(latex: String) {
+  case latex {
+    "'" -> Ok("\u{2032}")
+    "''" -> Ok("\u{2033}")
+    "'''" -> Ok("\u{2034}")
+    "\\" <> command -> math_command_to_grapheme(command)
+    _ -> Error(Nil)
+  }
+}
+
+fn math_command_to_grapheme(command: String) -> Result(String, Nil) {
+  case command {
+    " " -> Ok(" ")
+    "space" -> Ok(" ")
+    "char" <> dec -> {
+      use int <- result.try(int.parse(dec))
+      use cp <- result.map(string.utf_codepoint(int))
+      string.from_utf_codepoints([cp])
+    }
+    _ -> unimath_to_grapheme(command)
   }
 }
 
 @external(javascript, "./latex/unimath_map.mjs", "notation_to_codepoint_type")
-fn notation_to_codepoint_type_ffi(
+fn unimath_to_codepoint_type_ffi(
   notation: String,
 ) -> Result(#(Int, MathType), Nil)
 
 /// Returns the LaTeX math type and code point of a given unicode-math command.
-pub fn unimath(notation: String) -> Result(#(MathType, UtfCodepoint), Nil) {
-  use #(cp, math_type) <- result.try(notation_to_codepoint_type_ffi(notation))
+pub fn unimath(command: String) -> Result(#(MathType, UtfCodepoint), Nil) {
+  use #(cp, math_type) <- result.try(unimath_to_codepoint_type_ffi(command))
   use codepoint <- result.map(string.utf_codepoint(cp))
   #(math_type, codepoint)
 }
 
-/// Get the LaTeX math type of a given unicode-math command.
-pub fn unimath_to_math_type(notation: String) -> Result(MathType, Nil) {
-  use #(_, math_type) <- result.map(notation_to_codepoint_type_ffi(notation))
-  math_type
-}
-
-/// Get the code point outputted by a given unicode-math command.
-pub fn unimath_to_codepoint(notation: String) -> Result(UtfCodepoint, Nil) {
-  use #(codepoint, _) <- result.try(notation_to_codepoint_type_ffi(notation))
-  string.utf_codepoint(codepoint)
-}
-
-/// Get the grapheme outputted by a given unicode-math command.
-pub fn unimath_to_grapheme(notation: String) -> Result(String, Nil) {
-  use codepoint <- result.map(unimath_to_codepoint(notation))
+fn unimath_to_grapheme(command: String) -> Result(String, Nil) {
+  use #(_, codepoint) <- result.map(unimath(command))
   string.from_utf_codepoints([codepoint])
 }
+// END

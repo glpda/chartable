@@ -115,8 +115,7 @@ pub fn latex_unimath_test() {
   let table = latex_codegen.unimath_symbols_to_notation_table(math_symbols)
 
   dict.each(table.notation_to_grapheme, fn(notation, grapheme) {
-    let assert "\\" <> command = notation
-    assert latex.unimath_to_grapheme(command) == Ok(grapheme)
+    assert latex.math_to_grapheme(notation) == Ok(grapheme)
   })
 
   notation_table.to_string(table)
