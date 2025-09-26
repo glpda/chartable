@@ -151,17 +151,38 @@ pub fn unimath_from_codepoint(cp: UtfCodepoint) -> List(String) {
 // =============================================================================
 // BEGIN TeX/LaTeX -> Grapheme
 
+fn any_to_grapheme(latex: String) -> Result(String, Nil) {
+  case latex {
+    "`" -> Ok("\u{2018}")
+    "\\" <> command -> any_command_to_grapheme(command)
+    _ -> Error(Nil)
+  }
+}
+
+fn any_command_to_grapheme(command: String) -> Result(String, Nil) {
+  case command {
+    " " -> Ok(" ")
+    "space" -> Ok(" ")
+    "char" <> dec -> {
+      use int <- result.try(int.parse(dec))
+      use cp <- result.map(string.utf_codepoint(int))
+      string.from_utf_codepoints([cp])
+    }
+    _ -> Error(Nil)
+  }
+}
+
 /// Returns the grapheme represented by a TeX/LaTeX command in text mode.
 ///
 /// This is not a TeX parser! Some commands can be directly followed by other
 /// characters without issue, but this function does not handle such cases.
 pub fn text_to_grapheme(latex: String) -> Result(String, Nil) {
+  use <- result.lazy_or(any_to_grapheme(latex))
   case latex {
     "~" -> Ok("\u{00A0}")
     "-" -> Ok(" \u{2010}")
     "--" -> Ok("\u{2013}")
     "---" -> Ok("\u{2014}")
-    "`" -> Ok("\u{2018}")
     "'" -> Ok("\u{2019}")
     "``" -> Ok("\u{201C}")
     "''" -> Ok("\u{201D}")
@@ -172,14 +193,7 @@ pub fn text_to_grapheme(latex: String) -> Result(String, Nil) {
 
 fn text_command_to_grapheme(command: String) -> Result(String, Nil) {
   case command {
-    " " -> Ok(" ")
-    "space" -> Ok(" ")
     "-" -> Ok("\u{00AD}")
-    "char" <> dec -> {
-      use int <- result.try(int.parse(dec))
-      use cp <- result.map(string.utf_codepoint(int))
-      string.from_utf_codepoints([cp])
-    }
     _ -> Error(Nil)
   }
 }
@@ -189,6 +203,7 @@ fn text_command_to_grapheme(command: String) -> Result(String, Nil) {
 /// This is not a TeX parser! Some commands can be directly followed by other
 /// characters without issue, but this function does not handle such cases.
 pub fn math_to_grapheme(latex: String) {
+  use <- result.lazy_or(any_to_grapheme(latex))
   case latex {
     "'" -> Ok("\u{2032}")
     "''" -> Ok("\u{2033}")

@@ -47,21 +47,29 @@ pub fn char_escape_test() {
   assert latex.char_escape(cp) == "\\char11088"
 }
 
+pub fn any_to_grapheme_test() {
+  assert latex.text_to_grapheme("`") == Ok("\u{2018}")
+  assert latex.math_to_grapheme("`") == Ok("\u{2018}")
+  assert latex.text_to_grapheme("\\space") == Ok(" ")
+  assert latex.math_to_grapheme("\\space") == Ok(" ")
+}
+
+pub fn char_to_grapheme_test() {
+  assert latex.text_to_grapheme("\\char65") == Ok("A")
+  assert latex.math_to_grapheme("\\char65") == Ok("A")
+  assert latex.text_to_grapheme("\\char11088") == Ok("⭐")
+  assert latex.math_to_grapheme("\\char11088") == Ok("⭐")
+}
+
 pub fn text_to_grapheme_test() {
   assert latex.text_to_grapheme("~") == Ok("\u{00A0}")
   assert latex.text_to_grapheme("``") == Ok("“")
   assert latex.text_to_grapheme("''") == Ok("”")
-  assert latex.text_to_grapheme("\\space") == Ok(" ")
   assert latex.text_to_grapheme("\\-") == Ok("\u{00AD}")
-  assert latex.text_to_grapheme("\\char65") == Ok("A")
-  assert latex.text_to_grapheme("\\char11088") == Ok("⭐")
 }
 
 pub fn math_to_grapheme_test() {
   assert latex.math_to_grapheme("'") == Ok("′")
-  assert latex.math_to_grapheme("\\space") == Ok(" ")
-  assert latex.math_to_grapheme("\\char65") == Ok("A")
-  assert latex.math_to_grapheme("\\char11088") == Ok("⭐")
 }
 
 pub fn unimath_to_grapheme_test() {
