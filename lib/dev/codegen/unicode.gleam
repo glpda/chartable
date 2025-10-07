@@ -1,4 +1,4 @@
-import chartable/internal
+import chartable
 import chartable/unicode/category.{type GeneralCategory}
 import chartable/unicode/codepoint.{type Codepoint}
 import codegen/parser.{type ParserError}
@@ -72,14 +72,14 @@ pub fn range_records_to_string(
   |> list.map(fn(record) {
     let index = case codepoint.range_to_ints(record.codepoint_range) {
       #(start, end) if start == end -> {
-        let hex = internal.int_to_hex(start)
+        let hex = codepoint.int_to_hex(start)
         case string.utf_codepoint(start) {
           Ok(cp) -> hex <> " (" <> string.from_utf_codepoints([cp]) <> ")"
           Error(_) -> hex
         }
       }
       #(start, end) ->
-        internal.int_to_hex(start) <> ".." <> internal.int_to_hex(end)
+        codepoint.int_to_hex(start) <> ".." <> codepoint.int_to_hex(end)
     }
     index <> ": " <> data_to_string(record.data)
   })
@@ -97,8 +97,8 @@ pub fn make_name_map(
     list.filter_map(names, fn(record) {
       case codepoint.range_to_ints(record.codepoint_range) {
         #(start, end) if start != end -> {
-          let start = internal.int_to_hex(start)
-          let end = internal.int_to_hex(end)
+          let start = codepoint.int_to_hex(start)
+          let end = codepoint.int_to_hex(end)
           let indentation = "    "
           // if ((0x3400 <= cp) && (cp <= 0x4DBF)) {
           //   return new Ok("CJK UNIFIED IDEOGRAPH-" + int_to_hex(cp));
@@ -123,7 +123,7 @@ pub fn make_name_map(
     list.filter_map(names, fn(record) {
       case codepoint.range_to_ints(record.codepoint_range) {
         #(start, end) if start == end -> {
-          let cp = internal.int_to_hex(start)
+          let cp = codepoint.int_to_hex(start)
           // TODO assert name is (uppercase letter + space + dash)
           let name = string.replace(in: record.data, each: "*", with: cp)
           // [0x0020, "SPACE"],
@@ -147,8 +147,8 @@ pub fn make_block_map(
     list.fold(over: pva, from: dict.new(), with: fn(acc, record) {
       case record {
         PvaRecord(property: "blk", short_name:, long_name:, alt_names:) -> {
-          let key = internal.comparable_property(long_name)
-          let value = case internal.comparable_property(short_name) == key {
+          let key = chartable.comparable_property(long_name)
+          let value = case chartable.comparable_property(short_name) == key {
             True -> alt_names
             False -> [short_name, ..alt_names]
           }
@@ -164,15 +164,15 @@ pub fn make_block_map(
         [
           long_name,
           ..result.unwrap(
-            dict.get(aliases, internal.comparable_property(long_name)),
+            dict.get(aliases, chartable.comparable_property(long_name)),
             or: [],
           )
         ]
         |> list.map(fn(name) { "\"" <> name <> "\"" })
         |> string.join(with: ", ")
       let ints = codepoint.range_to_ints(record.codepoint_range)
-      let start = internal.int_to_hex(ints.0)
-      let end = internal.int_to_hex(ints.1)
+      let start = codepoint.int_to_hex(ints.0)
+      let end = codepoint.int_to_hex(ints.1)
       // [0x0000, 0x007F, "Basic Latin", "ASCII"]
       "[0x" <> start <> ", 0x" <> end <> ", " <> names <> "]"
     })
@@ -202,8 +202,8 @@ pub fn make_script_map(
     sort_range_records(scripts)
     |> list.map(fn(record) {
       let pair = codepoint.range_to_ints(record.codepoint_range)
-      let start = internal.int_to_hex(pair.0)
-      let end = internal.int_to_hex(pair.1)
+      let start = codepoint.int_to_hex(pair.0)
+      let end = codepoint.int_to_hex(pair.1)
       // [[0x0000, 0x0040], "zyyy"]
       "[[0x" <> start <> ", 0x" <> end <> "], \"" <> record.data <> "\"]"
     })
@@ -220,8 +220,8 @@ pub fn make_category_map(
   let categories =
     list.map(categories, fn(record) {
       let #(start, end) = codepoint.range_to_ints(record.codepoint_range)
-      let start = internal.int_to_hex(start)
-      let end = internal.int_to_hex(end)
+      let start = codepoint.int_to_hex(start)
+      let end = codepoint.int_to_hex(end)
       case record {
         AlternatingRecord(_, even:, odd:) -> {
           let even_name = category.to_short_name(even)
@@ -391,13 +391,13 @@ fn parse_range_record(
 fn parse_codepoint_range(str: String) -> Result(codepoint.Range, String) {
   case string.split_once(str, on: "..") {
     Ok(#(start, end)) -> {
-      case internal.parse_codepoint(start), internal.parse_codepoint(end) {
+      case codepoint.parse(start), codepoint.parse(end) {
         Ok(start), Ok(end) -> Ok(codepoint.range_from_codepoints(start, end))
         _, _ -> Error("Invalid Codepoint Range")
       }
     }
     Error(_) -> {
-      case internal.parse_codepoint(str) {
+      case codepoint.parse(str) {
         Ok(cp) -> Ok(codepoint.range_from_codepoints(cp, cp))
         Error(_) -> Error("Invalid Codepoint")
       }
@@ -456,7 +456,7 @@ pub fn parse_scripts(
         PvaRecord(property: "sc", short_name:, long_name:, ..) -> {
           let #(short_names, long_names) = acc
           let short_name = string.lowercase(short_name)
-          let long_name = internal.comparable_property(long_name)
+          let long_name = chartable.comparable_property(long_name)
           #(
             set.insert(short_name, into: short_names),
             dict.insert(short_name, for: long_name, into: long_names),
@@ -470,7 +470,7 @@ pub fn parse_scripts(
   use data <- parse_range_records(txt)
   case data {
     [script_name, ..] -> {
-      let script_name = internal.comparable_property(script_name)
+      let script_name = chartable.comparable_property(script_name)
       use <- bool.guard(
         when: set.contains(script_name, in: short_names),
         return: Ok(script_name),

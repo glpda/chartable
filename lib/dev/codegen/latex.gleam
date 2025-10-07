@@ -1,5 +1,5 @@
-import chartable/internal
 import chartable/latex/math_type.{type MathType}
+import chartable/unicode/codepoint
 import codegen/notation_table
 import codegen/parser.{type ParserError}
 import gleam/dict
@@ -28,7 +28,7 @@ pub fn parse_unimath_symbols(
   })
   let #(hex, _, rest) = splitter.split(curly, rest)
   use codepoint <- result.try(
-    internal.parse_utf(hex) |> result.replace_error("Invalid Codepoint"),
+    codepoint.parse_utf(hex) |> result.replace_error("Invalid Codepoint"),
   )
   let #(notation, _, rest) = splitter.split(curly, rest)
   let #(math_type, _, _) = splitter.split(curly, rest)
@@ -59,7 +59,7 @@ pub fn javascript_unimath_map(
 ) -> String {
   let unimath_records =
     list.map(records, fn(record) {
-      let codepoint = internal.utf_to_hex(record.codepoint)
+      let codepoint = codepoint.utf_to_hex(record.codepoint)
       let math_type = javascript_math_type(record.math_type)
       let notation = string.drop_start(from: record.notation, up_to: 1)
       "[0x" <> codepoint <> ", " <> math_type <> ", \"" <> notation <> "\"]"

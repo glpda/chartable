@@ -1,9 +1,9 @@
 import birdie
 import chartable/html
-import chartable/internal
 import chartable/latex
 import chartable/typst
 import chartable/unicode
+import chartable/unicode/codepoint
 import codegen/html as html_codegen
 import codegen/latex as latex_codegen
 import codegen/notation_table
@@ -22,7 +22,7 @@ pub fn unicode_name_test() {
 
   unicode_codegen.assert_match_range_records(names, fn(cp, name) {
     assert name != ""
-    let hex = internal.codepoint_to_hex(cp)
+    let hex = codepoint.to_hex(cp)
     let name = string.replace(in: name, each: "*", with: hex)
     unicode.name_from_codepoint(cp) == Ok(name)
   })

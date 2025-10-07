@@ -1,4 +1,4 @@
-import chartable/internal
+import chartable
 import chartable/unicode/category.{type GeneralCategory}
 import chartable/unicode/codepoint.{type Codepoint}
 import gleam/list
@@ -169,7 +169,7 @@ fn block_from_codepoint_ffi(
 ///
 pub fn block_from_name(name: String) -> Result(Block, Nil) {
   use #(start, end, name, aliases) <- result.try(
-    block_from_name_ffi(internal.comparable_property(name)),
+    block_from_name_ffi(chartable.comparable_property(name)),
   )
   use range <- result.map(codepoint.range_from_ints(start, end))
   Block(range:, name:, aliases:)

@@ -1,4 +1,4 @@
-import chartable/internal
+import chartable
 
 /// Unicode Mathematical Classification
 ///
@@ -54,7 +54,7 @@ pub type MathClass {
 }
 
 pub fn from_name(str: String) {
-  case internal.comparable_property(str) {
+  case chartable.comparable_property(str) {
     // From short name:
     "n" -> Ok(Normal)
     "a" -> Ok(Alphabetic)

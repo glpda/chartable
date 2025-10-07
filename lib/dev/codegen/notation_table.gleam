@@ -1,4 +1,4 @@
-import chartable/internal
+import chartable/unicode/codepoint
 import gleam/dict.{type Dict}
 import gleam/dynamic/decode
 import gleam/json
@@ -44,7 +44,7 @@ pub fn to_string(table: NotationTable) -> String {
     let #(grapheme, notations) = key_value
     let codepoints =
       string.to_utf_codepoints(grapheme)
-      |> list.map(internal.utf_to_hex)
+      |> list.map(codepoint.utf_to_hex)
       |> string.join("-")
     let escapes =
       list.sort(notations, string.compare) |> string.join(with: ", ")
@@ -147,6 +147,6 @@ pub fn make_javascript_map(
 
 fn grapheme_to_codepoints(grapheme: String) -> String {
   string.to_utf_codepoints(grapheme)
-  |> list.map(fn(cp) { "\\u{" <> internal.utf_to_hex(cp) <> "}" })
+  |> list.map(fn(cp) { "\\u{" <> codepoint.utf_to_hex(cp) <> "}" })
   |> string.concat()
 }

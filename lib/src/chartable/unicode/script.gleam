@@ -5,7 +5,7 @@
 //// Scripts can be scattered accross multiple blocks,
 //// and one block can contain multiple scripts.
 
-import chartable/internal
+import chartable
 import chartable/unicode/codepoint.{type Codepoint}
 import gleam/list
 import gleam/string
@@ -53,7 +53,7 @@ pub fn list() -> List(Script) {
 /// ```
 ///
 pub fn from_name(str: String) -> Result(Script, Nil) {
-  let str = internal.comparable_property(str)
+  let str = chartable.comparable_property(str)
   case short_name_to_long_name(str) {
     Ok(_) -> Ok(Script(str))
     Error(_) ->

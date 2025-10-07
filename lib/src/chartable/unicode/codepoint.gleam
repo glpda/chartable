@@ -1,6 +1,7 @@
 import gleam/int
 import gleam/list
 import gleam/order.{type Order}
+import gleam/result
 import gleam/string
 
 // =============================================================================
@@ -48,6 +49,18 @@ pub fn from_int(value: Int) -> Result(Codepoint, Nil) {
   }
 }
 
+/// Parse an hexadecimal representation `String` to a `Codepoint`.
+@internal
+pub fn parse(str: String) -> Result(Codepoint, Nil) {
+  int.base_parse(str, 16) |> result.try(from_int)
+}
+
+/// Parse an hexadecimal representation `String` to an `UtfCodepoint`.
+@internal
+pub fn parse_utf(str: String) -> Result(UtfCodepoint, Nil) {
+  int.base_parse(str, 16) |> result.try(string.utf_codepoint)
+}
+
 /// Converts a chartable [`Codepoint`](#Codepoint) to a standard `UtfCodepoint`.
 ///
 /// Returns an `Error` if the code point is a surrogate.
@@ -61,6 +74,27 @@ pub fn to_utf(cp: Codepoint) -> Result(UtfCodepoint, Nil) {
 /// Converts a chartable [`Codepoint`](#Codepoint) to its ordinal value.
 pub fn to_int(cp: Codepoint) -> Int {
   cp.value
+}
+
+/// Converts a `Codepoint` to an hexadecimal representation `String` padded
+/// with zeroes to have a minimum length of 4.
+@internal
+pub fn to_hex(cp: Codepoint) -> String {
+  to_int(cp) |> int_to_hex
+}
+
+/// Converts an `UtfCodepoint` to an hexadecimal representation `String` padded
+/// with zeroes to have a minimum length of 4.
+@internal
+pub fn utf_to_hex(cp: UtfCodepoint) -> String {
+  string.utf_codepoint_to_int(cp) |> int_to_hex
+}
+
+/// Converts an `Int` to an hexadecimal representation `String` padded with
+/// zeroes to have a minimum length of 4.
+@internal
+pub fn int_to_hex(value: Int) -> String {
+  int.to_base16(value) |> string.pad_start(to: 4, with: "0")
 }
 
 /// Compares two code points, returning an order.

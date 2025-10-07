@@ -3,7 +3,7 @@
 //// many characters have multiples uses wich are not captured by
 //// this simple categories (Latin letters may be used as numerals).
 
-import chartable/internal
+import chartable
 
 pub type GeneralCategory {
   Letter(Letter)
@@ -175,7 +175,7 @@ pub const list = [
 /// ```
 ///
 pub fn from_name(str: String) -> Result(GeneralCategory, Nil) {
-  case internal.comparable_property(str) {
+  case chartable.comparable_property(str) {
     // From short name:
     // - Letters:
     "lu" -> Ok(Letter(UppercaseLetter))

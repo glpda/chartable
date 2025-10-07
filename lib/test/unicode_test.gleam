@@ -33,6 +33,21 @@ pub fn codepoint_test() {
   }
 }
 
+pub fn codepoint_int_to_hex_test() {
+  assert codepoint.int_to_hex(0x0000) == "0000"
+  assert codepoint.int_to_hex(0x0041) == "0041"
+  assert codepoint.int_to_hex(0x2B50) == "2B50"
+  assert codepoint.int_to_hex(0x661F) == "661F"
+}
+
+pub fn codepoint_parse_utf_test() {
+  assert codepoint.parse_utf("0000") == string.utf_codepoint(0x0000)
+  assert codepoint.parse_utf("0041") == string.utf_codepoint(0x0041)
+  assert codepoint.parse_utf("2B50") == string.utf_codepoint(0x2B50)
+  assert codepoint.parse_utf("661F") == string.utf_codepoint(0x661F)
+  assert codepoint.parse_utf("120000") == Error(Nil)
+}
+
 pub fn codepoint_range_ints_test() {
   let assert Error(_) = codepoint.range_from_ints(-100, 0)
   let assert Error(_) = codepoint.range_from_ints(100, -50)
