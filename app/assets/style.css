@@ -9,11 +9,14 @@
   --bg1: #ddd;
   --bg2: #ccc;
   --fg0: #222;
+  --fg1: #888;
   --bg-hl0: #077;
   --bg-hl1: #099;
   --fg-hl: white;
-  color: var(--fg0);
-  background-color: var(--bg0);
+  --bg: var(--bg0);
+  --fg: var(--fg0);
+  background-color: var(--bg);
+  color: var(--fg);
   font-family: var(--font-sans);
 }
 
@@ -26,38 +29,41 @@
   }
 }
 
-::selection {
-  background-color: var(--bg-hl0);
-  color: var(--fg-hl);
-}
-
 :focus {
   outline: 2px solid orange;
+}
+
+::selection {
+  --bg: var(--bg-hl0);
+  --fg: var(--fg-hl);
+  background-color: var(--bg);
+  color: var(--fg);
+}
+
+:is([aria-current]:not([aria-current="false"])) {
+  --bg: var(--bg-hl0);
+  --fg: var(--fg-hl);
+  background-color: var(--bg);
+  color: var(--fg);
+
+  &:hover {
+    --bg: var(--bg-hl1);
+  }
 }
 
 .invisible {
   display: none;
 }
 
-:is([aria-current]:not([aria-current="false"])) {
-  background-color: var(--bg-hl0);
-  color: var(--fg-hl);
-}
-
-:is([aria-current]:not([aria-current="false"])):hover {
-  background-color: var(--bg-hl1);
-  color: var(--fg-hl);
-}
-
 #chartable {
   margin: 0;
-}
 
-#chartable>div {
-  height: 100vh;
-  display: grid;
-  grid-template-columns: var(--sidenav-width) 1fr var(--article-width);
-  grid-template-rows: 1fr;
+  &>div {
+    height: 100vh;
+    display: grid;
+    grid-template-columns: var(--sidenav-width) 1fr var(--article-width);
+    grid-template-rows: 1fr;
+  }
 }
 
 nav {
@@ -65,16 +71,21 @@ nav {
   overflow-y: auto;
   overflow-x: hidden;
 
-  header {
+  & header {
     width: var(--sidenav-width);
   }
 
-  button {
+  & button {
     flex: 1;
     margin: 0px;
   }
 
-  a {
+  & li:hover {
+    --bg: var(--bg2);
+    background-color: var(--bg);
+  }
+
+  & a {
     display: block;
     padding: 4px 8px;
   }
@@ -84,7 +95,7 @@ main {
   overflow-y: auto;
   min-height: 100vh;
 
-  header {
+  & header {
     width: calc(100% - var(--sidenav-width) - var(--article-width));
   }
 }
@@ -99,27 +110,29 @@ article {
   border-left: var(--border);
   overflow-y: auto;
 
-  header {
+  & header {
     width: var(--article-width);
   }
 }
 
 header {
+  --bg: var(--bg1);
+  background-color: var(--bg);
   position: fixed;
   top: 0;
   height: var(--header-height);
   display: flex;
-  background-color: var(--bg1);
-}
 
-header+* {
-  margin-top: var(--header-height);
+  &+* {
+    margin-top: var(--header-height);
+  }
 }
 
 footer {
+  --bg: var(--bg1);
+  background-color: var(--bg);
   margin: 12px;
   margin-top: 100vh;
-  background-color: var(--bg1);
   display: flex;
 }
 
@@ -137,22 +150,19 @@ a {
   cursor: pointer;
 }
 
-a:hover {
-  background-color: var(--bg2);
-}
-
 button {
-  background-color: var(--bg1);
-  color: var(--fg0);
+  --bg: var(--bg1);
+  background-color: var(--bg);
+  color: var(--fg);
   border: none;
   font-size: 18px;
   text-align: center;
   text-decoration: none;
   cursor: pointer;
-}
 
-button:hover {
-  background-color: var(--bg2);
+  &:hover {
+    --bg: var(--bg2);
+  }
 }
 
 code {
