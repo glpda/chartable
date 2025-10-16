@@ -312,6 +312,9 @@ fn parse_alternating_records(
       let #(start_1, end_1) = codepoint.range_to_ints(range_1)
       let #(start_2, end_2) = codepoint.range_to_ints(range_2)
       let #(start_3, end_3) = codepoint.range_to_ints(range_3)
+      let #(start, _) = codepoint.range_to_codepoints(range_0)
+      let #(_, end) = codepoint.range_to_codepoints(range_3)
+      let codepoint_range = codepoint.range_from_codepoints(start, end)
       case
         start_0 == end_0
         && start_1 == end_1
@@ -322,22 +325,14 @@ fn parse_alternating_records(
         && start_0 + 3 == start_3
       {
         False -> [ContiguousRecord(range_0, data_0), ..accumulator]
-        True if start_0 % 2 == 0 -> {
-          let assert Ok(codepoint_range) =
-            codepoint.range_from_ints(start_0, end_3)
-          [
-            AlternatingRecord(codepoint_range:, even: data_0, odd: data_1),
-            ..next_records
-          ]
-        }
-        True -> {
-          let assert Ok(codepoint_range) =
-            codepoint.range_from_ints(start_0, end_3)
-          [
-            AlternatingRecord(codepoint_range:, even: data_1, odd: data_0),
-            ..next_records
-          ]
-        }
+        True if start_0 % 2 == 0 -> [
+          AlternatingRecord(codepoint_range:, even: data_0, odd: data_1),
+          ..next_records
+        ]
+        True -> [
+          AlternatingRecord(codepoint_range:, even: data_1, odd: data_0),
+          ..next_records
+        ]
       }
     }
     [ContiguousRecord(_, _), ..] -> [
@@ -348,15 +343,16 @@ fn parse_alternating_records(
 
     [AlternatingRecord(range_1, even:, odd:), ..next_records] -> {
       let #(start_0, end_0) = codepoint.range_to_ints(range_0)
-      let #(start_1, end_1) = codepoint.range_to_ints(range_1)
-      let is_adjacent_single = start_0 == end_0 && start_0 + 1 != start_1
+      let #(start_1, _) = codepoint.range_to_ints(range_1)
+      let is_adjacent_single = start_0 == end_0 && start_0 + 1 == start_1
       let match_even = data_0 == even && start_0 % 2 == 0
       let match_odd = data_0 == odd && start_0 % 2 == 1
       case is_adjacent_single && { match_even || match_odd } {
         False -> [ContiguousRecord(range_0, data_0), ..accumulator]
         True -> {
-          let assert Ok(codepoint_range) =
-            codepoint.range_from_ints(start_0, end_1)
+          let #(start, _) = codepoint.range_to_codepoints(range_0)
+          let #(_, end) = codepoint.range_to_codepoints(range_1)
+          let codepoint_range = codepoint.range_from_codepoints(start, end)
           [AlternatingRecord(codepoint_range:, even:, odd:), ..next_records]
         }
       }
