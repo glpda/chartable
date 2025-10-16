@@ -3,6 +3,7 @@ import chartable/unicode/category
 import chartable/unicode/codepoint
 import chartable/unicode/script
 import gleam/list
+import gleam/order
 import gleam/result
 import gleam/string
 
@@ -80,6 +81,21 @@ pub fn codepoint_range_ints_test() {
   let assert Ok(right) = codepoint.from_int(right)
   assert codepoint.range_from_codepoints(left, right) == range
   assert codepoint.range_from_codepoints(right, left) == range
+}
+
+pub fn codepoint_range_compare_test() {
+  let assert Ok(cp1) = codepoint.from_int(100)
+  let assert Ok(cp2) = codepoint.from_int(200)
+  let assert Ok(cp3) = codepoint.from_int(300)
+  let assert Ok(cp4) = codepoint.from_int(400)
+  let range = codepoint.range_from_codepoints
+
+  assert codepoint.range_compare(range(cp1, cp2), range(cp3, cp4)) == order.Lt
+  assert codepoint.range_compare(range(cp1, cp2), range(cp2, cp4)) == order.Eq
+  assert codepoint.range_compare(range(cp1, cp3), range(cp2, cp4)) == order.Eq
+  assert codepoint.range_compare(range(cp3, cp4), range(cp1, cp2)) == order.Gt
+  assert codepoint.range_compare(range(cp3, cp4), range(cp1, cp3)) == order.Eq
+  assert codepoint.range_compare(range(cp2, cp4), range(cp1, cp3)) == order.Eq
 }
 
 pub fn codepoint_range_overlap_test() {
