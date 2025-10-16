@@ -50,6 +50,12 @@
   &:hover {
     --bg: var(--bg-hl1);
   }
+
+  & .private-use,
+  & .surrogate,
+  & .unassigned {
+    --fg: var(--fg-hl);
+  }
 }
 
 .invisible {
@@ -105,6 +111,35 @@ main {
   display: grid;
   grid-gap: 6px;
   grid-template-columns: repeat(auto-fill, minmax(128px, 1fr));
+}
+
+.tile {
+  text-align: center;
+  font-size: 12px;
+
+  & div {
+    margin-bottom: 1em;
+  }
+}
+
+.character {
+  font-size: 1.5em;
+}
+
+.label {
+  border: 1px dashed var(--fg);
+  font-size: 1.25em;
+  padding: 1ex;
+  display: inline-block;
+  /*font-family: var(--font-mono);*/
+}
+
+.private-use,
+.surrogate,
+.unassigned {
+  font-size: 1.5em;
+  --fg: var(--fg1);
+  color: var(--fg);
 }
 
 article {

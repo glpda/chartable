@@ -1,11 +1,10 @@
 import chartable/unicode
 import chartable/unicode/codepoint.{type Codepoint}
 import chartable/unicode/script.{type Script}
+import chartable/view_codepoint
 
-import gleam/int
 import gleam/list
 import gleam/result
-import gleam/string
 
 import lustre
 import lustre/attribute
@@ -184,39 +183,26 @@ fn view_main(model: Model) -> Element(Msg) {
     html.ol(
       [attribute.id("codepoints-grid")],
       list.map(codepoints, fn(codepoint) {
-        html.li([], [
-          html.a(
-            [
-              event.on_click(UserSelectedCodepoint(codepoint)),
-              ..case codepoint == model.codepoint {
-                True -> [attribute.aria_current("true")]
-                False -> []
-              }
-            ],
-            [view_codepoint(codepoint)],
-          ),
-        ])
+        html.li(
+          case codepoint == model.codepoint {
+            True -> [attribute.aria_current("true")]
+            False -> []
+          },
+          [
+            view_codepoint.tile(codepoint, UserSelectedCodepoint(codepoint)),
+          ],
+        )
       }),
     ),
     view_footer(),
   ])
 }
 
-fn view_codepoint(cp: Codepoint) {
-  let int = codepoint.to_int(cp)
-  let char = case codepoint.to_utf(cp) {
-    _ if int <= 0x1F || 0x7F <= int && int <= 0x9F -> "�"
-    Ok(utf) -> [utf] |> string.from_utf_codepoints
-    Error(_) -> "�"
-  }
-  let hex = int.to_base16(int) |> string.pad_start(to: 4, with: "0")
-
-  html.text(char <> " U+" <> hex)
-}
-
 fn view_article(model: Model) {
   html.article([], [
-    html.header([], [html.h2([], [view_codepoint(model.codepoint)])]),
+    html.header([], [
+      html.h2([], [html.text(codepoint.to_hex(model.codepoint))]),
+    ]),
     html.dl([], [
       html.dt([], [html.text("Name")]),
       html.dd([], [
