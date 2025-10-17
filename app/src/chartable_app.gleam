@@ -1,10 +1,12 @@
 import chartable/unicode
+import chartable/unicode/category.{type GeneralCategory}
 import chartable/unicode/codepoint.{type Codepoint}
 import chartable/unicode/script.{type Script}
 import chartable/view_codepoint
 
 import gleam/list
 import gleam/result
+import gleam/string
 
 import lustre
 import lustre/attribute
@@ -163,6 +165,15 @@ fn script_is_current(model: Model, script) {
   }
 }
 
+fn category_to_string(cat: GeneralCategory) {
+  let long_name =
+    category.to_long_name(cat)
+    |> string.replace(each: "_", with: " ")
+  let short_name = category.to_short_name(cat)
+
+  html.text(long_name <> " (" <> short_name <> ")")
+}
+
 fn view_main(model: Model) -> Element(Msg) {
   let codepoints = case model.grid_model {
     GridBlock(block) -> codepoint.range_to_list(block.range)
@@ -199,24 +210,27 @@ fn view_main(model: Model) -> Element(Msg) {
 }
 
 fn view_article(model: Model) {
+  let hex = codepoint.to_hex(model.codepoint)
+  let cat = unicode.category_from_codepoint(model.codepoint)
+  let name =
+    unicode.name_from_codepoint(model.codepoint)
+    |> result.unwrap("<" <> hex <> ">")
+  let block = case unicode.block_from_codepoint(model.codepoint) {
+    Ok(block) -> block_link(block)
+    Error(Nil) -> html.text("No_Block")
+  }
+
   html.article([], [
     html.header([], [
-      html.h2([], [html.text(codepoint.to_hex(model.codepoint))]),
+      html.h2([], [html.text("U+" <> hex)]),
     ]),
     html.dl([], [
       html.dt([], [html.text("Name")]),
-      html.dd([], [
-        html.text(
-          unicode.name_from_codepoint(model.codepoint) |> result.unwrap(""),
-        ),
-      ]),
+      html.dd([], [html.text(name)]),
       html.dt([], [html.text("Block")]),
-      html.dd([], [
-        case unicode.block_from_codepoint(model.codepoint) {
-          Ok(block) -> block_link(block)
-          Error(Nil) -> html.text("No_Block")
-        },
-      ]),
+      html.dd([], [block]),
+      html.dt([], [html.text("Category")]),
+      html.dd([], [category_to_string(cat)]),
     ]),
   ])
 }
