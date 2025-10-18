@@ -208,8 +208,8 @@ pub fn unimath_from_grapheme_test() {
 
 pub fn unimath_to_math_type_test() {
   let math_type = fn(command) {
-    use #(math_type, _) <- result.map(latex.unimath(command))
-    math_type
+    use #(math_type, _) <- result.try(latex.unimath(command))
+    Ok(math_type)
   }
   assert math_type("mathampersand") == Ok(math_type.Ordinary)
   assert math_type("mupGamma") == Ok(math_type.Alphabetic)

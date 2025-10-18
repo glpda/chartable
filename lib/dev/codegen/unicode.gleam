@@ -377,8 +377,8 @@ fn parse_range_record(
   case fields {
     [first_field, ..other_fields] -> {
       use codepoint_range <- result.try(parse_codepoint_range(first_field))
-      use data <- result.map(fields_parser(other_fields))
-      RangeRecord(codepoint_range:, data:)
+      use data <- result.try(fields_parser(other_fields))
+      Ok(RangeRecord(codepoint_range:, data:))
     }
     _ -> Error("Missing Fields")
   }

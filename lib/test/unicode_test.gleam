@@ -265,8 +265,8 @@ pub fn block_from_codepoint_test() {
 
 pub fn block_from_name_test() {
   let block_range = fn(block_name) {
-    use block <- result.map(unicode.block_from_name(block_name))
-    codepoint.range_to_ints(block.range)
+    use block <- result.try(unicode.block_from_name(block_name))
+    Ok(codepoint.range_to_ints(block.range))
   }
   assert block_range("ascii") == Ok(#(0x0000, 0x007F))
   assert block_range("Basic_Latin") == Ok(#(0x0000, 0x007F))

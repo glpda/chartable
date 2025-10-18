@@ -34,7 +34,7 @@ pub type BasicType {
 /// ## Examples
 ///
 /// ```gleam
-/// use cp <- result.map(codepoint.from_int(0x2B50))
+/// let assert Ok(cp) = codepoint.from_int(0x2B50)
 /// assert unicode.basic_type_from_codepoint(cp) == unicode.Graphic
 /// ```
 ///
@@ -94,7 +94,7 @@ pub fn basic_type_from_codepoint(cp: Codepoint) -> BasicType {
 /// ## Examples
 ///
 /// ```gleam
-/// use cp <- result.map(codepoint.from_int(0x661F))
+/// let assert Ok(cp) = codepoint.from_int(0x661F)
 /// assert unicode.name_from_codepoint(cp) == Ok("CJK UNIFIED IDEOGRAPH-661F")
 /// ```
 ///
@@ -116,8 +116,8 @@ pub type Block {
 /// Get the list of all Unicode blocks.
 pub fn blocks() -> List(Block) {
   use #(start, end, name, aliases) <- list.filter_map(blocks_ffi())
-  use range <- result.map(codepoint.range_from_ints(start, end))
-  Block(range:, name:, aliases:)
+  use range <- result.try(codepoint.range_from_ints(start, end))
+  Ok(Block(range:, name:, aliases:))
 }
 
 @external(javascript, "./unicode/block_map.mjs", "get_list")
@@ -144,8 +144,8 @@ pub fn block_from_codepoint(cp: Codepoint) -> Result(Block, Nil) {
   use #(start, end, name, aliases) <- result.try(
     block_from_codepoint_ffi(codepoint.to_int(cp)),
   )
-  use range <- result.map(codepoint.range_from_ints(start, end))
-  Block(range:, name:, aliases:)
+  use range <- result.try(codepoint.range_from_ints(start, end))
+  Ok(Block(range:, name:, aliases:))
 }
 
 @external(javascript, "./unicode/block_map.mjs", "codepoint_to_block")
@@ -171,8 +171,8 @@ pub fn block_from_name(name: String) -> Result(Block, Nil) {
   use #(start, end, name, aliases) <- result.try(
     block_from_name_ffi(chartable.comparable_property(name)),
   )
-  use range <- result.map(codepoint.range_from_ints(start, end))
-  Block(range:, name:, aliases:)
+  use range <- result.try(codepoint.range_from_ints(start, end))
+  Ok(Block(range:, name:, aliases:))
 }
 
 @external(javascript, "./unicode/block_map.mjs", "name_to_block")
@@ -185,7 +185,7 @@ fn block_from_name_ffi(
 /// ## Examples
 ///
 /// ```gleam
-/// use cp <- result.map(codepoint.from_int(0x0041))
+/// let assert Ok(cp) = codepoint.from_int(0x0041)
 /// assert unicode.category_from_codepoint(cp) == category.LetterUppercase
 /// ```
 ///

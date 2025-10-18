@@ -32,11 +32,11 @@ pub fn parse_unimath_symbols(
   )
   let #(notation, _, rest) = splitter.split(curly, rest)
   let #(math_type, _, _) = splitter.split(curly, rest)
-  use math_type <- result.map(
+  use math_type <- result.try(
     math_type.from_tex(math_type)
     |> result.replace_error("Invalid MathType"),
   )
-  UnimathSymbol(codepoint:, math_type:, notation: string.trim(notation))
+  Ok(UnimathSymbol(codepoint:, math_type:, notation: string.trim(notation)))
 }
 
 pub fn unimath_symbols_to_notation_table(unimath_symbols: List(UnimathSymbol)) {

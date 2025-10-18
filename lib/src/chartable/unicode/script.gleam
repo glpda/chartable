@@ -106,7 +106,7 @@ pub fn to_long_name(script: Script) -> String {
 /// ## Examples
 ///
 /// ```gleam
-/// use cp <- result.map(codepoint.from_int(0x0041))
+/// let assert Ok(cp) = codepoint.from_int(0x0041)
 /// let latin = script.from_codepoint(cp)
 /// assert script.to_long_name(latin) == "Latin"
 /// ```

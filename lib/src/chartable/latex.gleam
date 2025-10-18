@@ -145,12 +145,12 @@ pub fn catcode_from_int(int: Int) -> Result(CatCode, Nil) {
 pub fn short_control_escape(codepoint: UtfCodepoint) -> Result(String, Nil) {
   case string.utf_codepoint_to_int(codepoint) {
     i if i < 0x40 -> {
-      use cp <- result.map(string.utf_codepoint(i + 0x40))
-      "^^" <> string.from_utf_codepoints([cp])
+      use cp <- result.try(string.utf_codepoint(i + 0x40))
+      Ok("^^" <> string.from_utf_codepoints([cp]))
     }
     i if i < 0x80 -> {
-      use cp <- result.map(string.utf_codepoint(i - 0x40))
-      "^^" <> string.from_utf_codepoints([cp])
+      use cp <- result.try(string.utf_codepoint(i - 0x40))
+      Ok("^^" <> string.from_utf_codepoints([cp]))
     }
     _ -> Error(Nil)
   }
@@ -257,8 +257,8 @@ fn any_command_to_grapheme(command: String) -> Result(String, Nil) {
     "space" -> Ok(" ")
     "char" <> dec -> {
       use int <- result.try(int.parse(dec))
-      use cp <- result.map(string.utf_codepoint(int))
-      string.from_utf_codepoints([cp])
+      use cp <- result.try(string.utf_codepoint(int))
+      Ok(string.from_utf_codepoints([cp]))
     }
     _ -> Error(Nil)
   }
@@ -313,8 +313,8 @@ fn math_command_to_grapheme(command: String) -> Result(String, Nil) {
     "space" -> Ok(" ")
     "char" <> dec -> {
       use int <- result.try(int.parse(dec))
-      use cp <- result.map(string.utf_codepoint(int))
-      string.from_utf_codepoints([cp])
+      use cp <- result.try(string.utf_codepoint(int))
+      Ok(string.from_utf_codepoints([cp]))
     }
     _ -> unimath_to_grapheme(command)
   }
@@ -329,12 +329,12 @@ fn unimath_to_mathtype_codepoint_ffi(
 /// [unicode-math](https://ctan.org/pkg/unicode-math) command.
 pub fn unimath(command: String) -> Result(#(MathType, UtfCodepoint), Nil) {
   use #(math_type, cp) <- result.try(unimath_to_mathtype_codepoint_ffi(command))
-  use codepoint <- result.map(string.utf_codepoint(cp))
-  #(math_type, codepoint)
+  use codepoint <- result.try(string.utf_codepoint(cp))
+  Ok(#(math_type, codepoint))
 }
 
 fn unimath_to_grapheme(command: String) -> Result(String, Nil) {
-  use #(_, codepoint) <- result.map(unimath(command))
-  string.from_utf_codepoints([codepoint])
+  use #(_, codepoint) <- result.try(unimath(command))
+  Ok(string.from_utf_codepoints([codepoint]))
 }
 // END
