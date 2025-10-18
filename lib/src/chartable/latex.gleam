@@ -320,15 +320,15 @@ fn math_command_to_grapheme(command: String) -> Result(String, Nil) {
   }
 }
 
-@external(javascript, "./latex/unimath_map.mjs", "notation_to_codepoint_type")
-fn unimath_to_codepoint_type_ffi(
+@external(javascript, "./latex/unimath_map.mjs", "notation_to_mathtype_codepoint")
+fn unimath_to_mathtype_codepoint_ffi(
   notation: String,
-) -> Result(#(Int, MathType), Nil)
+) -> Result(#(MathType, Int), Nil)
 
 /// Returns the LaTeX math type and code point of a given
 /// [unicode-math](https://ctan.org/pkg/unicode-math) command.
 pub fn unimath(command: String) -> Result(#(MathType, UtfCodepoint), Nil) {
-  use #(cp, math_type) <- result.try(unimath_to_codepoint_type_ffi(command))
+  use #(math_type, cp) <- result.try(unimath_to_mathtype_codepoint_ffi(command))
   use codepoint <- result.map(string.utf_codepoint(cp))
   #(math_type, codepoint)
 }
