@@ -43,13 +43,12 @@ pub fn symbols_from_grapheme(grapheme: String) -> List(String) {
 /// ## Examples
 ///
 /// ```gleam
-/// assert string.utf_codepoint(0x22C6)
-///   |> result.map(typst.symbols_from_codepoint)
-///   == Ok(["#sym.star.op"])
+/// let assert Ok(cp) = string.utf_codepoint(0x22C6)
+/// assert typst.symbols_from_codepoint(cp) == ["#sym.star.op"]
 ///
-/// assert string.utf_codepoint(0x0024)
-///   |> result.map(typst.symbols_from_codepoint)
-///   == Ok(["#sym.dollar", "#sym.pataca", "#sym.peso"])
+/// let assert Ok(cp) = string.utf_codepoint(0x0024)
+/// assert typst.symbols_from_codepoint(cp)
+///   == ["#sym.dollar", "#sym.pataca", "#sym.peso"]
 /// ```
 ///
 pub fn symbols_from_codepoint(codepoint: UtfCodepoint) -> List(String) {
@@ -82,13 +81,11 @@ pub fn emojis_from_grapheme(grapheme: String) -> List(String) {
 /// ## Examples
 ///
 /// ```gleam
-/// assert string.utf_codepoint(0x2B50)
-///   |> result.map(typst.emojis_from_codepoint)
-///   == Ok(["#emoji.star"])
+/// let assert Ok(cp) = string.utf_codepoint(0x2B50)
+/// assert typst.emojis_from_codepoint(cp) == ["#emoji.star"]
 ///
-/// assert string.utf_codepoint(0x1F31F)
-///   |> result.map(typst.emojis_from_codepoint)
-///   == Ok(["#emoji.star.glow"])
+/// let assert Ok(cp) = string.utf_codepoint(0x1F31F)
+/// assert typst.emojis_from_codepoint(cp) == ["#emoji.star.glow"]
 /// ```
 ///
 pub fn emojis_from_codepoint(codepoint: UtfCodepoint) -> List(String) {

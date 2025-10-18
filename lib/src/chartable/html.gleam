@@ -40,9 +40,8 @@ pub fn named_character_references(grapheme: String) -> List(String) {
 /// ## Examples
 ///
 /// ```gleam
-/// assert string.utf_codepoint(11_088)
-///   |> result.map(html.decimal_character_reference)
-///   == Ok("&#11088;")
+/// let assert Ok(cp) = string.utf_codepoint(11_088)
+/// assert html.decimal_character_reference(cp) == "&#11088;"
 /// ```
 ///
 pub fn decimal_character_reference(codepoint: UtfCodepoint) -> String {
@@ -56,9 +55,8 @@ pub fn decimal_character_reference(codepoint: UtfCodepoint) -> String {
 /// ## Examples
 ///
 /// ```gleam
-/// assert string.utf_codepoint(0x2B50)
-///   |> result.map(html.hexadecimal_character_reference)
-///   == Ok("&#x2B50;")
+/// let assert Ok(cp) = string.utf_codepoint(0x2B50)
+/// assert html.decimal_character_reference(cp) == "&#x2B50;"
 /// ```
 ///
 pub fn hexadecimal_character_reference(codepoint: UtfCodepoint) -> String {

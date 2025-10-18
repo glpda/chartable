@@ -17,14 +17,12 @@ pub fn symbols_from_grapheme_test() {
 }
 
 pub fn symbols_from_codepoint_test() {
-  assert string.utf_codepoint(0x26A7)
-    |> result.map(typst.symbols_from_codepoint)
-    == Ok(["#sym.gender.trans"])
-  assert string.utf_codepoint(0x22C6)
-    |> result.map(typst.symbols_from_codepoint)
-    == Ok(["#sym.star.op"])
-  assert string.utf_codepoint(0x0024)
-    |> result.map(typst.symbols_from_codepoint)
+  let symbols_from_int = fn(cp) {
+    result.map(string.utf_codepoint(cp), typst.symbols_from_codepoint)
+  }
+  assert symbols_from_int(0x26A7) == Ok(["#sym.gender.trans"])
+  assert symbols_from_int(0x22C6) == Ok(["#sym.star.op"])
+  assert symbols_from_int(0x0024)
     == Ok(["#sym.dollar", "#sym.pataca", "#sym.peso"])
 }
 
@@ -38,12 +36,11 @@ pub fn emojis_from_grapheme_test() {
 }
 
 pub fn emojis_from_codepoint_test() {
-  assert string.utf_codepoint(0x2B50)
-    |> result.map(typst.emojis_from_codepoint)
-    == Ok(["#emoji.star"])
-  assert string.utf_codepoint(0x1F31F)
-    |> result.map(typst.emojis_from_codepoint)
-    == Ok(["#emoji.star.glow"])
+  let emojis_from_int = fn(cp) {
+    result.map(string.utf_codepoint(cp), typst.emojis_from_codepoint)
+  }
+  assert emojis_from_int(0x2B50) == Ok(["#emoji.star"])
+  assert emojis_from_int(0x1F31F) == Ok(["#emoji.star.glow"])
 }
 
 pub fn markup_shorthand_to_codepoint_test() {
@@ -122,27 +119,16 @@ fn make_math_alphanum_notation_table() {
 }
 
 pub fn math_alphanum_from_codepoint_test() {
-  assert string.utf_codepoint(0x0043)
-    |> result.try(typst.math_alphanum_from_codepoint)
-    == Ok(["upright(C)"])
-  assert string.utf_codepoint(0x1D436)
-    |> result.try(typst.math_alphanum_from_codepoint)
-    == Ok(["C"])
-  assert string.utf_codepoint(0x1D53A)
-    |> result.try(typst.math_alphanum_from_codepoint)
-    == Error(Nil)
-  assert string.utf_codepoint(0x2102)
-    |> result.try(typst.math_alphanum_from_codepoint)
-    == Ok(["bb(C)"])
-  assert string.utf_codepoint(0x1D6AA)
-    |> result.try(typst.math_alphanum_from_codepoint)
-    == Ok(["bold(Gamma)"])
-  assert string.utf_codepoint(0x1D6C4)
-    |> result.try(typst.math_alphanum_from_codepoint)
-    == Ok(["bold(upright(gamma))"])
-  assert string.utf_codepoint(0x1D4F1)
-    |> result.try(typst.math_alphanum_from_codepoint)
-    == Ok(["bold(cal(h))"])
+  let math_alphanum_from_int = fn(cp) {
+    result.try(string.utf_codepoint(cp), typst.math_alphanum_from_codepoint)
+  }
+  assert math_alphanum_from_int(0x0043) == Ok(["upright(C)"])
+  assert math_alphanum_from_int(0x1D436) == Ok(["C"])
+  assert math_alphanum_from_int(0x1D53A) == Error(Nil)
+  assert math_alphanum_from_int(0x2102) == Ok(["bb(C)"])
+  assert math_alphanum_from_int(0x1D6AA) == Ok(["bold(Gamma)"])
+  assert math_alphanum_from_int(0x1D6C4) == Ok(["bold(upright(gamma))"])
+  assert math_alphanum_from_int(0x1D4F1) == Ok(["bold(cal(h))"])
 
   make_math_alphanum_notation_table()
   |> notation_table.to_string()
