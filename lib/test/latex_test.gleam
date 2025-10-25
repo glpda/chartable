@@ -90,40 +90,40 @@ pub fn long_control_escape_test() {
 }
 
 pub fn parse_control_escape_test() {
-  assert latex.parse_control_escape("A") == Ok("A")
-  assert latex.parse_control_escape("^^") == Ok("")
+  assert latex.parse_control_escape("A") == "A"
+  assert latex.parse_control_escape("^^") ==""
 
-  assert latex.parse_control_escape("^^!") == Ok("a")
-  assert latex.parse_control_escape("^^a") == Ok("!")
-  assert latex.parse_control_escape("^^M") == Ok("\r")
-  assert latex.parse_control_escape("^^?") == Ok("\u{7F}")
-  assert latex.parse_control_escape("^^@") == Ok("\u{00}")
-  assert latex.parse_control_escape("^^^") == Ok("\u{1E}")
-  assert latex.parse_control_escape("^^\r") == Ok("M")
-  assert latex.parse_control_escape("^^\u{7F}") == Ok("?")
-  assert latex.parse_control_escape("^^\u{00}") == Ok("@")
-  assert latex.parse_control_escape("^^\u{1E}") == Ok("^")
+  assert latex.parse_control_escape("^^!") == "a"
+  assert latex.parse_control_escape("^^a") == "!"
+  assert latex.parse_control_escape("^^M") == "\r"
+  assert latex.parse_control_escape("^^?") == "\u{7F}"
+  assert latex.parse_control_escape("^^@") == "\u{00}"
+  assert latex.parse_control_escape("^^^") == "\u{1E}"
+  assert latex.parse_control_escape("^^\r") == "M"
+  assert latex.parse_control_escape("^^\u{7F}") == "?"
+  assert latex.parse_control_escape("^^\u{00}") == "@"
+  assert latex.parse_control_escape("^^\u{1E}") == "^"
 
-  assert latex.parse_control_escape("^^61") == Ok("a")
-  assert latex.parse_control_escape("^^00") == Ok("\u{00}")
-  assert latex.parse_control_escape("^^09") == Ok("\u{09}")
-  assert latex.parse_control_escape("^^0a") == Ok("\u{0A}")
-  assert latex.parse_control_escape("^^0f") == Ok("\u{0F}")
-  assert latex.parse_control_escape("^^90") == Ok("\u{90}")
-  assert latex.parse_control_escape("^^99") == Ok("\u{99}")
-  assert latex.parse_control_escape("^^9a") == Ok("\u{9A}")
-  assert latex.parse_control_escape("^^9f") == Ok("\u{9F}")
-  assert latex.parse_control_escape("^^a0") == Ok("\u{A0}")
-  assert latex.parse_control_escape("^^a9") == Ok("\u{A9}")
-  assert latex.parse_control_escape("^^aa") == Ok("\u{AA}")
-  assert latex.parse_control_escape("^^af") == Ok("\u{AF}")
-  assert latex.parse_control_escape("^^f0") == Ok("\u{F0}")
-  assert latex.parse_control_escape("^^f9") == Ok("\u{F9}")
-  assert latex.parse_control_escape("^^fa") == Ok("\u{FA}")
-  assert latex.parse_control_escape("^^ff") == Ok("\u{FF}")
+  assert latex.parse_control_escape("^^61") == "a"
+  assert latex.parse_control_escape("^^00") == "\u{00}"
+  assert latex.parse_control_escape("^^09") == "\u{09}"
+  assert latex.parse_control_escape("^^0a") == "\u{0A}"
+  assert latex.parse_control_escape("^^0f") == "\u{0F}"
+  assert latex.parse_control_escape("^^90") == "\u{90}"
+  assert latex.parse_control_escape("^^99") == "\u{99}"
+  assert latex.parse_control_escape("^^9a") == "\u{9A}"
+  assert latex.parse_control_escape("^^9f") == "\u{9F}"
+  assert latex.parse_control_escape("^^a0") == "\u{A0}"
+  assert latex.parse_control_escape("^^a9") == "\u{A9}"
+  assert latex.parse_control_escape("^^aa") == "\u{AA}"
+  assert latex.parse_control_escape("^^af") == "\u{AF}"
+  assert latex.parse_control_escape("^^f0") == "\u{F0}"
+  assert latex.parse_control_escape("^^f9") == "\u{F9}"
+  assert latex.parse_control_escape("^^fa") == "\u{FA}"
+  assert latex.parse_control_escape("^^ff") == "\u{FF}"
 
-  assert latex.parse_control_escape("^^5c^^27^^7b^^65^^7d") == Ok("\\'{e}")
-  assert latex.parse_control_escape("^^5c^^g^^;^^%^^=") == Ok("\\'{e}")
+  assert latex.parse_control_escape("^^5c^^27^^7b^^65^^7d") == "\\'{e}"
+  assert latex.parse_control_escape("^^5c^^g^^;^^%^^=") == "\\'{e}"
 }
 
 pub fn any_to_grapheme_test() {

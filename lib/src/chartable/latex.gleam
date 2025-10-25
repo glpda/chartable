@@ -209,13 +209,14 @@ pub fn unimath_from_codepoint(cp: UtfCodepoint) -> List(String) {
 /// [TeX for the Impatient](https://mirrors.ctan.org/info/impatient/book.pdf)
 /// page 55.
 ///
-pub fn parse_control_escape(str: String) -> Result(String, Nil) {
+pub fn parse_control_escape(str: String) -> String {
   string.to_utf_codepoints(str)
   |> list.map(string.utf_codepoint_to_int)
   |> parse_control_escape_loop([])
-  |> list.map(string.utf_codepoint)
-  |> result.all
-  |> result.map(string.from_utf_codepoints)
+  // NOTE: the ints should all be valid codepoints
+  |> list.try_map(string.utf_codepoint)
+  |> result.unwrap([])
+  |> string.from_utf_codepoints
 }
 
 fn parse_control_escape_loop(
@@ -297,7 +298,7 @@ fn any_command_to_grapheme(command: String) -> Result(String, Nil) {
 /// This is not a TeX parser! Some commands can be directly followed by other
 /// characters without issue, but this function does not handle such cases.
 pub fn text_to_grapheme(latex: String) -> Result(String, Nil) {
-  use latex <- result.try(parse_control_escape(latex))
+  let latex = parse_control_escape(latex)
   use <- result.lazy_or(any_to_grapheme(latex))
   case latex {
     "~" -> Ok("\u{00A0}")
@@ -341,7 +342,7 @@ fn text_command_to_grapheme(command: String) -> Result(String, Nil) {
 /// This is not a TeX parser! Some commands can be directly followed by other
 /// characters without issue, but this function does not handle such cases.
 pub fn math_to_grapheme(latex: String) {
-  use latex <- result.try(parse_control_escape(latex))
+  let latex = parse_control_escape(latex)
   use <- result.lazy_or(any_to_grapheme(latex))
   case latex {
     "'" -> Ok("\u{2032}")
