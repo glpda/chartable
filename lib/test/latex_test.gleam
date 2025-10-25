@@ -145,10 +145,16 @@ pub fn text_to_grapheme_test() {
   assert latex.text_to_grapheme("``") == Ok("“")
   assert latex.text_to_grapheme("''") == Ok("”")
   assert latex.text_to_grapheme("\\-") == Ok("\u{00AD}")
+  assert latex.text_to_grapheme("\\AE") == Ok("Æ")
+  assert latex.text_to_grapheme("\\ae") == Ok("æ")
+  assert latex.text_to_grapheme("\\i") == Ok("ı")
+  assert latex.text_to_grapheme("\\j") == Ok("ȷ")
 }
 
 pub fn math_to_grapheme_test() {
   assert latex.math_to_grapheme("'") == Ok("′")
+  assert latex.math_to_grapheme("\\>") == Ok("\u{205F}")
+  assert latex.math_to_grapheme("\\not") == Ok("\u{0338}")
 }
 
 pub fn unimath_to_grapheme_test() {

@@ -253,8 +253,36 @@ fn any_to_grapheme(latex: String) -> Result(String, Nil) {
 
 fn any_command_to_grapheme(command: String) -> Result(String, Nil) {
   case command {
-    " " -> Ok(" ")
-    "space" -> Ok(" ")
+    // special symbols:
+    "#" -> Ok("#")
+    "$" -> Ok("$")
+    "%" -> Ok("%")
+    "&" -> Ok("&")
+    "_" -> Ok("_")
+    "lq" -> Ok("‘")
+    "rq" -> Ok("’")
+    "lbrack" -> Ok("[")
+    "rbrack" -> Ok("]")
+    "dag" -> Ok("†")
+    "ddag" -> Ok("‡")
+    "copyright" -> Ok("©")
+    "P" -> Ok("¶")
+    "S" -> Ok("§")
+    "dots" -> Ok("…")
+    "slash" -> Ok("/")
+
+    // spacing:
+    " " | "space" -> Ok(" ")
+    // ⅙em:
+    "thinspace" -> Ok("\u{2006}")
+    // ½em: Ok("\u{2000}")
+    "enskip" | "enspace" -> Ok("\u{2002}")
+    // 1em: Ok("\u{2001}")
+    "quad" -> Ok("\u{2003}")
+    // 2em:
+    "qquad" -> Ok("\u{2003}\u{2003}")
+
+    // char escape:
     "char" <> dec -> {
       use int <- result.try(int.parse(dec))
       use cp <- result.try(string.utf_codepoint(int))
@@ -279,6 +307,7 @@ pub fn text_to_grapheme(latex: String) -> Result(String, Nil) {
     "'" -> Ok("\u{2019}")
     "``" -> Ok("\u{201C}")
     "''" -> Ok("\u{201D}")
+
     "\\" <> command -> text_command_to_grapheme(command)
     _ -> Error(Nil)
   }
@@ -286,7 +315,23 @@ pub fn text_to_grapheme(latex: String) -> Result(String, Nil) {
 
 fn text_command_to_grapheme(command: String) -> Result(String, Nil) {
   case command {
+    // soft hyphen:
     "-" -> Ok("\u{00AD}")
+    // letters and ligatures:
+    "AA" -> Ok("Å")
+    "aa" -> Ok("å")
+    "AE" -> Ok("Æ")
+    "ae" -> Ok("æ")
+    "L" -> Ok("Ł")
+    "l" -> Ok("ł")
+    "O" -> Ok("Ø")
+    "o" -> Ok("ø")
+    "OE" -> Ok("Œ")
+    "oe" -> Ok("œ")
+    "ss" -> Ok("ß")
+    "i" -> Ok("ı")
+    "j" -> Ok("ȷ")
+
     _ -> Error(Nil)
   }
 }
@@ -302,6 +347,7 @@ pub fn math_to_grapheme(latex: String) {
     "'" -> Ok("\u{2032}")
     "''" -> Ok("\u{2033}")
     "'''" -> Ok("\u{2034}")
+
     "\\" <> command -> math_command_to_grapheme(command)
     _ -> Error(Nil)
   }
@@ -309,13 +355,18 @@ pub fn math_to_grapheme(latex: String) {
 
 fn math_command_to_grapheme(command: String) -> Result(String, Nil) {
   case command {
-    " " -> Ok(" ")
-    "space" -> Ok(" ")
-    "char" <> dec -> {
-      use int <- result.try(int.parse(dec))
-      use cp <- result.try(string.utf_codepoint(int))
-      Ok(string.from_utf_codepoints([cp]))
-    }
+    // negative thin space:
+    // "!" -> Ok("\u{200B}")
+    // thin space:
+    "," -> Ok("\u{202F}")
+    // medium space:
+    ">" -> Ok("\u{205F}")
+    // thick space:
+    ";" -> Ok("\u{2004}")
+    // discretionary multiplication symbol:
+    "*" -> Ok("\u{2062}")
+    // negation overlay accent:
+    "not" -> Ok("\u{0338}")
     _ -> unimath_to_grapheme(command)
   }
 }
