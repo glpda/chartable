@@ -45,5 +45,6 @@ allow_write = [
     "./src/chartable/typst/symbol_map.mjs",
     "./src/chartable/typst/emoji_map.mjs",
     "./src/chartable/html/entity_map.mjs",
+    "./src/chartable/latex/texmath_map.mjs",
     "./src/chartable/latex/unimath_map.mjs",
 ]

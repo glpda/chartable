@@ -108,14 +108,28 @@ pub fn html_entity_test() {
 // =============================================================================
 // BEGIN LaTeX Notation Tests
 
+pub fn latex_texmath_test() {
+  let assert Ok(txt) = simplifile.read("data/latex/tex-math.txt")
+  let assert Ok(math_symbols) = latex_codegen.parse_texmath_symbols(txt:)
+
+  let table = latex_codegen.math_symbols_to_notation_table(math_symbols)
+
+  dict.each(table.notation_to_grapheme, fn(notation, grapheme) {
+    assert latex.math_to_grapheme("\\" <> notation) == Ok(grapheme)
+  })
+
+  notation_table.to_string(table)
+  |> birdie.snap(title: "Plain Tex Math from codepoints")
+}
+
 pub fn latex_unimath_test() {
   let assert Ok(tex) = simplifile.read("data/latex/unicode-math.tex")
   let assert Ok(math_symbols) = latex_codegen.parse_unimath_symbols(tex)
 
-  let table = latex_codegen.unimath_symbols_to_notation_table(math_symbols)
+  let table = latex_codegen.math_symbols_to_notation_table(math_symbols)
 
   dict.each(table.notation_to_grapheme, fn(notation, grapheme) {
-    assert latex.math_to_grapheme(notation) == Ok(grapheme)
+    assert latex.math_to_grapheme("\\" <> notation) == Ok(grapheme)
   })
 
   notation_table.to_string(table)

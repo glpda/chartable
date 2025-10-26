@@ -1,0 +1,247 @@
+// List of TeX commands for symbols in math formulas,
+// extracted from https://mirrors.ctan.org/info/impatient/book.pdf
+
+// miscellaneous ordinary symbols:
+infty ORD ∞
+angle ORD ∠
+triangle ORD △
+emptyset ORD ∅
+bot ORD ⊥
+top ORD ⊤
+exists ORD ∃
+forall ORD ∀
+nabla ORD ∇
+neg ORD ¬
+lnot ORD ¬
+prime ORD ′ // U+2032
+partial ORD ∂
+surd ORD √
+wp ORD ℘
+flat ORD ♭
+sharp ORD ♯
+natural ORD ♮
+clubsuit ORD ♣
+diamondsuit ORD ♢
+heartsuit ORD ♡
+spadesuit ORD ♠
+
+// alphabetic:
+Re ABC ℜ
+Im ABC ℑ
+hbar ABC ħ
+ell ABC ℓ
+aleph ABC ℵ
+imath ABC 𝚤
+jmath ABC 𝚥
+// (TeX does not have commands for Greek letters that look like their roman counterparts)
+alpha ABC α
+beta ABC β
+chi ABC χ
+delta ABC δ
+Delta ABC Δ
+epsilon ABC ϵ
+varepsilon ABC ε
+eta ABC η
+gamma ABC γ
+Gamma ABC Γ
+iota ABC ι
+kappa ABC κ
+lambda ABC λ
+Lambda ABC Λ
+mu ABC μ
+nu ABC ν
+omega ABC ω
+Omega ABC Ω
+phi ABC ϕ
+varphi ABC φ
+Phi ABC Φ
+pi ABC π
+varpi ABC ϖ
+Pi ABC Π
+psi ABC ψ
+Psi ABC Ψ
+rho ABC ρ
+varrho ABC ϱ
+sigma ABC σ
+varsigma ABC ς
+Sigma ABC Σ
+tau ABC τ
+theta ABC θ
+vartheta ABC ϑ
+Theta ABC Θ
+upsilon ABC υ
+Upsilon ABC Υ
+xi ABC ξ
+Xi ABC Ξ
+zeta ABC ζ
+
+// binary operations:
+vee BIN ∨
+lor BIN ∨
+wedge BIN ∧
+land BIN ∧
+amalg BIN ⨿
+cap BIN ∩
+cup BIN ∪
+uplus BIN ⊎
+sqcap BIN ⊓
+sqcup BIN ⊔
+dagger BIN †
+ddagger BIN ‡
+cdot BIN ⋅
+diamond BIN ⋄
+bullet BIN •
+circ BIN ∘
+bigcirc BIN ○
+odot BIN ⊙
+ominus BIN ⊖
+oplus BIN ⊕
+oslash BIN ⊘
+otimes BIN ⊗
+pm BIN ±
+mp BIN ∓
+triangleleft BIN ◁
+triangleright BIN ▷
+triangledown BIN ▿
+triangleup BIN ▵
+ast BIN ∗
+star BIN ⋆
+times BIN ×
+div BIN ÷
+setminus BIN ∖
+wr BIN ≀
+
+// relations:
+asymp REL ≍
+cong REL ≅
+dashv REL ⊣
+vdash REL ⊢
+perp REL ⟂
+mid REL ∣
+parallel REL ∥
+doteq REL ≐
+equiv REL ≡
+ge REL ≥
+geq REL ≥
+le REL ≤
+leq REL ≤
+gg REL ≫
+ll REL ≪
+models REL ⊧
+ne REL ≠
+neq REL ≠
+notin REL ∉
+in REL ∈
+ni REL ∋
+owns REL ∋
+prec REL ≺
+preceq REL ⪯
+succ REL ≻
+succeq REL ⪰
+bowtie REL ⋈
+propto REL ∝
+approx REL ≈
+sim REL ∼
+simeq REL ≃
+frown REL ⌢
+smile REL ⌣
+subset REL ⊂
+subseteq REL ⊆
+supset REL ⊃
+supseteq REL ⊇
+sqsubseteq REL ⊑
+sqsupseteq REL ⊒
+
+// arrows:
+leftarrow REL ←
+gets REL ←
+Leftarrow REL ⇐
+rightarrow REL →
+to REL →
+Rightarrow REL ⇒
+leftrightarrow REL ↔
+Leftrightarrow REL ⇔
+longleftarrow REL ⟵ // ←−
+Longleftarrow REL ⟸ // ⇐=
+longrightarrow REL ⟶ // −→
+Longrightarrow REL ⟹ // =⇒
+longleftrightarrow REL ⟷ // ←→
+Longleftrightarrow REL ⟺ // ⇐⇒
+iff REL ⟺ // ⇐⇒
+hookleftarrow REL ↩
+hookrightarrow REL ↪
+leftharpoondown REL ↽
+rightharpoondown REL ⇁
+leftharpoonup REL ↼
+rightharpoonup REL ⇀
+rightleftharpoons REL ⇌ // ⇀↽
+mapsto REL ↦
+longmapsto REL ⟼
+downarrow REL ↓ // also FEN delimiters
+Downarrow REL ⇓ // also FEN delimiters
+uparrow REL ↑ // also FEN delimiters
+Uparrow REL ⇑ // also FEN delimiters
+updownarrow REL ↕ // also FEN delimiters
+Updownarrow REL ⇕ // also FEN delimiters
+nearrow REL ↗
+searrow REL ↘
+nwarrow REL ↖
+swarrow REL ↙
+
+// delimiters:
+lbrace OPN {
+{ OPN {
+rbrace CLO }
+} CLO }
+lbrack OPN [
+rbrack CLO ]
+langle OPN ⟨
+rangle CLO ⟩
+lceil OPN ⌈
+rceil CLO ⌉
+lfloor OPN ⌊
+rfloor CLO ⌋
+backslash FEN \
+vert FEN |
+Vert FEN ‖
+| FEN ‖
+lgroup OPN ⟮
+rgroup CLO ⟯
+
+// large operators:
+bigcap LOP ⋂
+bigcup LOP ⋃
+bigodot LOP ⨀ // ⊙
+bigoplus LOP ⨁ // ⊕
+bigotimes LOP ⨂ // ⊗
+bigsqcup LOP ⨆ // ⊔
+biguplus LOP ⨄ // ⊎
+bigvee LOP ⋁ // ∨
+bigwedge LOP ⋀ // ∧
+coprod LOP ∐
+smallint LOP ∫
+int LOP ∫
+oint LOP ∮
+prod LOP ∏
+sum LOP ∑
+
+// punctuations:
+cdotp PUN ·
+ldotp PUN .
+colon PUN :
+ldots PUN …
+cdots PUN ⋯
+vdots PUN ⋮
+ddots PUN ⋱
+
+// others:
+sqrt RAD √
+// downbracefill
+// upbracefill
+lmoustache FEN ⎰ // OPN or CLO delimiters
+rmoustache FEN ⎱ // OPN or CLO delimiters
+bracevert FEN ⎪
+// arrowvert FEN |
+// Arrowvert FEN ‖
+
+

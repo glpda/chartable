@@ -189,6 +189,16 @@ pub fn char_escape(codepoint: UtfCodepoint) -> String {
   "\\char" <> int.to_string(cp)
 }
 
+@external(javascript, "./latex/texmath_map.mjs", "codepoint_to_notations")
+fn codepoint_to_texmath_ffi(cp: Int) -> List(String)
+
+/// Get the Plain TeX math mode commands outputting a given code point.
+pub fn texmath_from_codepoint(cp: UtfCodepoint) -> List(String) {
+  string.utf_codepoint_to_int(cp)
+  |> codepoint_to_texmath_ffi
+  |> list.map(string.append(_, to: "\\"))
+}
+
 @external(javascript, "./latex/unimath_map.mjs", "codepoint_to_notations")
 fn codepoint_to_unimath_ffi(cp: Int) -> List(String)
 
@@ -355,6 +365,8 @@ pub fn math_to_grapheme(latex: String) {
 }
 
 fn math_command_to_grapheme(command: String) -> Result(String, Nil) {
+  use <- result.lazy_or(unimath_to_grapheme(command))
+  use <- result.lazy_or(texmath_to_grapheme(command))
   case command {
     // negative thin space:
     // "!" -> Ok("\u{200B}")
@@ -368,8 +380,25 @@ fn math_command_to_grapheme(command: String) -> Result(String, Nil) {
     "*" -> Ok("\u{2062}")
     // negation overlay accent:
     "not" -> Ok("\u{0338}")
-    _ -> unimath_to_grapheme(command)
+    _ -> Error(Nil)
   }
+}
+
+@external(javascript, "./latex/texmath_map.mjs", "notation_to_mathtype_codepoint")
+fn texmath_to_mathtype_codepoint_ffi(
+  notation: String,
+) -> Result(#(MathType, Int), Nil)
+
+/// Returns the Plain TeX math type and code point of a given command.
+pub fn texmath(command: String) -> Result(#(MathType, UtfCodepoint), Nil) {
+  use #(math_type, cp) <- result.try(texmath_to_mathtype_codepoint_ffi(command))
+  use codepoint <- result.try(string.utf_codepoint(cp))
+  Ok(#(math_type, codepoint))
+}
+
+fn texmath_to_grapheme(command: String) -> Result(String, Nil) {
+  use #(_, codepoint) <- result.try(texmath(command))
+  Ok(string.from_utf_codepoints([codepoint]))
 }
 
 @external(javascript, "./latex/unimath_map.mjs", "notation_to_mathtype_codepoint")

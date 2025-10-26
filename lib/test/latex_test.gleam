@@ -91,7 +91,7 @@ pub fn long_control_escape_test() {
 
 pub fn parse_control_escape_test() {
   assert latex.parse_control_escape("A") == "A"
-  assert latex.parse_control_escape("^^") ==""
+  assert latex.parse_control_escape("^^") == ""
 
   assert latex.parse_control_escape("^^!") == "a"
   assert latex.parse_control_escape("^^a") == "!"
@@ -157,6 +157,24 @@ pub fn math_to_grapheme_test() {
   assert latex.math_to_grapheme("\\not") == Ok("\u{0338}")
 }
 
+pub fn texmath_to_grapheme_test() {
+  assert latex.math_to_grapheme("\\infty") == Ok("∞")
+  assert latex.math_to_grapheme("\\alpha") == Ok("α")
+  assert latex.math_to_grapheme("\\vee") == Ok("∨")
+  assert latex.math_to_grapheme("\\in") == Ok("∈")
+  assert latex.math_to_grapheme("\\to") == Ok("→")
+  assert latex.math_to_grapheme("\\lbrace") == Ok("{")
+  assert latex.math_to_grapheme("\\{") == Ok("{")
+  assert latex.math_to_grapheme("\\rbrace") == Ok("}")
+  assert latex.math_to_grapheme("\\}") == Ok("}")
+  assert latex.math_to_grapheme("\\Vert") == Ok("‖")
+  assert latex.math_to_grapheme("\\|") == Ok("‖")
+  assert latex.math_to_grapheme("\\sum") == Ok("∑")
+  assert latex.math_to_grapheme("\\colon") == Ok(":")
+  assert latex.math_to_grapheme("\\sqrt") == Ok("√")
+  assert latex.math_to_grapheme("\\bracevert") == Ok("⎪")
+}
+
 pub fn unimath_to_grapheme_test() {
   assert latex.math_to_grapheme("\\star") == Ok("\u{22C6}")
   assert latex.math_to_grapheme("\\medwhitestar") == Ok("⭐")
@@ -180,6 +198,27 @@ pub fn unimath_to_grapheme_test() {
   assert latex.math_to_grapheme("\\overbracket") == Ok("⎴")
   assert latex.math_to_grapheme("\\underbracket") == Ok("⎵")
   assert latex.math_to_grapheme("\\mathcolon") == Ok(":")
+}
+
+pub fn texmath_from_grapheme_test() {
+  let texmath_from_grapheme = fn(grapheme) {
+    case string.to_utf_codepoints(grapheme) {
+      [cp] -> latex.texmath_from_codepoint(cp)
+      _ -> []
+    }
+  }
+  assert texmath_from_grapheme("∞") == ["\\infty"]
+  assert texmath_from_grapheme("α") == ["\\alpha"]
+  assert texmath_from_grapheme("∨") == ["\\vee", "\\lor"]
+  assert texmath_from_grapheme("∈") == ["\\in"]
+  assert texmath_from_grapheme("→") == ["\\rightarrow", "\\to"]
+  assert texmath_from_grapheme("{") == ["\\lbrace", "\\{"]
+  assert texmath_from_grapheme("}") == ["\\rbrace", "\\}"]
+  assert texmath_from_grapheme("‖") == ["\\Vert", "\\|"]
+  assert texmath_from_grapheme("∑") == ["\\sum"]
+  assert texmath_from_grapheme(":") == ["\\colon"]
+  assert texmath_from_grapheme("√") == ["\\surd", "\\sqrt"]
+  assert texmath_from_grapheme("⎪") == ["\\bracevert"]
 }
 
 pub fn unimath_from_grapheme_test() {
@@ -212,6 +251,28 @@ pub fn unimath_from_grapheme_test() {
   assert unimath_from_grapheme(":") == ["\\mathcolon"]
 }
 
+pub fn texmath_to_math_type_test() {
+  let math_type = fn(command) {
+    use #(math_type, _) <- result.try(latex.texmath(command))
+    Ok(math_type)
+  }
+  assert math_type("infty") == Ok(math_type.Ordinary)
+  assert math_type("alpha") == Ok(math_type.Alphabetic)
+  assert math_type("vee") == Ok(math_type.BinaryOperation)
+  assert math_type("in") == Ok(math_type.Relation)
+  assert math_type("to") == Ok(math_type.Relation)
+  assert math_type("lbrace") == Ok(math_type.Opening)
+  assert math_type("{") == Ok(math_type.Opening)
+  assert math_type("rbrace") == Ok(math_type.Closing)
+  assert math_type("}") == Ok(math_type.Closing)
+  assert math_type("Vert") == Ok(math_type.Fencing)
+  assert math_type("|") == Ok(math_type.Fencing)
+  assert math_type("sum") == Ok(math_type.LargeOperator)
+  assert math_type("colon") == Ok(math_type.Punctuation)
+  assert math_type("sqrt") == Ok(math_type.Radical)
+  assert math_type("bracevert") == Ok(math_type.Fencing)
+}
+
 pub fn unimath_to_math_type_test() {
   let math_type = fn(command) {
     use #(math_type, _) <- result.try(latex.unimath(command))
@@ -227,7 +288,7 @@ pub fn unimath_to_math_type_test() {
   assert math_type("times") == Ok(math_type.BinaryOperation)
   assert math_type("equal") == Ok(math_type.Relation)
   assert math_type("sum") == Ok(math_type.LargeOperator)
-  // assert unimath_to_math_type("sqrt") == Ok(math_type.Radical)
+  // assert math_type("sqrt") == Ok(math_type.Radical)
   assert math_type("lbrace") == Ok(math_type.Opening)
   assert math_type("rbrace") == Ok(math_type.Closing)
   assert math_type("vert") == Ok(math_type.Fencing)

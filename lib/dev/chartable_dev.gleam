@@ -77,12 +77,26 @@ pub fn main() {
       contents: html.make_map(entities:, template:, data_source:),
     )
   let assert Ok(template) =
-    simplifile.read("codegen_templates/latex_unimath_map.mjs")
+    simplifile.read("codegen_templates/latex_math_map.mjs")
+  let data_source = "https://mirrors.ctan.org/info/impatient/book.pdf"
+  let assert Ok(txt) = simplifile.read("data/latex/tex-math.txt")
+  let assert Ok(math_symbols) = latex.parse_texmath_symbols(txt:)
+  let texmath_map =
+    latex.javascript_math_map(math_symbols:, template:, data_source:)
+  let assert Ok(Nil) =
+    simplifile.write(
+      to: "src/chartable/latex/texmath_map.mjs",
+      contents: texmath_map,
+    )
+  let data_source =
+    "https://github.com/latex3/unicode-math/blob/master/unicode-math-table.tex"
   let assert Ok(tex) = simplifile.read("data/latex/unicode-math.tex")
-  let assert Ok(unimath_symbols) = latex.parse_unimath_symbols(tex:)
+  let assert Ok(math_symbols) = latex.parse_unimath_symbols(tex:)
+  let unimath_map =
+    latex.javascript_math_map(math_symbols:, template:, data_source:)
   let assert Ok(Nil) =
     simplifile.write(
       to: "src/chartable/latex/unimath_map.mjs",
-      contents: latex.javascript_unimath_map(unimath_symbols:, template:),
+      contents: unimath_map,
     )
 }

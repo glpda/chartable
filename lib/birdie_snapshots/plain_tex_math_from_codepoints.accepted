@@ -1,0 +1,211 @@
+---
+version: 1.4.1
+title: Plain Tex Math from codepoints
+file: ./test/codegen_test.gleam
+test_name: latex_texmath_test
+---
+002E (.): ldotp
+003A (:): colon
+005B ([): lbrack
+005C (\): backslash
+005D (]): rbrack
+007B ({): lbrace, {
+007C (|): vert
+007D (}): rbrace, }
+00AC (¬): lnot, neg
+00B1 (±): pm
+00B7 (·): cdotp
+00D7 (×): times
+00F7 (÷): div
+0127 (ħ): hbar
+0393 (Γ): Gamma
+0394 (Δ): Delta
+0398 (Θ): Theta
+039B (Λ): Lambda
+039E (Ξ): Xi
+03A0 (Π): Pi
+03A3 (Σ): Sigma
+03A5 (Υ): Upsilon
+03A6 (Φ): Phi
+03A8 (Ψ): Psi
+03A9 (Ω): Omega
+03B1 (α): alpha
+03B2 (β): beta
+03B3 (γ): gamma
+03B4 (δ): delta
+03B5 (ε): varepsilon
+03B6 (ζ): zeta
+03B7 (η): eta
+03B8 (θ): theta
+03B9 (ι): iota
+03BA (κ): kappa
+03BB (λ): lambda
+03BC (μ): mu
+03BD (ν): nu
+03BE (ξ): xi
+03C0 (π): pi
+03C1 (ρ): rho
+03C2 (ς): varsigma
+03C3 (σ): sigma
+03C4 (τ): tau
+03C5 (υ): upsilon
+03C6 (φ): varphi
+03C7 (χ): chi
+03C8 (ψ): psi
+03C9 (ω): omega
+03D1 (ϑ): vartheta
+03D5 (ϕ): phi
+03D6 (ϖ): varpi
+03F1 (ϱ): varrho
+03F5 (ϵ): epsilon
+2016 (‖): Vert, |
+2020 (†): dagger
+2021 (‡): ddagger
+2022 (•): bullet
+2026 (…): ldots
+2032 (′): prime
+2111 (ℑ): Im
+2113 (ℓ): ell
+2118 (℘): wp
+211C (ℜ): Re
+2135 (ℵ): aleph
+2190 (←): gets, leftarrow
+2191 (↑): uparrow
+2192 (→): rightarrow, to
+2193 (↓): downarrow
+2194 (↔): leftrightarrow
+2195 (↕): updownarrow
+2196 (↖): nwarrow
+2197 (↗): nearrow
+2198 (↘): searrow
+2199 (↙): swarrow
+21A6 (↦): mapsto
+21A9 (↩): hookleftarrow
+21AA (↪): hookrightarrow
+21BC (↼): leftharpoonup
+21BD (↽): leftharpoondown
+21C0 (⇀): rightharpoonup
+21C1 (⇁): rightharpoondown
+21CC (⇌): rightleftharpoons
+21D0 (⇐): Leftarrow
+21D1 (⇑): Uparrow
+21D2 (⇒): Rightarrow
+21D3 (⇓): Downarrow
+21D4 (⇔): Leftrightarrow
+21D5 (⇕): Updownarrow
+2200 (∀): forall
+2202 (∂): partial
+2203 (∃): exists
+2205 (∅): emptyset
+2207 (∇): nabla
+2208 (∈): in
+2209 (∉): notin
+220B (∋): ni, owns
+220F (∏): prod
+2210 (∐): coprod
+2211 (∑): sum
+2213 (∓): mp
+2216 (∖): setminus
+2217 (∗): ast
+2218 (∘): circ
+221A (√): sqrt, surd
+221D (∝): propto
+221E (∞): infty
+2220 (∠): angle
+2223 (∣): mid
+2225 (∥): parallel
+2227 (∧): land, wedge
+2228 (∨): lor, vee
+2229 (∩): cap
+222A (∪): cup
+222B (∫): int, smallint
+222E (∮): oint
+223C (∼): sim
+2240 (≀): wr
+2243 (≃): simeq
+2245 (≅): cong
+2248 (≈): approx
+224D (≍): asymp
+2250 (≐): doteq
+2260 (≠): ne, neq
+2261 (≡): equiv
+2264 (≤): le, leq
+2265 (≥): ge, geq
+226A (≪): ll
+226B (≫): gg
+227A (≺): prec
+227B (≻): succ
+2282 (⊂): subset
+2283 (⊃): supset
+2286 (⊆): subseteq
+2287 (⊇): supseteq
+228E (⊎): uplus
+2291 (⊑): sqsubseteq
+2292 (⊒): sqsupseteq
+2293 (⊓): sqcap
+2294 (⊔): sqcup
+2295 (⊕): oplus
+2296 (⊖): ominus
+2297 (⊗): otimes
+2298 (⊘): oslash
+2299 (⊙): odot
+22A2 (⊢): vdash
+22A3 (⊣): dashv
+22A4 (⊤): top
+22A5 (⊥): bot
+22A7 (⊧): models
+22C0 (⋀): bigwedge
+22C1 (⋁): bigvee
+22C2 (⋂): bigcap
+22C3 (⋃): bigcup
+22C4 (⋄): diamond
+22C5 (⋅): cdot
+22C6 (⋆): star
+22C8 (⋈): bowtie
+22EE (⋮): vdots
+22EF (⋯): cdots
+22F1 (⋱): ddots
+2308 (⌈): lceil
+2309 (⌉): rceil
+230A (⌊): lfloor
+230B (⌋): rfloor
+2322 (⌢): frown
+2323 (⌣): smile
+23AA (⎪): bracevert
+23B0 (⎰): lmoustache
+23B1 (⎱): rmoustache
+25B3 (△): triangle
+25B5 (▵): triangleup
+25B7 (▷): triangleright
+25BF (▿): triangledown
+25C1 (◁): triangleleft
+25CB (○): bigcirc
+2660 (♠): spadesuit
+2661 (♡): heartsuit
+2662 (♢): diamondsuit
+2663 (♣): clubsuit
+266D (♭): flat
+266E (♮): natural
+266F (♯): sharp
+27C2 (⟂): perp
+27E8 (⟨): langle
+27E9 (⟩): rangle
+27EE (⟮): lgroup
+27EF (⟯): rgroup
+27F5 (⟵): longleftarrow
+27F6 (⟶): longrightarrow
+27F7 (⟷): longleftrightarrow
+27F8 (⟸): Longleftarrow
+27F9 (⟹): Longrightarrow
+27FA (⟺): Longleftrightarrow, iff
+27FC (⟼): longmapsto
+2A00 (⨀): bigodot
+2A01 (⨁): bigoplus
+2A02 (⨂): bigotimes
+2A04 (⨄): biguplus
+2A06 (⨆): bigsqcup
+2A3F (⨿): amalg
+2AAF (⪯): preceq
+2AB0 (⪰): succeq
+1D6A4 (𝚤): imath
+1D6A5 (𝚥): jmath
