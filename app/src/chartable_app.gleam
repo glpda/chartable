@@ -1,37 +1,33 @@
+import chartable/data.{type Data}
+import chartable/route.{type Route}
 import chartable/unicode
 import chartable/unicode/category.{type GeneralCategory}
-import chartable/unicode/codepoint.{type Codepoint}
+import chartable/unicode/codepoint
 import chartable/unicode/script.{type Script}
 import chartable/view_codepoint
 
 import gleam/list
 import gleam/result
 import gleam/string
+import gleam/uri.{type Uri}
 
 import lustre
 import lustre/attribute
+import lustre/effect.{type Effect}
 import lustre/element.{type Element}
 import lustre/element/html
 import lustre/event
+import modem
 
 pub fn main() -> Nil {
-  let app = lustre.simple(init, update, view)
+  let app = lustre.application(init, update, view)
   let assert Ok(_) = lustre.start(app, "#chartable", Nil)
 
   Nil
 }
 
 type Model {
-  Model(
-    data: Data,
-    nav_model: NavModel,
-    grid_model: GridModel,
-    codepoint: Codepoint,
-  )
-}
-
-type Data {
-  Data(blocks: List(unicode.Block), scripts: List(Script))
+  Model(data: Data, nav_model: NavModel, route: Route)
 }
 
 type NavModel {
@@ -40,37 +36,29 @@ type NavModel {
   // NavHidden
 }
 
-type GridModel {
-  GridBlock(unicode.Block)
-  GridScript(Script)
+fn init(_) -> #(Model, Effect(Msg)) {
+  let data = data.init()
+  let route =
+    modem.initial_uri()
+    |> result.unwrap(uri.empty)
+    |> route.from_uri(data)
+  let model = Model(data:, nav_model: NavBlock, route:)
+  #(model, modem.init(on_url_change(_, data)))
 }
 
-fn init(_args) -> Model {
-  let blocks = unicode.blocks()
-  let scripts = script.list()
-  let assert Ok(ascii) = list.first(blocks)
-  let assert Ok(codepoint) = codepoint.from_int(0x41)
-  Model(
-    data: Data(blocks:, scripts:),
-    nav_model: NavBlock,
-    grid_model: GridBlock(ascii),
-    codepoint:,
-  )
+fn on_url_change(uri: Uri, data: Data) -> Msg {
+  OnRouteChange(route.from_uri(uri, data))
 }
 
 type Msg {
   UserSelectedNav(NavModel)
-  UserSelectedBlock(unicode.Block)
-  UserSelectedScript(Script)
-  UserSelectedCodepoint(Codepoint)
+  OnRouteChange(Route)
 }
 
-fn update(model: Model, msg: Msg) -> Model {
+fn update(model: Model, msg: Msg) -> #(Model, Effect(Msg)) {
   case msg {
-    UserSelectedBlock(block) -> Model(..model, grid_model: GridBlock(block))
-    UserSelectedScript(script) -> Model(..model, grid_model: GridScript(script))
-    UserSelectedNav(nav_model) -> Model(..model, nav_model:)
-    UserSelectedCodepoint(codepoint) -> Model(..model, codepoint:)
+    UserSelectedNav(nav_model) -> #(Model(..model, nav_model:), effect.none())
+    OnRouteChange(route) -> #(Model(..model, route:), effect.none())
   }
 }
 
@@ -138,14 +126,14 @@ fn nav_list(
 }
 
 fn block_link(block: unicode.Block) -> Element(Msg) {
-  html.a([event.on_click(UserSelectedBlock(block))], [
+  html.a([attribute.href(route.block_path(block))], [
     html.text(block.name),
   ])
 }
 
 fn block_is_current(model: Model, block) {
-  case model.grid_model {
-    GridBlock(active_block) -> active_block == block
+  case model.route {
+    route.Block(active_block, ..) -> active_block == block
     _ -> False
   }
 }
@@ -153,14 +141,14 @@ fn block_is_current(model: Model, block) {
 fn script_link(script: Script) -> Element(Msg) {
   let long_name = script.to_long_name(script)
   let short_name = script.to_short_name(script)
-  html.a([event.on_click(UserSelectedScript(script))], [
+  html.a([attribute.href(route.script_path(script))], [
     html.text(long_name <> " (" <> short_name <> ")"),
   ])
 }
 
 fn script_is_current(model: Model, script) {
-  case model.grid_model {
-    GridScript(active_script) -> active_script == script
+  case model.route {
+    route.Script(active_script, ..) -> active_script == script
     _ -> False
   }
 }
@@ -175,9 +163,9 @@ fn category_to_string(cat: GeneralCategory) {
 }
 
 fn view_main(model: Model) -> Element(Msg) {
-  let codepoints = case model.grid_model {
-    GridBlock(block) -> codepoint.range_to_list(block.range)
-    GridScript(script) ->
+  let codepoints = case model.route {
+    route.Block(block, ..) -> codepoint.range_to_list(block.range)
+    route.Script(script, ..) ->
       script.to_ranges(script)
       |> list.flat_map(codepoint.range_to_list)
   }
@@ -185,9 +173,9 @@ fn view_main(model: Model) -> Element(Msg) {
   html.main([], [
     html.header([attribute.id("header")], [
       html.h1([], [
-        html.text(case model.grid_model {
-          GridBlock(block) -> "Block: " <> block.name
-          GridScript(script) -> "Script: " <> script.to_long_name(script)
+        html.text(case model.route {
+          route.Block(block, ..) -> "Block: " <> block.name
+          route.Script(script, ..) -> "Script: " <> script.to_long_name(script)
         }),
       ]),
     ]),
@@ -195,12 +183,12 @@ fn view_main(model: Model) -> Element(Msg) {
       [attribute.id("codepoints-grid")],
       list.map(codepoints, fn(codepoint) {
         html.li(
-          case codepoint == model.codepoint {
+          case codepoint == model.route.codepoint {
             True -> [attribute.aria_current("true")]
             False -> []
           },
           [
-            view_codepoint.tile(codepoint, UserSelectedCodepoint(codepoint)),
+            view_codepoint.tile(codepoint, model.route),
           ],
         )
       }),
@@ -210,12 +198,13 @@ fn view_main(model: Model) -> Element(Msg) {
 }
 
 fn view_article(model: Model) {
-  let hex = codepoint.to_hex(model.codepoint)
-  let cat = unicode.category_from_codepoint(model.codepoint)
+  let codepoint = model.route.codepoint
+  let hex = codepoint.to_hex(codepoint)
+  let cat = unicode.category_from_codepoint(codepoint)
   let name =
-    unicode.name_from_codepoint(model.codepoint)
+    unicode.name_from_codepoint(codepoint)
     |> result.unwrap("<" <> hex <> ">")
-  let block = case unicode.block_from_codepoint(model.codepoint) {
+  let block = case unicode.block_from_codepoint(codepoint) {
     Ok(block) -> block_link(block)
     Error(Nil) -> html.text("No_Block")
   }
@@ -237,7 +226,7 @@ fn view_article(model: Model) {
 
 fn view_footer() {
   let link = fn(url, name) {
-    html.a([attribute.href(url)], [
+    html.a([attribute.class("external"), attribute.href(url)], [
       html.text(name),
     ])
   }

@@ -184,6 +184,12 @@ ol {
 a {
   text-decoration: none;
   cursor: pointer;
+  color: var(--fg);
+
+  &.external {
+    --fg: var(--bg-hl1);
+    text-decoration: underline;
+  }
 }
 
 button {

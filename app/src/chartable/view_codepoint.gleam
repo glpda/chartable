@@ -1,3 +1,4 @@
+import chartable/route.{type Route}
 import chartable/unicode
 import chartable/unicode/category
 import chartable/unicode/codepoint.{type Codepoint}
@@ -8,7 +9,6 @@ import gleam/string
 
 import lustre/attribute
 import lustre/element/html
-import lustre/event
 
 type Display {
   Character(String)
@@ -18,7 +18,7 @@ type Display {
   Unassigned
 }
 
-pub fn tile(codepoint: Codepoint, event) {
+pub fn tile(codepoint: Codepoint, route: Route) {
   let hex = codepoint.to_hex(codepoint)
   let #(class, display) = case display(codepoint) {
     Character(char) -> #("character", [html.text(char)])
@@ -30,8 +30,8 @@ pub fn tile(codepoint: Codepoint, event) {
     Surrogate -> #("surrogate", [html.text("�")])
     Unassigned -> #("unassigned", [html.text("�")])
   }
-
-  html.a([event.on_click(event), attribute.class("tile")], [
+  let url = route.codepoint_path(codepoint, route)
+  html.a([attribute.href(url), attribute.class("tile")], [
     html.div([], [html.span([], [html.text("U+" <> hex)])]),
     html.div([], [html.span([attribute.class(class)], display)]),
   ])
