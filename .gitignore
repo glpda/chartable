@@ -5,3 +5,4 @@ erl_crash.dump
 /lib/build
 /app/build
 /app/dist
+/app/.lustre

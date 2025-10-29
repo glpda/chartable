@@ -7,7 +7,11 @@ codegen: fetch
 
 [working-directory('app')]
 serve-app:
-	gleam run -m serve
+	gleam run -m lustre/dev start
+
+[working-directory('app')]
+build-app:
+	gleam run -m lustre/dev build --minify
 
 # ==============================================================================
 # BEGIN Test Recipes

@@ -20,7 +20,7 @@ modem = ">= 2.1.2 and < 3.0.0"
 
 [dev-dependencies]
 gleeunit = ">= 1.0.0 and < 2.0.0"
-esgleam = ">= 0.8.0 and < 1.0.0"
+lustre_dev_tools = ">= 2.1.3 and < 3.0.0"
 
 [javascript]
 runtime = "deno"
@@ -35,9 +35,25 @@ allow_read = [
     "./test",
 ]
 allow_write = [
-    "./build/dev/bin/package/bin",
     "./dist"
 ]
-allow_run = [
-    "./build/dev/bin/package/bin/esbuild"
+
+# [tools.lustre.bin]
+# bun = "system"
+
+[tools.lustre.build]
+no_tailwind = true
+# minify = true
+
+[tools.lustre.html]
+title = "CharTable 🎒"
+lang = "en"
+meta = [
+    { name = "author", content = "Louis Guichard (glpda)" },
+    { name = "description", content = "An application to explore the Unicode database." },
 ]
+stylesheets = [
+  { href = "/style.css" },
+]
+body = '<div id="chartable"></div>'
+

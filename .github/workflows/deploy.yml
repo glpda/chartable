@@ -38,10 +38,8 @@ jobs:
         working-directory: app
         run: |
             gleam build
-            gleam run -m esgleam/install
-            gleam run -m bundle
-            cat index.html | sed 's|dist/chartable_app.js|chartable_app.js|' > dist/index.html
-            cp -r ./assets ./dist/assets
+            gleam run -m lustre/dev add bun
+            gleam run -m lustre/dev build --minify
       - name: Setup Pages
         uses: actions/configure-pages@v4
       - name: Upload artifact
