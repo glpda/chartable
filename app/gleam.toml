@@ -3,7 +3,7 @@ version = "1.0.0"
 
 description = "An application to explore the Unicode database"
 licences = ["Apache-2.0"]
-links = [{ title = "Application", href = "https://glpda.github.io/chartable/" }]
+links = [{ title = "Application", href = "https://chartable.glpda.net/" }]
 target = "javascript"
 
 [repository]
