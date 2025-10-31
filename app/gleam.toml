@@ -53,7 +53,18 @@ meta = [
     { name = "description", content = "An application to explore the Unicode database." },
 ]
 stylesheets = [
-  { href = "/style.css" },
+    { href = "/style.css" },
+]
+scripts = [
+    { content = '''
+(function() {
+  const params = new URLSearchParams(window.location.search);
+  const path = params.get('path');
+  if (path) {
+    window.history.replaceState(null, null, path);
+  }
+})();
+''' },
 ]
 body = '<div id="chartable"></div>'
 
