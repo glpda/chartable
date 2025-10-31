@@ -7,21 +7,17 @@ import gleam/result
 import gleam/string
 import gleam/uri.{type Uri}
 
-const app = "chartable"
-
 pub type Route {
   Block(unicode.Block, codepoint: Codepoint)
   Script(UnicodeScript, codepoint: Codepoint)
 }
 
 pub fn block_path(block: unicode.Block) -> String {
-  let prefix = "/" <> app <> "/block/"
-  prefix <> string.lowercase(block.name) |> string.replace(" ", with: "-")
+  "/block/" <> string.lowercase(block.name) |> string.replace(" ", with: "-")
 }
 
 pub fn script_path(script: UnicodeScript) -> String {
-  let prefix = "/" <> app <> "/script/"
-  prefix <> string.lowercase(script.to_short_name(script))
+  "/script/" <> string.lowercase(script.to_short_name(script))
 }
 
 pub fn codepoint_path(codepoint: Codepoint, route: Route) {
@@ -49,13 +45,13 @@ pub fn from_uri(uri: Uri, data: Data) -> Route {
     }
   }
   case uri.path_segments(uri.path) {
-    [prefix, "block", block, ..rest] if prefix == app -> {
+    ["block", block, ..rest] -> {
       let block =
         unicode.block_from_name(block) |> result.unwrap(data.default_block)
       let codepoint = parse_codepoint(rest)
       Block(block, codepoint)
     }
-    [prefix, "script", script, ..rest] if prefix == app -> {
+    ["script", script, ..rest] -> {
       let script =
         script.from_name(script) |> result.unwrap(data.default_script)
       let codepoint = parse_codepoint(rest)
