@@ -235,6 +235,9 @@ fn view_footer() {
   let lustre = link("https://lustre.build/", "Lustre 🦋")
 
   html.footer([], [
+    html.p([attribute.style("text-align", "center")], [
+      html.strong([], [html.text("🚧 UNDER CONSTRUCTION 🚧")]),
+    ]),
     html.p([], [
       html.text("Made by "),
       glpda,

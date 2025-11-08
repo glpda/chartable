@@ -4,6 +4,8 @@
 
 An application to explore the Unicode database.
 
+🚧 **UNDER CONSTRUCTION** 🚧
+
 Features: ...
 
 Inspirations (a prior art list):

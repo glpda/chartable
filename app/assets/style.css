@@ -169,7 +169,7 @@ footer {
   background-color: var(--bg);
   margin: 12px;
   margin-top: 100vh;
-  display: flex;
+  padding: 6px;
 }
 
 menu {
