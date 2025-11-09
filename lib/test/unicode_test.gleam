@@ -229,10 +229,10 @@ pub fn basic_type_from_codepoint_test() {
 
 pub fn name_from_codepoint_test() {
   let name_from_int = fn(cp) {
-    result.try(codepoint.from_int(cp), unicode.name_from_codepoint)
+    result.map(codepoint.from_int(cp), unicode.name_from_codepoint)
   }
   assert name_from_int(0x0041) == Ok("LATIN CAPITAL LETTER A")
-  assert name_from_int(0x03A2) == Error(Nil)
+  assert name_from_int(0x03A2) == Ok("")
   assert name_from_int(0x22C6) == Ok("STAR OPERATOR")
   assert name_from_int(0x661F) == Ok("CJK UNIFIED IDEOGRAPH-661F")
 }

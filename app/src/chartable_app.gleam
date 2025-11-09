@@ -201,9 +201,10 @@ fn view_article(model: Model) {
   let codepoint = model.route.codepoint
   let hex = codepoint.to_hex(codepoint)
   let cat = unicode.category_from_codepoint(codepoint)
-  let name =
-    unicode.name_from_codepoint(codepoint)
-    |> result.unwrap("<" <> hex <> ">")
+  let name = case unicode.name_from_codepoint(codepoint) {
+    "" -> "<" <> hex <> ">"
+    name -> name
+  }
   let block = case unicode.block_from_codepoint(codepoint) {
     Ok(block) -> block_link(block)
     Error(Nil) -> html.text("No_Block")

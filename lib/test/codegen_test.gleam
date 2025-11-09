@@ -24,7 +24,7 @@ pub fn unicode_name_test() {
     assert name != ""
     let hex = codepoint.to_hex(cp)
     let name = string.replace(in: name, each: "*", with: hex)
-    unicode.name_from_codepoint(cp) == Ok(name)
+    unicode.name_from_codepoint(cp) == name
   })
 }
 

@@ -88,22 +88,22 @@ pub fn basic_type_from_codepoint(cp: Codepoint) -> BasicType {
 
 /// Get the Unicode "Name" property of a code point.
 ///
-/// Returns an `Error` if the character does not have a standard name
+/// Returns an empty string if the character does not have a standard name
 /// (control or unassigned characters).
 ///
 /// ## Examples
 ///
 /// ```gleam
 /// let assert Ok(cp) = codepoint.from_int(0x661F)
-/// assert unicode.name_from_codepoint(cp) == Ok("CJK UNIFIED IDEOGRAPH-661F")
+/// assert unicode.name_from_codepoint(cp) == "CJK UNIFIED IDEOGRAPH-661F"
 /// ```
 ///
-pub fn name_from_codepoint(cp: Codepoint) -> Result(String, Nil) {
+pub fn name_from_codepoint(cp: Codepoint) -> String {
   name_from_codepoint_ffi(codepoint.to_int(cp))
 }
 
 @external(javascript, "./unicode/name_map.mjs", "get_name")
-fn name_from_codepoint_ffi(cp: Int) -> Result(String, Nil)
+fn name_from_codepoint_ffi(cp: Int) -> String
 
 /// A contiguous range of code points identified by a name.
 ///

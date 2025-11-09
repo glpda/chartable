@@ -101,7 +101,7 @@ pub fn make_name_map(
           let end = codepoint.int_to_hex(end)
           let indentation = "    "
           // if ((0x3400 <= cp) && (cp <= 0x4DBF)) {
-          //   return new Ok("CJK UNIFIED IDEOGRAPH-" + int_to_hex(cp));
+          //   return "CJK UNIFIED IDEOGRAPH-" + int_to_hex(cp);
           // }
           let if_in_range =
             "if ((0x" <> start <> " <= cp) && (cp <= 0x" <> end <> ")) {\n"
@@ -111,7 +111,7 @@ pub fn make_name_map(
             |> list.intersperse(with: "int_to_hex(cp)")
             |> list.filter(fn(str) { str != "\"\"" })
             |> string.join(" + ")
-          let return_name = "  return new Ok(" <> name <> ");\n"
+          let return_name = "  return " <> name <> ";\n"
           Ok(if_in_range <> indentation <> return_name <> indentation <> "}")
         }
         _ -> Error(Nil)
