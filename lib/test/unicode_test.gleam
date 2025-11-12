@@ -237,6 +237,36 @@ pub fn name_from_codepoint_test() {
   assert name_from_int(0x661F) == Ok("CJK UNIFIED IDEOGRAPH-661F")
 }
 
+pub fn aliases_from_codepoint_test() {
+  let aliases_from_int = fn(cp) {
+    let assert Ok(cp) = codepoint.from_int(cp)
+    unicode.aliases_from_codepoint(cp)
+  }
+  assert aliases_from_int(0x0041) == unicode.NameAliases([], [], [], [], [])
+
+  let null_aliases = aliases_from_int(0x0000)
+  assert null_aliases.controls == ["NULL"]
+  assert null_aliases.abbreviations == ["NUL"]
+
+  let lf_aliases = aliases_from_int(0x000A)
+  assert lf_aliases.controls == ["LINE FEED", "NEW LINE", "END OF LINE"]
+  assert lf_aliases.abbreviations == ["LF", "NL", "EOL"]
+
+  let pad_aliases = aliases_from_int(0x0080)
+  assert pad_aliases.figments == ["PADDING CHARACTER"]
+  assert pad_aliases.abbreviations == ["PAD"]
+
+  assert aliases_from_int(0xE0101).abbreviations == ["VS18"]
+
+  assert aliases_from_int(0xFE18).corrections
+    == [
+      "PRESENTATION FORM FOR VERTICAL RIGHT WHITE LENTICULAR BRACKET",
+    ]
+  let bom_aliases = aliases_from_int(0xFEFF)
+  assert bom_aliases.alternates == ["BYTE ORDER MARK"]
+  assert bom_aliases.abbreviations == ["BOM", "ZWNBSP"]
+}
+
 // END
 
 // =============================================================================

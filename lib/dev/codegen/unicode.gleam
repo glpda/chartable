@@ -3,13 +3,15 @@ import chartable/unicode/category.{type GeneralCategory}
 import chartable/unicode/codepoint.{type Codepoint}
 import codegen/parser.{type ParserError}
 import gleam/bool
-import gleam/dict
+import gleam/dict.{type Dict}
 import gleam/int
 import gleam/list
+import gleam/option.{None, Some}
 import gleam/order
 import gleam/result
 import gleam/set
 import gleam/string
+import splitter
 
 /// Records for "`PropertyValueAliases.txt`"
 pub type PvaRecord {
@@ -24,6 +26,42 @@ pub type PvaRecord {
   // ccc;         0; NR          ; Not_Reordered
   // ccc; {numeric}; {short_name}; {long_name}
   CccRecord(short_name: String, long_name: String, numeric: Int)
+}
+
+pub type NameAliasRecord {
+  NameCorrection(codepoint: Codepoint, alias: String)
+  NameControl(codepoint: Codepoint, alias: String)
+  NameAlternate(codepoint: Codepoint, alias: String)
+  NameFigment(codepoint: Codepoint, alias: String)
+  NameAbbreviation(codepoint: Codepoint, alias: String)
+}
+
+pub type NameAliases {
+  NameAliases(
+    corrections: List(String),
+    controls: List(String),
+    alternates: List(String),
+    figments: List(String),
+    abbreviations: List(String),
+  )
+}
+
+fn update_name_aliases(
+  aliases: NameAliases,
+  record: NameAliasRecord,
+) -> NameAliases {
+  case record {
+    NameCorrection(_, alias:) ->
+      NameAliases(..aliases, corrections: [alias, ..aliases.corrections])
+    NameControl(_, alias:) ->
+      NameAliases(..aliases, controls: [alias, ..aliases.controls])
+    NameAlternate(_, alias:) ->
+      NameAliases(..aliases, alternates: [alias, ..aliases.alternates])
+    NameFigment(_, alias:) ->
+      NameAliases(..aliases, figments: [alias, ..aliases.figments])
+    NameAbbreviation(_, alias:) ->
+      NameAliases(..aliases, abbreviations: [alias, ..aliases.abbreviations])
+  }
 }
 
 pub type RangeRecord(data) {
@@ -89,6 +127,14 @@ pub fn range_records_to_string(
 // =============================================================================
 // BEGIN CODE GENERATORS
 
+fn make_string(string: String) -> String {
+  "\"" <> string <> "\""
+}
+
+fn make_list(strings: List(String)) -> String {
+  "[" <> string.join(strings, with: ", ") <> "]"
+}
+
 pub fn make_name_map(
   names names: List(RangeRecord(String)),
   template template: String,
@@ -136,6 +182,31 @@ pub fn make_name_map(
 
   string.replace(in: template, each: "/*{{if_ranges}}*/", with: if_ranges)
   |> string.replace(each: "/*{{map_def}}*/", with: map_def)
+}
+
+pub fn make_name_alias_map(
+  name_aliases name_aliases: Dict(Codepoint, NameAliases),
+  template template: String,
+) {
+  let name_aliases =
+    dict.to_list(name_aliases)
+    |> list.sort(fn(lhs, rhs) { codepoint.compare(lhs.0, rhs.0) })
+    |> list.map(fn(record) {
+      let cp = "0x" <> codepoint.to_hex(record.0)
+      let aliases = record.1
+      let corrections =
+        aliases.corrections |> list.map(make_string) |> make_list
+      let controls = aliases.controls |> list.map(make_string) |> make_list
+      let alternates = aliases.alternates |> list.map(make_string) |> make_list
+      let figments = aliases.figments |> list.map(make_string) |> make_list
+      let abbreviations =
+        aliases.abbreviations |> list.map(make_string) |> make_list
+      // [0x0000, [corrections], [controls], [alternates], [figments], [abbreviations]]
+      make_list([cp, corrections, controls, alternates, figments, abbreviations])
+    })
+    |> string.join(with: ",\n")
+
+  string.replace(in: template, each: "/*{{name_aliases}}*/", with: name_aliases)
 }
 
 pub fn make_block_map(
@@ -409,6 +480,42 @@ pub fn parse_names(
     [""] -> Error("Empty Name Field")
     [name, ..] -> Ok(name)
     [] -> Error("No Name Field")
+  }
+}
+
+pub fn parse_name_aliases(
+  txt: String,
+) -> Result(Dict(Codepoint, NameAliases), ParserError) {
+  let separator = splitter.new([";"])
+  use records <- parse_unidata(txt:, parser: parse_name_alias(_, separator))
+  use acc, record <- list.fold(over: records, from: dict.new())
+  dict.upsert(in: acc, update: record.codepoint, with: fn(option) {
+    case option {
+      None -> update_name_aliases(NameAliases([], [], [], [], []), record)
+      Some(aliases) -> update_name_aliases(aliases, record)
+    }
+  })
+}
+
+fn parse_name_alias(
+  line: String,
+  separator: splitter.Splitter,
+) -> Result(NameAliasRecord, String) {
+  let #(hex, _, rest) = splitter.split(separator, line)
+  use codepoint <- result.try(
+    string.trim(hex)
+    |> codepoint.parse
+    |> result.replace_error("Invalid Codepoint"),
+  )
+  let #(alias, _, rest) = splitter.split(separator, rest)
+  let alias_type = splitter.split_before(separator, rest).0 |> string.trim
+  case alias_type {
+    "correction" -> Ok(NameCorrection(codepoint:, alias:))
+    "control" -> Ok(NameControl(codepoint:, alias:))
+    "alternate" -> Ok(NameAlternate(codepoint:, alias:))
+    "figment" -> Ok(NameFigment(codepoint:, alias:))
+    "abbreviation" -> Ok(NameAbbreviation(codepoint:, alias:))
+    _ -> Error("Invalid Name Alias Type")
   }
 }
 

@@ -54,6 +54,7 @@ unidata := "https://www.unicode.org/Public/UCD/latest/ucd"
 [group('fetch')]
 fetch-unidata: \
 (dl-data unidata "PropertyValueAliases.txt" "unicode/property-value-aliases.txt") \
+(dl-data unidata "NameAliases.txt" "unicode/name-aliases.txt") \
 (dl-data unidata "extracted/DerivedName.txt" "unicode/names.txt") \
 (dl-data unidata "extracted/DerivedGeneralCategory.txt" "unicode/categories.txt") \
 (dl-data unidata "Blocks.txt" "unicode/blocks.txt") \

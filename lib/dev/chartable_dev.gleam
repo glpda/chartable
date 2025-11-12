@@ -18,6 +18,15 @@ pub fn main() {
       to: "src/chartable/unicode/name_map.mjs",
       contents: unicode.make_name_map(names:, template:),
     )
+  let assert Ok(txt) = simplifile.read("data/unicode/name-aliases.txt")
+  let assert Ok(name_aliases) = unicode.parse_name_aliases(txt)
+  let assert Ok(template) =
+    simplifile.read("codegen_templates/name_alias_map.mjs")
+  let assert Ok(Nil) =
+    simplifile.write(
+      to: "src/chartable/unicode/name_alias_map.mjs",
+      contents: unicode.make_name_alias_map(name_aliases:, template:),
+    )
   let assert Ok(txt) = simplifile.read("data/unicode/blocks.txt")
   let assert Ok(blocks) = unicode.parse_blocks(txt)
   let assert Ok(template) = simplifile.read("codegen_templates/block_map.mjs")

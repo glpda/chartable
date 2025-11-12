@@ -28,6 +28,19 @@ pub fn unicode_name_test() {
   })
 }
 
+pub fn unicode_alias_test() {
+  let assert Ok(txt) = simplifile.read("data/unicode/name-aliases.txt")
+  let assert Ok(aliases) = unicode_codegen.parse_name_aliases(txt)
+
+  use cp, parsed_aliases <- dict.each(aliases)
+  let codegen_aliases = unicode.aliases_from_codepoint(cp)
+  assert parsed_aliases.corrections == codegen_aliases.corrections
+  assert parsed_aliases.controls == codegen_aliases.controls
+  assert parsed_aliases.alternates == codegen_aliases.alternates
+  assert parsed_aliases.figments == codegen_aliases.figments
+  assert parsed_aliases.abbreviations == codegen_aliases.abbreviations
+}
+
 pub fn unicode_blocks_test() {
   let assert Ok(txt) = simplifile.read("data/unicode/blocks.txt")
   let assert Ok(blocks) = unicode_codegen.parse_blocks(txt)

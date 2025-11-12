@@ -105,6 +105,47 @@ pub fn name_from_codepoint(cp: Codepoint) -> String {
 @external(javascript, "./unicode/name_map.mjs", "get_name")
 fn name_from_codepoint_ffi(cp: Int) -> String
 
+/// [Character Name Aliases](https://www.unicode.org/versions/latest/core-spec/chapter-4/#G141423):
+/// additional names for code points.
+pub type NameAliases {
+  NameAliases(
+    /// Corrections for serious problems in the character names.
+    corrections: List(String),
+    /// SO 6429 names for C0 and C1 control functions, and other commonly
+    /// occurring names for control codes.
+    controls: List(String),
+    /// A few widely used alternate names for format characters.
+    alternates: List(String),
+    /// Several documented labels for C1 control code points which were never
+    /// actually approved in any standard.
+    figments: List(String),
+    /// Commonly occurring abbreviations (or acronyms) for control codes, format
+    /// characters, spaces, and variation selectors.
+    abbreviations: List(String),
+  )
+}
+
+/// Get the "Name Aliases" of a code point.
+///
+/// ## Examples
+///
+/// ```gleam
+/// let assert Ok(cp) = codepoint.from_int(0x000A)
+/// assert unicode.aliases_from_codepoint(cp).controls
+///   == ["LINE FEED", "NEW LINE", "END OF LINE"]
+/// ```
+///
+pub fn aliases_from_codepoint(cp: Codepoint) -> NameAliases {
+  let #(corrections, controls, alternates, figments, abbreviations) =
+    aliases_from_codepoint_ffi(codepoint.to_int(cp))
+  NameAliases(corrections:, controls:, alternates:, figments:, abbreviations:)
+}
+
+@external(javascript, "./unicode/name_alias_map.mjs", "get_aliases")
+fn aliases_from_codepoint_ffi(
+  int: Int,
+) -> #(List(String), List(String), List(String), List(String), List(String))
+
 /// A contiguous range of code points identified by a name.
 ///
 /// Standard blocks contains a multiple of 16 code points and starts at a
