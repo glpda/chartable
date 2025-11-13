@@ -3,14 +3,11 @@ version = "1.0.0"
 
 description = "Fetch information about Unicode code points."
 licences = ["Apache-2.0"]
+repository = {type = "github", user = "glpda", repo = "chartable", path = "lib"}
 links = [{ title = "Application", href = "https://chartable.glpda.net/" }]
-target = "javascript"
 
-[repository]
-type = "github"
-user = "glpda"
-repo = "chartable"
-path = "lib"
+target = "javascript"
+gleam = ">= 1.13.0"
 
 [dependencies]
 gleam_stdlib = ">= 0.44.0 and < 2.0.0"

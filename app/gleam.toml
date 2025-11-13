@@ -3,14 +3,11 @@ version = "1.0.0"
 
 description = "An application to explore the Unicode database"
 licences = ["Apache-2.0"]
+repository = {type = "github", user = "glpda", repo = "chartable", path = "app"}
 links = [{ title = "Application", href = "https://chartable.glpda.net/" }]
-target = "javascript"
 
-[repository]
-type = "github"
-user = "glpda"
-repo = "chartable"
-path = "app"
+target = "javascript"
+gleam = ">= 1.13.0"
 
 [dependencies]
 gleam_stdlib = ">= 0.44.0 and < 2.0.0"
