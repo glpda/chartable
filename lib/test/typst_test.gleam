@@ -18,12 +18,12 @@ pub fn symbols_from_grapheme_test() {
 
 pub fn symbols_from_codepoint_test() {
   let symbols_from_int = fn(cp) {
-    result.map(string.utf_codepoint(cp), typst.symbols_from_codepoint)
+    let assert Ok(cp) = string.utf_codepoint(cp)
+    typst.symbols_from_codepoint(cp)
   }
-  assert symbols_from_int(0x26A7) == Ok(["#sym.gender.trans"])
-  assert symbols_from_int(0x22C6) == Ok(["#sym.star.op"])
-  assert symbols_from_int(0x0024)
-    == Ok(["#sym.dollar", "#sym.pataca", "#sym.peso"])
+  assert symbols_from_int(0x26A7) == ["#sym.gender.trans"]
+  assert symbols_from_int(0x22C6) == ["#sym.star.op"]
+  assert symbols_from_int(0x0024) == ["#sym.dollar", "#sym.pataca", "#sym.peso"]
 }
 
 pub fn emojis_from_grapheme_test() {
@@ -37,10 +37,11 @@ pub fn emojis_from_grapheme_test() {
 
 pub fn emojis_from_codepoint_test() {
   let emojis_from_int = fn(cp) {
-    result.map(string.utf_codepoint(cp), typst.emojis_from_codepoint)
+    let assert Ok(cp) = string.utf_codepoint(cp)
+    typst.emojis_from_codepoint(cp)
   }
-  assert emojis_from_int(0x2B50) == Ok(["#emoji.star"])
-  assert emojis_from_int(0x1F31F) == Ok(["#emoji.star.glow"])
+  assert emojis_from_int(0x2B50) == ["#emoji.star"]
+  assert emojis_from_int(0x1F31F) == ["#emoji.star.glow"]
 }
 
 pub fn markup_shorthand_to_codepoint_test() {

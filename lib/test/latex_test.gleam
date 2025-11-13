@@ -41,10 +41,12 @@ pub fn catcode_test() {
 }
 
 pub fn char_escape_test() {
-  let assert Ok(cp) = string.utf_codepoint(65)
-  assert latex.char_escape(cp) == "\\char65"
-  let assert Ok(cp) = string.utf_codepoint(0x2B50)
-  assert latex.char_escape(cp) == "\\char11088"
+  let char_escape = fn(cp) {
+    let assert Ok(codepoint) = string.utf_codepoint(cp)
+    latex.char_escape(codepoint)
+  }
+  assert char_escape(65) == "\\char65"
+  assert char_escape(0x2B50) == "\\char11088"
 }
 
 pub fn short_control_escape_test() {

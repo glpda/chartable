@@ -195,31 +195,32 @@ pub fn codepoint_range_overlap_test() {
 
 pub fn basic_type_from_codepoint_test() {
   let basic_type_from_int = fn(cp) {
-    result.map(codepoint.from_int(cp), unicode.basic_type_from_codepoint)
+    let assert Ok(cp) = codepoint.from_int(cp)
+    unicode.basic_type_from_codepoint(cp)
   }
-  assert basic_type_from_int(0x0041) == Ok(unicode.Graphic)
-  assert basic_type_from_int(0x0301) == Ok(unicode.Graphic)
-  assert basic_type_from_int(0x0032) == Ok(unicode.Graphic)
-  assert basic_type_from_int(0x2013) == Ok(unicode.Graphic)
-  assert basic_type_from_int(0x2B50) == Ok(unicode.Graphic)
-  assert basic_type_from_int(0x0020) == Ok(unicode.Graphic)
+  assert basic_type_from_int(0x0041) == unicode.Graphic
+  assert basic_type_from_int(0x0301) == unicode.Graphic
+  assert basic_type_from_int(0x0032) == unicode.Graphic
+  assert basic_type_from_int(0x2013) == unicode.Graphic
+  assert basic_type_from_int(0x2B50) == unicode.Graphic
+  assert basic_type_from_int(0x0020) == unicode.Graphic
 
-  assert basic_type_from_int(0x00AD) == Ok(unicode.Format)
-  assert basic_type_from_int(0x2028) == Ok(unicode.Format)
-  assert basic_type_from_int(0x2029) == Ok(unicode.Format)
+  assert basic_type_from_int(0x00AD) == unicode.Format
+  assert basic_type_from_int(0x2028) == unicode.Format
+  assert basic_type_from_int(0x2029) == unicode.Format
 
-  assert basic_type_from_int(0x0007) == Ok(unicode.Control)
-  assert basic_type_from_int(0xDB7F) == Ok(unicode.Surrogate)
-  assert basic_type_from_int(0xE777) == Ok(unicode.PrivateUse)
+  assert basic_type_from_int(0x0007) == unicode.Control
+  assert basic_type_from_int(0xDB7F) == unicode.Surrogate
+  assert basic_type_from_int(0xE777) == unicode.PrivateUse
 
-  assert basic_type_from_int(0x03A2) == Ok(unicode.Reserved)
-  assert basic_type_from_int(0xFDD0) == Ok(unicode.NonCharacter)
-  assert basic_type_from_int(0xFDE0) == Ok(unicode.NonCharacter)
-  assert basic_type_from_int(0xFDEF) == Ok(unicode.NonCharacter)
-  assert basic_type_from_int(0xFFFE) == Ok(unicode.NonCharacter)
-  assert basic_type_from_int(0xFFFF) == Ok(unicode.NonCharacter)
-  assert basic_type_from_int(0x5FFFE) == Ok(unicode.NonCharacter)
-  assert basic_type_from_int(0x5FFFF) == Ok(unicode.NonCharacter)
+  assert basic_type_from_int(0x03A2) == unicode.Reserved
+  assert basic_type_from_int(0xFDD0) == unicode.NonCharacter
+  assert basic_type_from_int(0xFDE0) == unicode.NonCharacter
+  assert basic_type_from_int(0xFDEF) == unicode.NonCharacter
+  assert basic_type_from_int(0xFFFE) == unicode.NonCharacter
+  assert basic_type_from_int(0xFFFF) == unicode.NonCharacter
+  assert basic_type_from_int(0x5FFFE) == unicode.NonCharacter
+  assert basic_type_from_int(0x5FFFF) == unicode.NonCharacter
 }
 
 // END
@@ -229,12 +230,13 @@ pub fn basic_type_from_codepoint_test() {
 
 pub fn name_from_codepoint_test() {
   let name_from_int = fn(cp) {
-    result.map(codepoint.from_int(cp), unicode.name_from_codepoint)
+    let assert Ok(cp) = codepoint.from_int(cp)
+    unicode.name_from_codepoint(cp)
   }
-  assert name_from_int(0x0041) == Ok("LATIN CAPITAL LETTER A")
-  assert name_from_int(0x03A2) == Ok("")
-  assert name_from_int(0x22C6) == Ok("STAR OPERATOR")
-  assert name_from_int(0x661F) == Ok("CJK UNIFIED IDEOGRAPH-661F")
+  assert name_from_int(0x0041) == "LATIN CAPITAL LETTER A"
+  assert name_from_int(0x03A2) == ""
+  assert name_from_int(0x22C6) == "STAR OPERATOR"
+  assert name_from_int(0x661F) == "CJK UNIFIED IDEOGRAPH-661F"
 }
 
 pub fn aliases_from_codepoint_test() {
@@ -358,39 +360,40 @@ pub fn script_name_test() {
 
 pub fn script_from_codepoint_test() {
   let script_from_int = fn(cp) {
-    result.map(codepoint.from_int(cp), script.from_codepoint)
+    let assert Ok(codepoint) = codepoint.from_int(cp)
+    script.from_codepoint(codepoint)
   }
-  let assert Ok(common) = script_from_int(0x0020)
+  let common = script_from_int(0x0020)
   assert script.to_short_name(common) == "Zyyy"
-  assert script_from_int(0x0032) == Ok(common)
-  assert script_from_int(0x005E) == Ok(common)
-  assert script_from_int(0x007B) == Ok(common)
-  assert script_from_int(0x00AD) == Ok(common)
-  assert script_from_int(0x2028) == Ok(common)
-  assert script_from_int(0x2B50) == Ok(common)
+  assert script_from_int(0x0032) == common
+  assert script_from_int(0x005E) == common
+  assert script_from_int(0x007B) == common
+  assert script_from_int(0x00AD) == common
+  assert script_from_int(0x2028) == common
+  assert script_from_int(0x2B50) == common
 
-  let assert Ok(latin) = script_from_int(0x0041)
+  let latin = script_from_int(0x0041)
   assert script.to_long_name(latin) == "Latin"
-  assert script_from_int(0x0061) == Ok(latin)
-  assert script_from_int(0x01F2) == Ok(latin)
-  assert script_from_int(0x02B0) == Ok(latin)
-  assert script_from_int(0x2162) == Ok(latin)
+  assert script_from_int(0x0061) == latin
+  assert script_from_int(0x01F2) == latin
+  assert script_from_int(0x02B0) == latin
+  assert script_from_int(0x2162) == latin
 
-  let assert Ok(inherited) = script_from_int(0x0301)
+  let inherited = script_from_int(0x0301)
   assert script.to_short_name(inherited) == "Zinh"
-  assert script_from_int(0x20E0) == Ok(inherited)
+  assert script_from_int(0x20E0) == inherited
 
-  let assert Ok(devanagari) = script_from_int(0x0903)
+  let devanagari = script_from_int(0x0903)
   assert script.to_short_name(devanagari) == "Deva"
 
-  let assert Ok(han) = script_from_int(0x661F)
+  let han = script_from_int(0x661F)
   assert script.to_long_name(han) == "Han"
 
-  let assert Ok(unknown) = script_from_int(0xDB7F)
+  let unknown = script_from_int(0xDB7F)
   assert script.to_short_name(unknown) == "Zzzz"
-  assert script_from_int(0xE000) == Ok(unknown)
-  assert script_from_int(0xF0000) == Ok(unknown)
-  assert script_from_int(0x100000) == Ok(unknown)
+  assert script_from_int(0xE000) == unknown
+  assert script_from_int(0xF0000) == unknown
+  assert script_from_int(0x100000) == unknown
 }
 
 pub fn script_to_ranges_test() {

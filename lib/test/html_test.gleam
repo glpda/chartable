@@ -1,6 +1,5 @@
 import chartable/html
 import gleam/list
-import gleam/result
 import gleam/string
 
 pub fn named_character_references_test() {
@@ -10,30 +9,31 @@ pub fn named_character_references_test() {
 
 pub fn decimal_character_reference_test() {
   let decimal_character_reference = fn(cp) {
-    result.map(string.utf_codepoint(cp), html.decimal_character_reference)
+    let assert Ok(cp) = string.utf_codepoint(cp)
+    html.decimal_character_reference(cp)
   }
-  assert decimal_character_reference(8902) == Ok("&#8902;")
-  assert decimal_character_reference(11_088) == Ok("&#11088;")
+  assert decimal_character_reference(8902) == "&#8902;"
+  assert decimal_character_reference(11_088) == "&#11088;"
 }
 
 pub fn hexadecimal_character_reference_test() {
   let hexadecimal_character_reference = fn(cp) {
-    result.map(string.utf_codepoint(cp), html.hexadecimal_character_reference)
+    let assert Ok(cp) = string.utf_codepoint(cp)
+    html.hexadecimal_character_reference(cp)
   }
-  assert hexadecimal_character_reference(0x22C6) == Ok("&#x22C6;")
-  assert hexadecimal_character_reference(0x2B50) == Ok("&#x2B50;")
+  assert hexadecimal_character_reference(0x22C6) == "&#x22C6;"
+  assert hexadecimal_character_reference(0x2B50) == "&#x2B50;"
 }
 
 pub fn character_references_from_codepoint_test() {
-  let assert Ok(star_symbol) = string.utf_codepoint(0x22C6)
-  let assert Ok(star_emoji) = string.utf_codepoint(0x2B50)
-
-  assert html.character_references_from_codepoint(star_symbol)
+  let character_references_from_int = fn(cp) {
+    let assert Ok(cp) = string.utf_codepoint(cp)
+    html.character_references_from_codepoint(cp)
     |> list.sort(string.compare)
+  }
+  assert character_references_from_int(0x22C6)
     == ["&#8902;", "&#x22C6;", "&Star;", "&sstarf;"]
-  assert html.character_references_from_codepoint(star_emoji)
-    |> list.sort(string.compare)
-    == ["&#11088;", "&#x2B50;"]
+  assert character_references_from_int(0x2B50) == ["&#11088;", "&#x2B50;"]
 }
 
 pub fn character_references_from_grapheme_test() {
