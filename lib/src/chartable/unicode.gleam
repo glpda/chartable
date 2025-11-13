@@ -1,6 +1,7 @@
 import chartable
 import chartable/unicode/category.{type GeneralCategory}
 import chartable/unicode/codepoint.{type Codepoint}
+import gleam/bool
 import gleam/list
 import gleam/result
 
@@ -145,6 +146,43 @@ pub fn aliases_from_codepoint(cp: Codepoint) -> NameAliases {
 fn aliases_from_codepoint_ffi(
   int: Int,
 ) -> #(List(String), List(String), List(String), List(String), List(String))
+
+/// Get the Name label of a code point.
+/// Prefer this to `name_from_codepoint` for display and user interfaces
+/// (never returns an empty string).
+///
+/// Returns the first correction alias if the code point has one,
+/// otherwise returns the standard name unless the code point is unnamed
+/// (control or unassigned characters),
+/// in such case returns a fallback label.
+///
+/// See [Unicode Core Specification 4.8.2](https://www.unicode.org/versions/latest/core-spec/chapter-4/#G135248)
+///
+/// ## Examples
+///
+/// ```gleam
+/// let assert Ok(cp) = codepoint.from_int(0x000A)
+/// assert label_from_codepoint(cp) == "<control-000A>"
+/// ```
+///
+pub fn label_from_codepoint(cp: Codepoint) -> String {
+  let aliases = aliases_from_codepoint(cp)
+  use <- result.lazy_unwrap(list.first(aliases.corrections))
+  let name = name_from_codepoint(cp)
+  use <- bool.guard(when: name != "", return: name)
+  let hex = codepoint.to_hex(cp)
+  let label = case basic_type_from_codepoint(cp) {
+    Control -> "control-"
+    Reserved -> "reserved-"
+    NonCharacter -> "noncharacter-"
+    PrivateUse -> "private-use-"
+    Surrogate -> "surrogate-"
+    // should not be reachable as all graphic and format codepoints are named:
+    Format -> "format-"
+    Graphic -> "graphic-"
+  }
+  "<" <> label <> hex <> ">"
+}
 
 /// A contiguous range of code points identified by a name.
 ///

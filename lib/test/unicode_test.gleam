@@ -269,6 +269,21 @@ pub fn aliases_from_codepoint_test() {
   assert bom_aliases.abbreviations == ["BOM", "ZWNBSP"]
 }
 
+pub fn label_from_codepoint_test() {
+  let label_from_int = fn(cp) {
+    let assert Ok(cp) = codepoint.from_int(cp)
+    unicode.label_from_codepoint(cp)
+  }
+  assert label_from_int(0x0041) == "LATIN CAPITAL LETTER A"
+  assert label_from_int(0xFE18)
+    == "PRESENTATION FORM FOR VERTICAL RIGHT WHITE LENTICULAR BRACKET"
+  assert label_from_int(0x0000) == "<control-0000>"
+  assert label_from_int(0x03A2) == "<reserved-03A2>"
+  assert label_from_int(0xFFFF) == "<noncharacter-FFFF>"
+  assert label_from_int(0xE777) == "<private-use-E777>"
+  assert label_from_int(0xDB7F) == "<surrogate-DB7F>"
+}
+
 // END
 
 // =============================================================================

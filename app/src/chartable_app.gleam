@@ -201,10 +201,7 @@ fn view_article(model: Model) {
   let codepoint = model.route.codepoint
   let hex = codepoint.to_hex(codepoint)
   let cat = unicode.category_from_codepoint(codepoint)
-  let name = case unicode.name_from_codepoint(codepoint) {
-    "" -> "<" <> hex <> ">"
-    name -> name
-  }
+  let label = unicode.label_from_codepoint(codepoint)
   let block = case unicode.block_from_codepoint(codepoint) {
     Ok(block) -> block_link(block)
     Error(Nil) -> html.text("No_Block")
@@ -216,7 +213,7 @@ fn view_article(model: Model) {
     ]),
     html.dl([], [
       html.dt([], [html.text("Name")]),
-      html.dd([], [html.text(name)]),
+      html.dd([], [html.text(label)]),
       html.dt([], [html.text("Block")]),
       html.dd([], [block]),
       html.dt([], [html.text("Category")]),
