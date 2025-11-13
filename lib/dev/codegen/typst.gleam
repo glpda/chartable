@@ -30,12 +30,12 @@ type Pair {
   None
 }
 
-pub fn make_map(
+pub fn js_map(
   codex table: NotationTable,
   template template: String,
   data_source data_source: String,
 ) -> String {
-  notation_table.make_javascript_map(table:, template:, data_source:)
+  notation_table.js_map(table:, template:, data_source:)
 }
 
 fn next_line(state state: ParserState, rest txt: String) -> ParserState {

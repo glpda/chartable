@@ -127,15 +127,15 @@ pub fn range_records_to_string(
 // =============================================================================
 // BEGIN CODE GENERATORS
 
-fn make_string(string: String) -> String {
+fn js_string(string: String) -> String {
   "\"" <> string <> "\""
 }
 
-fn make_list(strings: List(String)) -> String {
+fn js_array(strings: List(String)) -> String {
   "[" <> string.join(strings, with: ", ") <> "]"
 }
 
-pub fn make_name_map(
+pub fn js_name_map(
   names names: List(RangeRecord(String)),
   template template: String,
 ) -> String {
@@ -184,7 +184,7 @@ pub fn make_name_map(
   |> string.replace(each: "/*{{map_def}}*/", with: map_def)
 }
 
-pub fn make_name_alias_map(
+pub fn js_name_alias_map(
   name_aliases name_aliases: Dict(Codepoint, NameAliases),
   template template: String,
 ) {
@@ -194,22 +194,21 @@ pub fn make_name_alias_map(
     |> list.map(fn(record) {
       let cp = "0x" <> codepoint.to_hex(record.0)
       let aliases = record.1
-      let corrections =
-        aliases.corrections |> list.map(make_string) |> make_list
-      let controls = aliases.controls |> list.map(make_string) |> make_list
-      let alternates = aliases.alternates |> list.map(make_string) |> make_list
-      let figments = aliases.figments |> list.map(make_string) |> make_list
+      let corrections = aliases.corrections |> list.map(js_string) |> js_array
+      let controls = aliases.controls |> list.map(js_string) |> js_array
+      let alternates = aliases.alternates |> list.map(js_string) |> js_array
+      let figments = aliases.figments |> list.map(js_string) |> js_array
       let abbreviations =
-        aliases.abbreviations |> list.map(make_string) |> make_list
+        aliases.abbreviations |> list.map(js_string) |> js_array
       // [0x0000, [corrections], [controls], [alternates], [figments], [abbreviations]]
-      make_list([cp, corrections, controls, alternates, figments, abbreviations])
+      js_array([cp, corrections, controls, alternates, figments, abbreviations])
     })
     |> string.join(with: ",\n")
 
   string.replace(in: template, each: "/*{{name_aliases}}*/", with: name_aliases)
 }
 
-pub fn make_block_map(
+pub fn js_block_map(
   property_value_aliases pva: List(PvaRecord),
   blocks blocks: List(RangeRecord(String)),
   template template: String,
@@ -251,7 +250,7 @@ pub fn make_block_map(
   string.replace(in: template, each: "/*{{blocks}}*/", with: blocks)
 }
 
-pub fn make_script_map(
+pub fn js_script_map(
   property_value_aliases pva: List(PvaRecord),
   scripts scripts: List(RangeRecord(String)),
   template template: String,
@@ -284,7 +283,7 @@ pub fn make_script_map(
   |> string.replace(each: "/*{{script_ranges}}*/", with: script_ranges)
 }
 
-pub fn make_category_map(
+pub fn js_category_map(
   categories categories: List(AlternatingRecord(GeneralCategory)),
   template template: String,
 ) -> String {

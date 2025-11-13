@@ -76,7 +76,7 @@ pub fn math_symbols_to_notation_table(unimath_symbols: List(MathSymbol)) {
   notation_table.complement_notation_to_grapheme(notation_to_grapheme)
 }
 
-pub fn javascript_math_map(
+pub fn js_math_map(
   math_symbols records: List(MathSymbol),
   template template: String,
   data_source data_source: String,

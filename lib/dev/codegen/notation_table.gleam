@@ -121,7 +121,7 @@ pub fn parse_notation_to_grapheme_json(
   |> result.map(complement_notation_to_grapheme)
 }
 
-pub fn make_javascript_map(
+pub fn js_map(
   table table: NotationTable,
   template template: String,
   data_source data_source: String,
