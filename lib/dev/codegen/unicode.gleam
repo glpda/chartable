@@ -324,7 +324,12 @@ fn parse_unidata(
   // process the resulting list of records (in reverse order):
   reducer reducer: fn(List(record)) -> output,
 ) -> Result(output, ParserError) {
-  parser.parse_lines(txt:, comment: parser.Anywhere(["#"]), parser:, reducer:)
+  result.map(with: reducer, over: {
+    let comment = parser.Anywhere(["#"])
+    use line, records <- parser.parse_lines(txt:, init: [], comment:)
+    use record <- result.try(parser(line))
+    Ok([record, ..records])
+  })
 }
 
 pub fn parse_property_value_aliases(

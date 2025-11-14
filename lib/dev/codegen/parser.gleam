@@ -2,11 +2,6 @@ import gleam/list
 import gleam/string
 import splitter
 
-type ParserState {
-  // ParserState(line: Int, txt: String, status: status)
-  ParserState(line: Int, txt: String)
-}
-
 pub type ParserError {
   ParserError(line: Int, error: String)
 }
@@ -19,62 +14,53 @@ pub type SplitPosition {
 pub fn parse_lines(
   // input txt lines/records:
   txt txt: String,
+  // initial status:
+  init state: state,
   // comment split position:
   comment comment: SplitPosition,
-  // line/record parser (return `Error("")` for empty lines):
-  parser parser: fn(String) -> Result(record, String),
-  // process the resulting list of records (in reverse order):
-  reducer reducer: fn(List(record)) -> output,
-) -> Result(output, ParserError) {
-  let line_end = splitter.new(["\n"])
-  let parser_state = ParserState(line: 0, txt:)
-
+  // line/record parser:
+  parser parser: fn(String, state) -> Result(state, String),
+) -> Result(state, ParserError) {
+  let line_end = splitter.new(["\n", "\r\n"])
   case comment {
     Anywhere(comment_markers) -> {
       let comment_splitter = splitter.new(comment_markers)
-      use txt <- parser_loop(input: parser_state, acc: [], reducer:)
+      use txt, state <- loop(txt:, line: 0, state:)
       let #(line, _, rest) = splitter.split(line_end, txt)
       let line = splitter.split_before(comment_splitter, line).0 |> string.trim
       case line {
-        "" -> #(Error(""), rest)
-        _ -> #(parser(line), rest)
+        "" -> #(Ok(state), rest)
+        _ -> #(parser(line, state), rest)
       }
     }
     LineStart(comment_markers) -> {
-      use txt <- parser_loop(input: parser_state, acc: [], reducer:)
+      use txt, state <- loop(txt:, line: 0, state:)
       let #(line, _, rest) = splitter.split(line_end, txt)
       case list.any(comment_markers, string.starts_with(line, _)) {
-        True -> #(Error(""), rest)
-        _ if line == "" -> #(Error(""), rest)
-        False -> #(parser(line), rest)
+        True -> #(Ok(state), rest)
+        _ if line == "" -> #(Ok(state), rest)
+        False -> #(parser(line, state), rest)
       }
     }
   }
 }
 
-fn parser_loop(
-  input state: ParserState,
-  // Records accumulator
-  acc records: List(record),
-  // Returns `#(Result(record, "error message"), rest)`,
-  // empty error messages are ignored
-  parser parser: fn(String) -> #(Result(record, String), String),
-  reducer reducer: fn(List(record)) -> output,
-) -> Result(output, ParserError) {
-  case state.txt {
-    "" -> Ok(reducer(records))
-    txt ->
-      case parser(txt) {
-        #(Ok(record), rest) -> {
-          let acc = [record, ..records]
-          let state = ParserState(line: state.line + 1, txt: rest)
-          parser_loop(state, acc:, parser:, reducer:)
-        }
-        #(Error(""), rest) -> {
-          let state = ParserState(line: state.line + 1, txt: rest)
-          parser_loop(state, acc: records, parser:, reducer:)
-        }
-        #(Error(error), _) -> Error(ParserError(line: state.line, error:))
+fn loop(
+  // remaining txt lines/records:
+  txt txt: String,
+  // number of lines/records parsed:
+  line line: Int,
+  // current status:
+  state state: state,
+  // fn(txt, state) -> #(Result(state, "error message"), rest)
+  parser parser: fn(String, state) -> #(Result(state, String), String),
+) -> Result(state, ParserError) {
+  case txt {
+    "" -> Ok(state)
+    _ ->
+      case parser(txt, state) {
+        #(Ok(state), rest) -> loop(txt: rest, line: line + 1, state:, parser:)
+        #(Error(error), _) -> Error(ParserError(line:, error:))
       }
   }
 }

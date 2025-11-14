@@ -12,6 +12,18 @@ pub type MathSymbol {
   MathSymbol(codepoint: UtfCodepoint, math_type: MathType, notation: String)
 }
 
+pub fn parse_math_symbols(
+  txt txt: String,
+  comment comment: parser.SplitPosition,
+  parser parser: fn(String) -> Result(MathSymbol, String),
+) -> Result(List(MathSymbol), ParserError) {
+  result.map(with: list.reverse, over: {
+    use line, symbols <- parser.parse_lines(txt:, init: [], comment:)
+    use symbol <- result.try(parser(line))
+    Ok([symbol, ..symbols])
+  })
+}
+
 /// Parses `tex-math.txt` extracted from
 /// [TeX for the Impatient](https://mirrors.ctan.org/info/impatient/book.pdf).
 pub fn parse_texmath_symbols(
@@ -19,7 +31,7 @@ pub fn parse_texmath_symbols(
 ) -> Result(List(MathSymbol), ParserError) {
   let comment = parser.Anywhere(["//"])
   let space = splitter.new([" "])
-  use line <- parser.parse_lines(txt:, comment:, reducer: list.reverse)
+  use line <- parse_math_symbols(txt:, comment:)
   // alpha ABC α
   let #(notation, _, rest) = splitter.split(space, line)
   let #(tag, _, rest) = splitter.split(space, rest)
@@ -42,7 +54,7 @@ pub fn parse_unimath_symbols(
 ) -> Result(List(MathSymbol), ParserError) {
   let curly = splitter.new(["}{"])
   let comment = parser.Anywhere(["%"])
-  use line <- parser.parse_lines(txt:, comment:, reducer: list.reverse)
+  use line <- parse_math_symbols(txt:, comment:)
   // \UnicodeMathSymbol{"00021}{\mathexclam   }{\mathclose}{exclamation mark}%
   use rest <- result.try(case line {
     "\\UnicodeMathSymbol{\"" <> rest -> Ok(rest)
