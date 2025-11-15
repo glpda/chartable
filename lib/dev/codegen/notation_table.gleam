@@ -17,6 +17,10 @@ pub type NotationTable {
   )
 }
 
+pub fn new() -> NotationTable {
+  NotationTable(dict.new(), dict.new())
+}
+
 /// Asserts notation table consistency (`grapheme_to_notations` match
 /// `notation_to_grapheme`), ignores notations mapping to multiple codepoints
 /// wich are not included in the `grapheme_to_notations` table.
