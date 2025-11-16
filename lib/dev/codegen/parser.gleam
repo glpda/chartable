@@ -1,4 +1,5 @@
 import gleam/list
+import gleam/result
 import gleam/string
 import splitter
 
@@ -20,12 +21,14 @@ pub fn parse_lines(
   comment comment: SplitPosition,
   // line/record parser:
   parser parser: fn(String, state) -> Result(state, String),
-) -> Result(state, ParserError) {
+  // final state processing:
+  reducer reducer: fn(state) -> Result(output, String),
+) -> Result(output, ParserError) {
   let line_end = splitter.new(["\n", "\r\n"])
   case comment {
     Anywhere(comment_markers) -> {
       let comment_splitter = splitter.new(comment_markers)
-      use txt, state <- loop(txt:, line: 0, state:)
+      use txt, state <- loop(txt:, line: 0, state:, reducer:)
       let #(line, _, rest) = splitter.split(line_end, txt)
       let line = splitter.split_before(comment_splitter, line).0 |> string.trim
       case line {
@@ -34,7 +37,7 @@ pub fn parse_lines(
       }
     }
     LineStart(comment_markers) -> {
-      use txt, state <- loop(txt:, line: 0, state:)
+      use txt, state <- loop(txt:, line: 0, state:, reducer:)
       let #(line, _, rest) = splitter.split(line_end, txt)
       case list.any(comment_markers, string.starts_with(line, _)) {
         True -> #(Ok(state), rest)
@@ -54,12 +57,14 @@ fn loop(
   state state: state,
   // fn(txt, state) -> #(Result(state, "error message"), rest)
   parser parser: fn(String, state) -> #(Result(state, String), String),
-) -> Result(state, ParserError) {
+  reducer reducer: fn(state) -> Result(output, String),
+) -> Result(output, ParserError) {
   case txt {
-    "" -> Ok(state)
+    "" -> reducer(state) |> result.map_error(ParserError(_, line:))
     _ ->
       case parser(txt, state) {
-        #(Ok(state), rest) -> loop(txt: rest, line: line + 1, state:, parser:)
+        #(Ok(state), rest) ->
+          loop(txt: rest, line: line + 1, state:, parser:, reducer:)
         #(Error(error), _) -> Error(ParserError(line:, error:))
       }
   }

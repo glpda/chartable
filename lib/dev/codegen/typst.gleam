@@ -22,44 +22,52 @@ pub fn parse_codex(txt: String) -> Result(NotationTable, ParserError) {
   let init = ParserState(prefix: "", module: "", table: notation_table.new())
   let comment = parser.Anywhere(["//", "@"])
   let space = splitter.new([" "])
-  result.map(with: fn(state) { state.table }, over: {
-    use line, state <- parser.parse_lines(txt:, init:, comment:)
-    use <- bool.guard(
-      when: string.starts_with(line, "}"),
-      return: case state.module {
-        "" -> Error("Submodule Not Open")
-        _ -> Ok(ParserState(..state, module: ""))
-      },
-    )
-    let #(key, _, symbol) = splitter.split(space, line)
-    case key, symbol {
-      "", _ -> Error("Invalid Key")
-      ".", _ -> Error("Invalid Key")
-      "." <> _, "" -> Error("Invalid Prefix")
-      "." <> _, "{" -> Error("Invalid Submodule")
-      prefix, "" -> Ok(ParserState(..state, prefix:))
-      module, "{" -> Ok(ParserState(..state, prefix: "", module:))
-      key, symbol -> {
-        use grapheme <- result.try(
-          parse_grapheme(symbol)
-          |> result.replace_error("Invalid Codepoints"),
-        )
-        use notation <- result.try(case state.module, state.prefix, key {
-          _, "", "." <> _ -> Error("Invalid Prefix")
-          "", prefix, "." <> suffix -> Ok(prefix <> "." <> suffix)
-          module, prefix, "." <> suffix ->
-            Ok(module <> "." <> prefix <> "." <> suffix)
-          "", _, notation -> Ok(notation)
-          module, _, notation -> Ok(module <> "." <> notation)
-        })
-        let table = notation_table.update(state.table, grapheme:, notation:)
-        case key {
-          "." <> _ -> Ok(ParserState(..state, table:))
-          prefix -> Ok(ParserState(..state, prefix:, table:))
-        }
+  let reducer = fn(state: ParserState) {
+    case state.module {
+      "" -> Ok(state.table)
+      _ -> Error("Submodule Not Closed")
+    }
+  }
+  use line, state <- parser.parse_lines(txt:, init:, comment:, reducer:)
+  use <- bool.guard(
+    when: string.starts_with(line, "}"),
+    return: case state.module {
+      "" -> Error("Submodule Not Opened")
+      _ -> Ok(ParserState(..state, module: ""))
+    },
+  )
+  let #(key, _, symbol) = splitter.split(space, line)
+  case key, symbol {
+    "", _ -> Error("Invalid Key")
+    ".", _ -> Error("Invalid Key")
+    "." <> _, "" -> Error("Invalid Prefix")
+    "." <> _, "{" -> Error("Invalid Submodule")
+    prefix, "" -> Ok(ParserState(..state, prefix:))
+    module, "{" ->
+      case state.module {
+        "" -> Ok(ParserState(..state, prefix: "", module:))
+        _ -> Error("Submodule Not Closed")
+      }
+    key, symbol -> {
+      use grapheme <- result.try(
+        parse_grapheme(symbol)
+        |> result.replace_error("Invalid Codepoints"),
+      )
+      use notation <- result.try(case state.module, state.prefix, key {
+        _, "", "." <> _ -> Error("Invalid Prefix")
+        "", prefix, "." <> suffix -> Ok(prefix <> "." <> suffix)
+        module, prefix, "." <> suffix ->
+          Ok(module <> "." <> prefix <> "." <> suffix)
+        "", _, notation -> Ok(notation)
+        module, _, notation -> Ok(module <> "." <> notation)
+      })
+      let table = notation_table.update(state.table, grapheme:, notation:)
+      case key {
+        "." <> _ -> Ok(ParserState(..state, table:))
+        prefix -> Ok(ParserState(..state, prefix:, table:))
       }
     }
-  })
+  }
 }
 
 fn parse_grapheme(str: String) -> Result(String, Nil) {

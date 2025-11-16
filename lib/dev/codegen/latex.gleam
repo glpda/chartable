@@ -17,11 +17,10 @@ pub fn parse_math_symbols(
   comment comment: parser.SplitPosition,
   parser parser: fn(String) -> Result(MathSymbol, String),
 ) -> Result(List(MathSymbol), ParserError) {
-  result.map(with: list.reverse, over: {
-    use line, symbols <- parser.parse_lines(txt:, init: [], comment:)
-    use symbol <- result.try(parser(line))
-    Ok([symbol, ..symbols])
-  })
+  let reducer = fn(symbols) { Ok(list.reverse(symbols)) }
+  use line, symbols <- parser.parse_lines(txt:, init: [], comment:, reducer:)
+  use symbol <- result.try(parser(line))
+  Ok([symbol, ..symbols])
 }
 
 /// Parses `tex-math.txt` extracted from
