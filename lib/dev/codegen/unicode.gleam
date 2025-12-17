@@ -81,11 +81,6 @@ pub type RangeRecord(data) {
   RangeRecord(codepoint_range: codepoint.Range, data: data)
 }
 
-pub type AlternatingRecord(data) {
-  AlternatingRecord(codepoint_range: codepoint.Range, even: data, odd: data)
-  ContiguousRecord(codepoint_range: codepoint.Range, data: data)
-}
-
 fn concat_range_record(left: RangeRecord(data), right: RangeRecord(data)) {
   use <- bool.guard(when: left.data != right.data, return: Error(Nil))
   result.map(
@@ -135,6 +130,93 @@ pub fn range_records_to_string(
     index <> ": " <> data_to_string(record.data)
   })
   |> string.join("\n")
+}
+
+pub type AlternatingRecord(data) {
+  AlternatingRecord(codepoint_range: codepoint.Range, even: data, odd: data)
+  ContiguousRecord(codepoint_range: codepoint.Range, data: data)
+}
+
+fn alternating_records(
+  records: List(RangeRecord(data)),
+) -> List(AlternatingRecord(data)) {
+  use accumulator, previous_record <- list.fold(
+    from: [],
+    over: list.sort(records, fn(lhs, rhs) {
+      codepoint.range_compare(lhs.codepoint_range, rhs.codepoint_range)
+      |> order.negate
+    }),
+  )
+  let RangeRecord(range_0, data_0) = previous_record
+  case accumulator {
+    [ContiguousRecord(range_1, data_1), ..next_records] if data_0 == data_1 ->
+      case codepoint.range_union(range_0, range_1) {
+        Error(_) -> [ContiguousRecord(range_0, data_0), ..accumulator]
+        Ok(codepoint_range) -> [
+          ContiguousRecord(codepoint_range, data_0),
+          ..next_records
+        ]
+      }
+    [
+      ContiguousRecord(range_1, data_1),
+      ContiguousRecord(range_2, data_2),
+      ContiguousRecord(range_3, data_3),
+      ..next_records
+    ]
+      if data_0 == data_2 && data_1 == data_3
+    -> {
+      // && data_0 != data_1
+      let #(start_0, end_0) = codepoint.range_to_ints(range_0)
+      let #(start_1, end_1) = codepoint.range_to_ints(range_1)
+      let #(start_2, end_2) = codepoint.range_to_ints(range_2)
+      let #(start_3, end_3) = codepoint.range_to_ints(range_3)
+      let #(start, _) = codepoint.range_to_codepoints(range_0)
+      let #(_, end) = codepoint.range_to_codepoints(range_3)
+      let codepoint_range = codepoint.range_from_codepoints(start, end)
+      case
+        start_0 == end_0
+        && start_1 == end_1
+        && start_2 == end_2
+        && start_3 == end_3
+        && start_0 + 1 == start_1
+        && start_0 + 2 == start_2
+        && start_0 + 3 == start_3
+      {
+        False -> [ContiguousRecord(range_0, data_0), ..accumulator]
+        True if start_0 % 2 == 0 -> [
+          AlternatingRecord(codepoint_range:, even: data_0, odd: data_1),
+          ..next_records
+        ]
+        True -> [
+          AlternatingRecord(codepoint_range:, even: data_1, odd: data_0),
+          ..next_records
+        ]
+      }
+    }
+    [ContiguousRecord(_, _), ..] -> [
+      // if data_0 != data_1
+      ContiguousRecord(range_0, data_0),
+      ..accumulator
+    ]
+
+    [AlternatingRecord(range_1, even:, odd:), ..next_records] -> {
+      let #(start_0, end_0) = codepoint.range_to_ints(range_0)
+      let #(start_1, _) = codepoint.range_to_ints(range_1)
+      let is_adjacent_single = start_0 == end_0 && start_0 + 1 == start_1
+      let match_even = data_0 == even && start_0 % 2 == 0
+      let match_odd = data_0 == odd && start_0 % 2 == 1
+      case is_adjacent_single && { match_even || match_odd } {
+        False -> [ContiguousRecord(range_0, data_0), ..accumulator]
+        True -> {
+          let #(start, _) = codepoint.range_to_codepoints(range_0)
+          let #(_, end) = codepoint.range_to_codepoints(range_1)
+          let codepoint_range = codepoint.range_from_codepoints(start, end)
+          [AlternatingRecord(codepoint_range:, even:, odd:), ..next_records]
+        }
+      }
+    }
+    [] -> [ContiguousRecord(range_0, data_0)]
+  }
 }
 
 // =============================================================================
@@ -335,7 +417,9 @@ type IndexKind {
   LastCodepoint
 }
 
-pub fn parse_unicode_data(txt: String) -> Result(List(UnicodeDataRecord), ParserError) {
+pub fn parse_unicode_data(
+  txt: String,
+) -> Result(List(UnicodeDataRecord), ParserError) {
   let semicolon = splitter.new([";"])
   let comma = splitter.new([","])
   let reducer = fn(state) {
@@ -425,84 +509,8 @@ fn parse_alternating_records(
   txt: String,
   with fields_parser: fn(List(String)) -> Result(data, String),
 ) -> Result(List(AlternatingRecord(data)), ParserError) {
-  use records <- parse_records(txt, parser: parse_range_record(_, fields_parser))
-  use accumulator, previous_record <- list.fold(
-    from: [],
-    over: list.sort(records, fn(lhs, rhs) {
-      codepoint.range_compare(lhs.codepoint_range, rhs.codepoint_range)
-      |> order.negate
-    }),
-  )
-  let RangeRecord(range_0, data_0) = previous_record
-  case accumulator {
-    [ContiguousRecord(range_1, data_1), ..next_records] if data_0 == data_1 ->
-      case codepoint.range_union(range_0, range_1) {
-        Error(_) -> [ContiguousRecord(range_0, data_0), ..accumulator]
-        Ok(codepoint_range) -> [
-          ContiguousRecord(codepoint_range, data_0),
-          ..next_records
-        ]
-      }
-    [
-      ContiguousRecord(range_1, data_1),
-      ContiguousRecord(range_2, data_2),
-      ContiguousRecord(range_3, data_3),
-      ..next_records
-    ]
-      if data_0 == data_2 && data_1 == data_3
-    -> {
-      // && data_0 != data_1
-      let #(start_0, end_0) = codepoint.range_to_ints(range_0)
-      let #(start_1, end_1) = codepoint.range_to_ints(range_1)
-      let #(start_2, end_2) = codepoint.range_to_ints(range_2)
-      let #(start_3, end_3) = codepoint.range_to_ints(range_3)
-      let #(start, _) = codepoint.range_to_codepoints(range_0)
-      let #(_, end) = codepoint.range_to_codepoints(range_3)
-      let codepoint_range = codepoint.range_from_codepoints(start, end)
-      case
-        start_0 == end_0
-        && start_1 == end_1
-        && start_2 == end_2
-        && start_3 == end_3
-        && start_0 + 1 == start_1
-        && start_0 + 2 == start_2
-        && start_0 + 3 == start_3
-      {
-        False -> [ContiguousRecord(range_0, data_0), ..accumulator]
-        True if start_0 % 2 == 0 -> [
-          AlternatingRecord(codepoint_range:, even: data_0, odd: data_1),
-          ..next_records
-        ]
-        True -> [
-          AlternatingRecord(codepoint_range:, even: data_1, odd: data_0),
-          ..next_records
-        ]
-      }
-    }
-    [ContiguousRecord(_, _), ..] -> [
-      // if data_0 != data_1
-      ContiguousRecord(range_0, data_0),
-      ..accumulator
-    ]
-
-    [AlternatingRecord(range_1, even:, odd:), ..next_records] -> {
-      let #(start_0, end_0) = codepoint.range_to_ints(range_0)
-      let #(start_1, _) = codepoint.range_to_ints(range_1)
-      let is_adjacent_single = start_0 == end_0 && start_0 + 1 == start_1
-      let match_even = data_0 == even && start_0 % 2 == 0
-      let match_odd = data_0 == odd && start_0 % 2 == 1
-      case is_adjacent_single && { match_even || match_odd } {
-        False -> [ContiguousRecord(range_0, data_0), ..accumulator]
-        True -> {
-          let #(start, _) = codepoint.range_to_codepoints(range_0)
-          let #(_, end) = codepoint.range_to_codepoints(range_1)
-          let codepoint_range = codepoint.range_from_codepoints(start, end)
-          [AlternatingRecord(codepoint_range:, even:, odd:), ..next_records]
-        }
-      }
-    }
-    [] -> [ContiguousRecord(range_0, data_0)]
-  }
+  use line <- parse_records(txt, reducer: alternating_records)
+  parse_range_record(line, fields_parser)
 }
 
 fn parse_range_records(
