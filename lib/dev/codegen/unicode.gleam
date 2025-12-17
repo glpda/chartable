@@ -6,12 +6,25 @@ import gleam/bool
 import gleam/dict.{type Dict}
 import gleam/int
 import gleam/list
-import gleam/option.{None, Some}
+import gleam/option.{type Option, None, Some}
 import gleam/order
 import gleam/result
 import gleam/set
 import gleam/string
 import splitter
+
+pub type Index {
+  Index(Codepoint)
+  Range(codepoint.Range)
+}
+
+pub type UnicodeDataRecord {
+  UnicodeDataRecord(
+    index: Index,
+    name: Option(String),
+    category: GeneralCategory,
+  )
+}
 
 /// Records for "`PropertyValueAliases.txt`"
 pub type PvaRecord {
@@ -316,7 +329,64 @@ pub fn js_category_map(
 // =============================================================================
 // BEGIN UNIDATA PARSERS
 
-fn parse_unidata(
+type IndexKind {
+  SingleCodepoint
+  FirstCodepoint
+  LastCodepoint
+}
+
+pub fn parse_unicode_data(txt: String) -> Result(List(UnicodeDataRecord), ParserError) {
+  let semicolon = splitter.new([";"])
+  let comma = splitter.new([","])
+  let reducer = fn(state) {
+    let #(range_start, records) = state
+    case range_start {
+      None -> Ok(records)
+      Some(_) -> Error("Range Not Closed")
+    }
+  }
+  use line, #(range_start, records) <- parser.parse_lines(
+    txt:,
+    init: #(None, []),
+    comment: parser.LineStart([]),
+    reducer:,
+  )
+  let #(index_field, _, rest) = splitter.split(semicolon, line)
+  use codepoint <- result.try(
+    codepoint.parse(index_field) |> result.replace_error("Invalid Codepoint"),
+  )
+  let #(name_field, _, rest) = splitter.split(semicolon, rest)
+  let #(index_kind, name) = case name_field {
+    "<" <> _ ->
+      case splitter.split(comma, name_field).2 {
+        " First>" -> #(FirstCodepoint, None)
+        " Last>" -> #(LastCodepoint, None)
+        _ -> #(SingleCodepoint, None)
+      }
+    // NOTE: could test if name is valid
+    _ -> #(SingleCodepoint, Some(name_field))
+  }
+  let #(cat_field, _, _rest) = splitter.split(semicolon, rest)
+  use category <- result.try(
+    category.from_name(cat_field) |> result.replace_error("Invalid Category"),
+  )
+  // TODO parse other fields...
+  let record = UnicodeDataRecord(index: Index(codepoint), name:, category:)
+  case range_start, index_kind {
+    None, SingleCodepoint -> Ok(#(None, [record, ..records]))
+    None, FirstCodepoint -> Ok(#(Some(codepoint), records))
+    None, LastCodepoint -> Error("Range Not Opened")
+    Some(first), LastCodepoint -> {
+      let index = Range(codepoint.range_from_codepoints(first, codepoint))
+      let record = UnicodeDataRecord(index:, name:, category:)
+      // NOTE: could test if range first & last record fields match
+      Ok(#(None, [record, ..records]))
+    }
+    Some(_), _ -> Error("Range Not Closed")
+  }
+}
+
+fn parse_records(
   // input txt unidata:
   txt txt: String,
   // line/record parser:
@@ -334,7 +404,7 @@ fn parse_unidata(
 pub fn parse_property_value_aliases(
   txt: String,
 ) -> Result(List(PvaRecord), ParserError) {
-  use line <- parse_unidata(txt, reducer: list.reverse)
+  use line <- parse_records(txt, reducer: list.reverse)
   let fields = string.split(line, on: ";") |> list.map(string.trim)
   case fields {
     // ccc;       0; NR        ; Not_Reordered
@@ -355,7 +425,7 @@ fn parse_alternating_records(
   txt: String,
   with fields_parser: fn(List(String)) -> Result(data, String),
 ) -> Result(List(AlternatingRecord(data)), ParserError) {
-  use records <- parse_unidata(txt, parser: parse_range_record(_, fields_parser))
+  use records <- parse_records(txt, parser: parse_range_record(_, fields_parser))
   use accumulator, previous_record <- list.fold(
     from: [],
     over: list.sort(records, fn(lhs, rhs) {
@@ -439,7 +509,7 @@ fn parse_range_records(
   txt: String,
   with fields_parser: fn(List(String)) -> Result(data, String),
 ) -> Result(List(RangeRecord(data)), ParserError) {
-  use line <- parse_unidata(txt, reducer: concat_range_records)
+  use line <- parse_records(txt, reducer: concat_range_records)
   parse_range_record(line, fields_parser)
 }
 
@@ -490,7 +560,7 @@ pub fn parse_name_aliases(
   txt: String,
 ) -> Result(Dict(Codepoint, NameAliases), ParserError) {
   let separator = splitter.new([";"])
-  use records <- parse_unidata(txt:, parser: parse_name_alias(_, separator))
+  use records <- parse_records(txt:, parser: parse_name_alias(_, separator))
   use acc, record <- list.fold(over: records, from: dict.new())
   dict.upsert(in: acc, update: record.codepoint, with: fn(option) {
     case option {

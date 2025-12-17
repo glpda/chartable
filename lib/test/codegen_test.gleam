@@ -10,11 +10,36 @@ import codegen/notation_table
 import codegen/typst as typst_codegen
 import codegen/unicode as unicode_codegen
 import gleam/dict
+import gleam/list
+import gleam/option.{None, Some}
 import gleam/string
 import simplifile
 
 // =============================================================================
 // BEGIN Unicode Tests
+
+pub fn unicode_data_test() {
+  let assert Ok(txt) = simplifile.read("data/unicode/data.txt")
+  let assert Ok(unidata) = unicode_codegen.parse_unicode_data(txt)
+
+  use record <- list.each(unidata)
+  let codepoint = case record.index {
+    unicode_codegen.Index(codepoint) -> codepoint
+    unicode_codegen.Range(range) -> codepoint.range_to_codepoints(range).1
+  }
+  case record.name {
+    None -> {
+      // assert unicode.name_from_codepoint(codepoint) == ""
+      Nil
+    }
+    Some(name) -> {
+      let hex = codepoint.to_hex(codepoint)
+      let name = string.replace(in: name, each: "*", with: hex)
+      assert name == unicode.name_from_codepoint(codepoint)
+    }
+  }
+  assert record.category == unicode.category_from_codepoint(codepoint)
+}
 
 pub fn unicode_name_test() {
   let assert Ok(txt) = simplifile.read("data/unicode/names.txt")
