@@ -379,31 +379,38 @@ pub fn js_script_map(
 }
 
 pub fn js_category_map(
-  categories categories: List(AlternatingRecord(GeneralCategory)),
+  unidata unidata: List(UnicodeDataRecord),
   template template: String,
-) -> String {
-  let categories =
-    list.map(categories, fn(record) {
-      let #(start, end) = codepoint.range_to_ints(record.codepoint_range)
-      let start = codepoint.int_to_hex(start)
-      let end = codepoint.int_to_hex(end)
-      case record {
-        AlternatingRecord(_, even:, odd:) -> {
-          let even_name = category.to_short_name(even)
-          let odd_name = category.to_short_name(odd)
-          // [0x2C80, 0x2CE3, Lu, Ll] (Coptic)
-          let range = "0x" <> start <> ", 0x" <> end
-          "[" <> range <> ", " <> even_name <> ", " <> odd_name <> "]"
-        }
-        ContiguousRecord(_, data:) -> {
-          let category_name = category.to_short_name(data)
-          // [0x0000, 0x001F, "Cc"]
-          "[0x" <> start <> ", 0x" <> end <> ", " <> category_name <> "]"
-        }
+) {
+  list.map(unidata, fn(record) {
+    let codepoint_range = case record.index {
+      Index(codepoint) -> codepoint.range_from_codepoints(codepoint, codepoint)
+      Range(range) -> range
+    }
+    RangeRecord(codepoint_range:, data: record.category)
+  })
+  |> alternating_records
+  |> list.map(fn(record) {
+    let #(start, end) = codepoint.range_to_ints(record.codepoint_range)
+    let start = codepoint.int_to_hex(start)
+    let end = codepoint.int_to_hex(end)
+    case record {
+      AlternatingRecord(_, even:, odd:) -> {
+        let even_name = category.to_short_name(even)
+        let odd_name = category.to_short_name(odd)
+        // [0x2C80, 0x2CE2, Lu, Ll] (Coptic)
+        let range = "0x" <> start <> ", 0x" <> end
+        "[" <> range <> ", " <> even_name <> ", " <> odd_name <> "]"
       }
-    })
-    |> string.join(with: ",\n")
-  string.replace(in: template, each: "/*{{categories}}*/", with: categories)
+      ContiguousRecord(_, data:) -> {
+        let category_name = category.to_short_name(data)
+        // [0x0000, 0x001F, "Cc"]
+        "[0x" <> start <> ", 0x" <> end <> ", " <> category_name <> "]"
+      }
+    }
+  })
+  |> string.join(with: ",\n")
+  |> string.replace(in: template, each: "/*{{categories}}*/")
 }
 
 // END
@@ -505,14 +512,6 @@ pub fn parse_property_value_aliases(
   }
 }
 
-fn parse_alternating_records(
-  txt: String,
-  with fields_parser: fn(List(String)) -> Result(data, String),
-) -> Result(List(AlternatingRecord(data)), ParserError) {
-  use line <- parse_records(txt, reducer: alternating_records)
-  parse_range_record(line, fields_parser)
-}
-
 fn parse_range_records(
   txt: String,
   with fields_parser: fn(List(String)) -> Result(data, String),
@@ -598,12 +597,6 @@ fn parse_name_alias(
     "abbreviation" -> Ok(NameAbbreviation(codepoint:, alias:))
     _ -> Error("Invalid Name Alias Type")
   }
-}
-
-pub fn parse_alternating_categories(
-  txt: String,
-) -> Result(List(AlternatingRecord(GeneralCategory)), ParserError) {
-  parse_alternating_records(txt, with: parse_category)
 }
 
 pub fn parse_categories(

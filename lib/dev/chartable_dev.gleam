@@ -10,6 +10,9 @@ pub fn main() {
   let assert Ok(property_value_aliases) =
     unicode.parse_property_value_aliases(txt)
 
+  let assert Ok(txt) = simplifile.read("data/unicode/data.txt")
+  let assert Ok(unidata) = unicode.parse_unicode_data(txt)
+
   let assert Ok(txt) = simplifile.read("data/unicode/names.txt")
   let assert Ok(names) = unicode.parse_names(txt)
   let assert Ok(template) = simplifile.read("codegen_templates/name_map.mjs")
@@ -43,13 +46,11 @@ pub fn main() {
       unicode.js_script_map(property_value_aliases:, scripts:, template:),
       to: "src/chartable/unicode/script_map.mjs",
     )
-  let assert Ok(txt) = simplifile.read("data/unicode/categories.txt")
-  let assert Ok(categories) = unicode.parse_alternating_categories(txt)
   let assert Ok(template) =
     simplifile.read("codegen_templates/category_map.mjs")
   let assert Ok(Nil) =
     simplifile.write(
-      unicode.js_category_map(categories:, template:),
+      unicode.js_category_map(unidata:, template:),
       to: "src/chartable/unicode/category_map.mjs",
     )
 
