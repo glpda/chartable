@@ -33,6 +33,15 @@ pub const minimum = Codepoint(0)
 /// Greatest possible code point: `0x10FFFF`.
 pub const maximum = Codepoint(0x10FFFF)
 
+/// Converts an integer to a chartable [`Codepoint`](#Codepoint),
+/// skipping boundary checks.
+///
+/// Only call on integer between `0` and `0x10FFFF`!
+@internal
+pub fn unsafe(value: Int) -> Codepoint {
+  Codepoint(value:)
+}
+
 /// Converts a standard `UtfCodepoint` to a chartable [`Codepoint`](#Codepoint).
 pub fn from_utf(utf: UtfCodepoint) -> Codepoint {
   Codepoint(string.utf_codepoint_to_int(utf))
