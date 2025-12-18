@@ -561,4 +561,21 @@ pub fn category_consistency_test() {
       }
   }
 }
+
+// END
+
+// =============================================================================
+// BEGIN Decomposition Tests
+
+pub fn full_decomposition_test() {
+  let full_decomposition_int = fn(cp) {
+    let assert Ok(cp) = codepoint.from_int(cp)
+    unicode.full_decomposition(cp)
+    |> list.map(codepoint.to_int)
+  }
+  assert full_decomposition_int(0x0041) == [0x0041]
+  assert full_decomposition_int(0xAC00) == [0x1100, 0x1161]
+  assert full_decomposition_int(0xD4DB) == [0x1111, 0x1171, 0x11B6]
+  assert full_decomposition_int(0xD7A3) == [0x1112, 0x1175, 0x11C2]
+}
 // END
