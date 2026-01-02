@@ -13,12 +13,10 @@ pub fn main() {
   let assert Ok(txt) = simplifile.read("data/unicode/data.txt")
   let assert Ok(unidata) = unicode.parse_unicode_data(txt)
 
-  let assert Ok(txt) = simplifile.read("data/unicode/names.txt")
-  let assert Ok(names) = unicode.parse_names(txt)
   let assert Ok(template) = simplifile.read("codegen_templates/name_map.mjs")
   let assert Ok(Nil) =
     simplifile.write(
-      unicode.js_name_map(names:, template:),
+      unicode.js_name_map(unidata:, template:),
       to: "src/chartable/unicode/name_map.mjs",
     )
   let assert Ok(txt) = simplifile.read("data/unicode/name-aliases.txt")

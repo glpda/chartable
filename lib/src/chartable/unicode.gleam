@@ -1,4 +1,5 @@
 import chartable
+import chartable/internal/jamo
 import chartable/unicode/category.{type GeneralCategory}
 import chartable/unicode/codepoint.{type Codepoint}
 import gleam/bool
@@ -100,8 +101,57 @@ pub fn basic_type_from_codepoint(cp: Codepoint) -> BasicType {
 /// assert unicode.name_from_codepoint(cp) == "CJK UNIFIED IDEOGRAPH-661F"
 /// ```
 ///
-pub fn name_from_codepoint(cp: Codepoint) -> String {
-  name_from_codepoint_ffi(codepoint.to_int(cp))
+pub fn name_from_codepoint(codepoint: Codepoint) -> String {
+  let cp = codepoint.to_int(codepoint)
+  case name_from_codepoint_ffi(cp) {
+    ""
+      if { 0x3400 <= cp && cp <= 0x4DBF }
+      || { 0x4E00 <= cp && cp <= 0x9FFF }
+      || { 0x20000 <= cp && cp <= 0x2A6DF }
+      || { 0x2A700 <= cp && cp <= 0x2B81D }
+      || { 0x2B820 <= cp && cp <= 0x2CEAD }
+      || { 0x2CEB0 <= cp && cp <= 0x2EBE0 }
+      || { 0x2EBF0 <= cp && cp <= 0x2EE5D }
+      || { 0x30000 <= cp && cp <= 0x3134A }
+      || { 0x31350 <= cp && cp <= 0x33479 }
+    -> "CJK UNIFIED IDEOGRAPH-" <> codepoint.int_to_hex(cp)
+
+    ""
+      if { 0xF900 <= cp && cp <= 0xFA6D }
+      || { 0xFA70 <= cp && cp <= 0xFAD9 }
+      || { 0x2F800 <= cp && cp <= 0x2FA1D }
+    -> "CJK COMPATIBILITY IDEOGRAPH-" <> codepoint.int_to_hex(cp)
+
+    "" if 0x13460 <= cp && cp <= 0x143FA ->
+      "EGYPTIAN HIEROGLYPH-" <> codepoint.int_to_hex(cp)
+
+    ""
+      if { 0x17000 <= cp && cp <= 0x187FF }
+      || { 0x18D00 <= cp && cp <= 0x18D1E }
+    -> "TANGUT IDEOGRAPH-" <> codepoint.int_to_hex(cp)
+
+    "" if { 0x18B00 <= cp && cp <= 0x18CD5 } || cp == 0x18CFF ->
+      "KHITAN SMALL SCRIPT CHARACTER-" <> codepoint.int_to_hex(cp)
+
+    "" if 0x1B170 <= cp && cp <= 0x1B2FB ->
+      "NUSHU CHARACTER-" <> codepoint.int_to_hex(cp)
+
+    "" ->
+      case hangul_full_decomposition(cp) {
+        Ok(#(leading, vowel, None)) ->
+          "HANGUL SYLLABLE "
+          <> jamo.short_name(leading)
+          <> jamo.short_name(vowel)
+        Ok(#(leading, vowel, Some(trailing))) ->
+          "HANGUL SYLLABLE "
+          <> jamo.short_name(leading)
+          <> jamo.short_name(vowel)
+          <> jamo.short_name(trailing)
+        Error(Nil) -> ""
+      }
+
+    name -> name
+  }
 }
 
 @external(javascript, "./unicode/name_map.mjs", "get_name")

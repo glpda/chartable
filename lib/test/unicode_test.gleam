@@ -237,6 +237,8 @@ pub fn name_from_codepoint_test() {
   assert name_from_int(0x03A2) == ""
   assert name_from_int(0x22C6) == "STAR OPERATOR"
   assert name_from_int(0x661F) == "CJK UNIFIED IDEOGRAPH-661F"
+  assert name_from_int(0xD4DB) == "HANGUL SYLLABLE PWILH"
+  assert name_from_int(100_344) == "TANGUT IDEOGRAPH-187F8"
 }
 
 pub fn aliases_from_codepoint_test() {

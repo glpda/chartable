@@ -231,52 +231,32 @@ fn js_array(strings: List(String)) -> String {
 }
 
 pub fn js_name_map(
-  names names: List(RangeRecord(String)),
+  unidata unidata: List(UnicodeDataRecord),
   template template: String,
-) -> String {
-  let if_ranges =
-    list.filter_map(names, fn(record) {
-      case codepoint.range_to_ints(record.codepoint_range) {
-        #(start, end) if start != end -> {
-          let start = codepoint.int_to_hex(start)
-          let end = codepoint.int_to_hex(end)
-          let indentation = "    "
-          // if ((0x3400 <= cp) && (cp <= 0x4DBF)) {
-          //   return "CJK UNIFIED IDEOGRAPH-" + int_to_hex(cp);
-          // }
-          let if_in_range =
-            "if ((0x" <> start <> " <= cp) && (cp <= 0x" <> end <> ")) {\n"
-          let name =
-            string.split(record.data, on: "*")
-            |> list.map(fn(str) { "\"" <> str <> "\"" })
-            |> list.intersperse(with: "int_to_hex(cp)")
-            |> list.filter(fn(str) { str != "\"\"" })
-            |> string.join(" + ")
-          let return_name = "  return " <> name <> ";\n"
-          Ok(if_in_range <> indentation <> return_name <> indentation <> "}")
-        }
-        _ -> Error(Nil)
-      }
+) {
+  list.filter_map(unidata, fn(record) {
+    use cp <- result.try(case record.index {
+      Index(codepoint) -> Ok(codepoint.to_int(codepoint))
+      Range(_) -> Error(Nil)
     })
-    |> string.join(" else ")
-
-  let map_def =
-    list.filter_map(names, fn(record) {
-      case codepoint.range_to_ints(record.codepoint_range) {
-        #(start, end) if start == end -> {
-          let cp = codepoint.int_to_hex(start)
-          // TODO assert name is (uppercase letter + space + dash)
-          let name = string.replace(in: record.data, each: "*", with: cp)
-          // [0x0020, "SPACE"],
-          Ok("[0x" <> cp <> ", \"" <> name <> "\"]")
-        }
-        _ -> Error(Nil)
-      }
+    use name <- result.try(case record.name {
+      // Some("") -> Error(Nil)
+      Some("CJK UNIFIED IDEOGRAPH-" <> _) -> Error(Nil)
+      Some("CJK COMPATIBILITY IDEOGRAPH-" <> _) -> Error(Nil)
+      Some("EGYPTIAN HIEROGLYPH-" <> _) -> Error(Nil)
+      Some("TANGUT IDEOGRAPH-" <> _) -> Error(Nil)
+      Some("KHITAN SMALL SCRIPT CHARACTER-" <> _) -> Error(Nil)
+      Some("NUSHU CHARACTER-" <> _) -> Error(Nil)
+      // TODO assert name is (uppercase letter + space + dash)
+      Some(name) -> Ok(name)
+      _ -> Error(Nil)
     })
-    |> string.join(",\n")
-
-  string.replace(in: template, each: "/*{{if_ranges}}*/", with: if_ranges)
-  |> string.replace(each: "/*{{map_def}}*/", with: map_def)
+    let hex = codepoint.int_to_hex(cp)
+    // [0x0020, "SPACE"]
+    Ok(js_array(["0x" <> hex, js_string(name)]))
+  })
+  |> string.join(",\n")
+  |> string.replace(in: template, each: "/*{{map_def}}*/")
 }
 
 pub fn js_name_alias_map(
@@ -432,7 +412,7 @@ pub fn parse_unicode_data(
   let reducer = fn(state) {
     let #(range_start, records) = state
     case range_start {
-      None -> Ok(records)
+      None -> Ok(list.reverse(records))
       Some(_) -> Error("Range Not Closed")
     }
   }
