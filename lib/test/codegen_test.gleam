@@ -3,7 +3,7 @@ import chartable/html
 import chartable/latex
 import chartable/typst
 import chartable/unicode
-import chartable/unicode/codepoint
+import chartable/unicode/codepoint.{type Codepoint}
 import codegen/html as html_codegen
 import codegen/latex as latex_codegen
 import codegen/notation_table
@@ -17,6 +17,16 @@ import simplifile
 
 // =============================================================================
 // BEGIN Unicode Tests
+
+fn each_range_records(
+  records: List(unicode_codegen.RangeRecord(data)),
+  callback: fn(Codepoint, data) -> Nil,
+) -> Nil {
+  use record <- list.each(records)
+  let codepoints = codepoint.range_to_list(record.codepoint_range)
+  use codepoint <- list.each(codepoints)
+  callback(codepoint, record.data)
+}
 
 pub fn unicode_data_test() {
   let assert Ok(txt) = simplifile.read("data/unicode/data.txt")
@@ -45,11 +55,11 @@ pub fn unicode_name_test() {
   let assert Ok(txt) = simplifile.read("data/unicode/names.txt")
   let assert Ok(names) = unicode_codegen.parse_names(txt)
 
-  unicode_codegen.assert_match_range_records(names, fn(cp, name) {
+  each_range_records(names, fn(cp, name) {
     assert name != ""
     let hex = codepoint.to_hex(cp)
     let name = string.replace(in: name, each: "*", with: hex)
-    unicode.name_from_codepoint(cp) == name
+    assert unicode.name_from_codepoint(cp) == name
   })
 }
 
@@ -70,9 +80,9 @@ pub fn unicode_blocks_test() {
   let assert Ok(txt) = simplifile.read("data/unicode/blocks.txt")
   let assert Ok(blocks) = unicode_codegen.parse_blocks(txt)
 
-  unicode_codegen.assert_match_range_records(blocks, fn(cp, block_name) {
+  each_range_records(blocks, fn(cp, block_name) {
     let assert Ok(block) = unicode.block_from_codepoint(cp)
-    block.name == block_name
+    assert block.name == block_name
   })
 
   unicode_codegen.range_records_to_string(blocks, fn(block_name) { block_name })
@@ -83,8 +93,8 @@ pub fn unicode_category_test() {
   let assert Ok(txt) = simplifile.read("data/unicode/categories.txt")
   let assert Ok(categories) = unicode_codegen.parse_categories(txt)
 
-  unicode_codegen.assert_match_range_records(categories, fn(cp, category) {
-    unicode.category_from_codepoint(cp) == category
+  each_range_records(categories, fn(cp, category) {
+    assert unicode.category_from_codepoint(cp) == category
   })
 }
 

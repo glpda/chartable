@@ -640,16 +640,4 @@ pub fn parse_scripts(
     [] -> Error("No Script Field")
   }
 }
-
 // END
-
-pub fn assert_match_range_records(
-  records: List(RangeRecord(data)),
-  codegen_match_record: fn(Codepoint, data) -> Bool,
-) -> Nil {
-  use record <- list.each(records)
-  let #(start, end) = codepoint.range_to_ints(record.codepoint_range)
-  use i <- list.each(list.range(start, end))
-  let assert Ok(cp) = codepoint.from_int(i)
-  assert codegen_match_record(cp, record.data)
-}
