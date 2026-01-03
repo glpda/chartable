@@ -1,12 +1,34 @@
 import chartable
 import chartable/unicode/codepoint.{type Codepoint}
+import gleam/bool
+import gleam/option.{type Option, None, Some}
 
 @internal
 pub const syllable_base = 0xAC00
 
 @internal
+pub const leading_base = 0x1100
+
+// @internal
+// pub const leading_count = 19
+
+@internal
+pub const vowel_base = 0x1161
+
+// @internal
+// pub const vowel_count = 21
+
+@internal
+pub const trailing_base = 0x11A7
+
+@internal
 pub const trailing_count = 28
 
+// vowel_count * trailing_count
+@internal
+pub const syllable_end_count = 588
+
+// leading_count * syllable_end_count
 @internal
 pub const syllable_count = 11_172
 
@@ -122,4 +144,29 @@ pub fn syllable_type_from_codepoint(cp: Codepoint) -> Result(SyllableType, Nil) 
     }
     _ -> Error(Nil)
   }
+}
+
+// Hangul Syllable Decomposition:
+// https://www.unicode.org/versions/latest/core-spec/chapter-3/#G56669
+@internal
+pub fn syllable_full_decomposition(
+  cp: Int,
+) -> Result(#(Codepoint, Codepoint, Option(Codepoint)), Nil) {
+  use <- bool.guard(
+    when: cp < syllable_base || syllable_base + syllable_count <= cp,
+    return: Error(Nil),
+  )
+  let syllable_index = cp - syllable_base
+
+  let leading_index = syllable_index / syllable_end_count
+  let vowel_index = { syllable_index % syllable_end_count } / trailing_count
+  let trailing_index = syllable_index % trailing_count
+
+  let leading_part = codepoint.unsafe(leading_base + leading_index)
+  let vowel_part = codepoint.unsafe(vowel_base + vowel_index)
+  let trailing_part = case trailing_index {
+    0 -> None
+    _ -> Some(codepoint.unsafe(trailing_base + trailing_index))
+  }
+  Ok(#(leading_part, vowel_part, trailing_part))
 }

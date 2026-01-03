@@ -2,9 +2,10 @@ import chartable
 import chartable/internal/jamo
 import chartable/unicode/category.{type GeneralCategory}
 import chartable/unicode/codepoint.{type Codepoint}
+import chartable/unicode/hangul
 import gleam/bool
 import gleam/list
-import gleam/option.{type Option, None, Some}
+import gleam/option.{None, Some}
 import gleam/result
 
 /// The basic types of code points
@@ -137,7 +138,7 @@ pub fn name_from_codepoint(codepoint: Codepoint) -> String {
       "NUSHU CHARACTER-" <> codepoint.int_to_hex(cp)
 
     "" ->
-      case hangul_full_decomposition(cp) {
+      case hangul.syllable_full_decomposition(cp) {
         Ok(#(leading, vowel, None)) ->
           "HANGUL SYLLABLE "
           <> jamo.short_name(leading)
@@ -329,53 +330,9 @@ fn category_from_codepoint_ffi(cp: Int) -> GeneralCategory
 pub fn full_decomposition(codepoint: Codepoint) -> List(Codepoint) {
   let cp = codepoint.to_int(codepoint)
   // TODO add all full decompositions
-  case hangul_full_decomposition(cp) {
+  case hangul.syllable_full_decomposition(cp) {
     Ok(#(leading, vowel, None)) -> [leading, vowel]
     Ok(#(leading, vowel, Some(trailing))) -> [leading, vowel, trailing]
     Error(Nil) -> [codepoint]
   }
-}
-
-const hangul_syllable_base = 0xAC00
-
-const hangul_leading_base = 0x1100
-
-// const hangul_leading_count = 19
-
-const hangul_vowel_base = 0x1161
-
-// const hangul_vowel_count = 21
-
-const hangul_trailing_base = 0x11A7
-
-const hangul_trailing_count = 28
-
-// hangul_vowel_count * hangul_trailing_count
-const hangul_syllable_end_count = 588
-
-// hangul_leading_count * hangul_syllable_end_count
-const hangul_syllable_count = 11_172
-
-fn hangul_full_decomposition(
-  cp: Int,
-) -> Result(#(Codepoint, Codepoint, Option(Codepoint)), Nil) {
-  use <- bool.guard(
-    when: cp < hangul_syllable_base
-      || hangul_syllable_base + hangul_syllable_count <= cp,
-    return: Error(Nil),
-  )
-  let syllable_index = cp - hangul_syllable_base
-
-  let leading_index = syllable_index / hangul_syllable_end_count
-  let vowel_index =
-    { syllable_index % hangul_syllable_end_count } / hangul_trailing_count
-  let trailing_index = syllable_index % hangul_trailing_count
-
-  let leading_part = codepoint.unsafe(hangul_leading_base + leading_index)
-  let vowel_part = codepoint.unsafe(hangul_vowel_base + vowel_index)
-  let trailing_part = case trailing_index {
-    0 -> None
-    _ -> Some(codepoint.unsafe(hangul_trailing_base + trailing_index))
-  }
-  Ok(#(leading_part, vowel_part, trailing_part))
 }
