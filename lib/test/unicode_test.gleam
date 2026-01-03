@@ -4,6 +4,7 @@ import chartable/unicode/codepoint
 import chartable/unicode/hangul
 import chartable/unicode/script
 import gleam/list
+import gleam/option.{None, Some}
 import gleam/order
 import gleam/result
 import gleam/string
@@ -584,6 +585,7 @@ pub fn full_decomposition_test() {
   assert full_decomposition_int(0xAC00) == [0x1100, 0x1161]
   assert full_decomposition_int(0xD4DB) == [0x1111, 0x1171, 0x11B6]
   assert full_decomposition_int(0xD7A3) == [0x1112, 0x1175, 0x11C2]
+  assert full_decomposition_int(0xBCC4) == [0x1107, 0x1167, 0x11AF]
 }
 
 // END
@@ -591,7 +593,7 @@ pub fn full_decomposition_test() {
 // =============================================================================
 // BEGIN Hangul Tests
 
-pub fn syllable_type_test() {
+pub fn hangul_syllable_type_test() {
   assert hangul.syllable_type_to_short_name(hangul.LeadingJamo) == "L"
   assert hangul.syllable_type_to_long_name(hangul.LeadingJamo) == "Leading_Jamo"
   assert hangul.syllable_type_from_name("Leading Jamo")
@@ -607,5 +609,22 @@ pub fn syllable_type_test() {
     == Ok(hangul.LvSyllable)
   assert hangul.syllable_type_from_codepoint(codepoint.unsafe(0xBCC4))
     == Ok(hangul.LvtSyllable)
+}
+
+pub fn hangul_decomposition_consistency_test() {
+  let recursive_decomposition = fn(codepoint) {
+    use #(first_part, second_part) <- result.try(
+      hangul.syllable_canonical_decomposition(codepoint),
+    )
+    case hangul.syllable_canonical_decomposition(first_part) {
+      Ok(#(leading_part, vowel_part)) ->
+        Ok(#(leading_part, vowel_part, Some(second_part)))
+      Error(Nil) -> Ok(#(first_part, second_part, None))
+    }
+  }
+  use cp <- list.each([0, 0xAC00, 0xD4DB, 0xD7A3, 0xBCBC, 0xBCC4])
+  let assert Ok(codepoint) = codepoint.from_int(cp)
+  assert recursive_decomposition(codepoint)
+    == hangul.syllable_full_decomposition(codepoint)
 }
 // END

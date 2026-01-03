@@ -138,7 +138,7 @@ pub fn name_from_codepoint(codepoint: Codepoint) -> String {
       "NUSHU CHARACTER-" <> codepoint.int_to_hex(cp)
 
     "" ->
-      case hangul.syllable_full_decomposition(cp) {
+      case hangul.syllable_full_decomposition(codepoint) {
         Ok(#(leading, vowel, None)) ->
           "HANGUL SYLLABLE "
           <> jamo.short_name(leading)
@@ -328,9 +328,8 @@ pub fn category_from_codepoint(cp: Codepoint) -> GeneralCategory {
 fn category_from_codepoint_ffi(cp: Int) -> GeneralCategory
 
 pub fn full_decomposition(codepoint: Codepoint) -> List(Codepoint) {
-  let cp = codepoint.to_int(codepoint)
   // TODO add all full decompositions
-  case hangul.syllable_full_decomposition(cp) {
+  case hangul.syllable_full_decomposition(codepoint) {
     Ok(#(leading, vowel, None)) -> [leading, vowel]
     Ok(#(leading, vowel, Some(trailing))) -> [leading, vowel, trailing]
     Error(Nil) -> [codepoint]

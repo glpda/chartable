@@ -149,9 +149,38 @@ pub fn syllable_type_from_codepoint(cp: Codepoint) -> Result(SyllableType, Nil) 
 // Hangul Syllable Decomposition:
 // https://www.unicode.org/versions/latest/core-spec/chapter-3/#G56669
 @internal
+pub fn syllable_canonical_decomposition(
+  codepoint: Codepoint,
+) -> Result(#(Codepoint, Codepoint), Nil) {
+  let cp = codepoint.to_int(codepoint)
+  use <- bool.guard(
+    when: cp < syllable_base || syllable_base + syllable_count <= cp,
+    return: Error(Nil),
+  )
+  let syllable_index = cp - syllable_base
+  case syllable_index % trailing_count {
+    0 -> {
+      let leading_index = syllable_index / syllable_end_count
+      let vowel_index = { syllable_index % syllable_end_count } / trailing_count
+      let leading_part = codepoint.unsafe(leading_base + leading_index)
+      let vowel_part = codepoint.unsafe(vowel_base + vowel_index)
+      Ok(#(leading_part, vowel_part))
+    }
+    _ -> {
+      let lv_index = { syllable_index / trailing_count } * trailing_count
+      let trailing_index = syllable_index % trailing_count
+      let lv_part = codepoint.unsafe(syllable_base + lv_index)
+      let trailing_part = codepoint.unsafe(trailing_base + trailing_index)
+      Ok(#(lv_part, trailing_part))
+    }
+  }
+}
+
+@internal
 pub fn syllable_full_decomposition(
-  cp: Int,
+  codepoint: Codepoint,
 ) -> Result(#(Codepoint, Codepoint, Option(Codepoint)), Nil) {
+  let cp = codepoint.to_int(codepoint)
   use <- bool.guard(
     when: cp < syllable_base || syllable_base + syllable_count <= cp,
     return: Error(Nil),
