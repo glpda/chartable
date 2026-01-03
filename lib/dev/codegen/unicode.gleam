@@ -496,13 +496,6 @@ fn parse_range_records(
   with fields_parser: fn(List(String)) -> Result(data, String),
 ) -> Result(List(RangeRecord(data)), ParserError) {
   use line <- parse_records(txt, reducer: concat_range_records)
-  parse_range_record(line, fields_parser)
-}
-
-fn parse_range_record(
-  line: String,
-  with fields_parser: fn(List(String)) -> Result(data, String),
-) -> Result(RangeRecord(data), String) {
   let fields = string.split(line, on: ";") |> list.map(string.trim)
   case fields {
     [first_field, ..other_fields] -> {
