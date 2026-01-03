@@ -1,6 +1,7 @@
 import chartable/unicode
 import chartable/unicode/category
 import chartable/unicode/codepoint
+import chartable/unicode/hangul
 import chartable/unicode/script
 import gleam/list
 import gleam/order
@@ -237,6 +238,10 @@ pub fn name_from_codepoint_test() {
   assert name_from_int(0x03A2) == ""
   assert name_from_int(0x22C6) == "STAR OPERATOR"
   assert name_from_int(0x661F) == "CJK UNIFIED IDEOGRAPH-661F"
+  assert name_from_int(0x1107) == "HANGUL CHOSEONG PIEUP"
+  assert name_from_int(0x1167) == "HANGUL JUNGSEONG YEO"
+  assert name_from_int(0x11AF) == "HANGUL JONGSEONG RIEUL"
+  assert name_from_int(0xBCC4) == "HANGUL SYLLABLE BYEOL"
   assert name_from_int(0xD4DB) == "HANGUL SYLLABLE PWILH"
   assert name_from_int(100_344) == "TANGUT IDEOGRAPH-187F8"
 }
@@ -579,5 +584,28 @@ pub fn full_decomposition_test() {
   assert full_decomposition_int(0xAC00) == [0x1100, 0x1161]
   assert full_decomposition_int(0xD4DB) == [0x1111, 0x1171, 0x11B6]
   assert full_decomposition_int(0xD7A3) == [0x1112, 0x1175, 0x11C2]
+}
+
+// END
+
+// =============================================================================
+// BEGIN Hangul Tests
+
+pub fn syllable_type_test() {
+  assert hangul.syllable_type_to_short_name(hangul.LeadingJamo) == "L"
+  assert hangul.syllable_type_to_long_name(hangul.LeadingJamo) == "Leading_Jamo"
+  assert hangul.syllable_type_from_name("Leading Jamo")
+    == Ok(hangul.LeadingJamo)
+  assert hangul.syllable_type_from_codepoint(codepoint.unsafe(0)) == Error(Nil)
+  assert hangul.syllable_type_from_codepoint(codepoint.unsafe(0x1107))
+    == Ok(hangul.LeadingJamo)
+  assert hangul.syllable_type_from_codepoint(codepoint.unsafe(0x1167))
+    == Ok(hangul.VowelJamo)
+  assert hangul.syllable_type_from_codepoint(codepoint.unsafe(0x11AF))
+    == Ok(hangul.TrailingJamo)
+  assert hangul.syllable_type_from_codepoint(codepoint.unsafe(0xBCBC))
+    == Ok(hangul.LvSyllable)
+  assert hangul.syllable_type_from_codepoint(codepoint.unsafe(0xBCC4))
+    == Ok(hangul.LvtSyllable)
 }
 // END

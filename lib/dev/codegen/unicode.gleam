@@ -1,6 +1,7 @@
 import chartable
 import chartable/unicode/category.{type GeneralCategory}
 import chartable/unicode/codepoint.{type Codepoint}
+import chartable/unicode/hangul
 import codegen/parser.{type ParserError}
 import gleam/bool
 import gleam/dict.{type Dict}
@@ -638,6 +639,18 @@ pub fn parse_scripts(
       }
     }
     [] -> Error("No Script Field")
+  }
+}
+
+pub fn parse_hangul_syllable_type(
+  txt: String,
+) -> Result(List(RangeRecord(hangul.SyllableType)), ParserError) {
+  use data <- parse_range_records(txt)
+  case data {
+    [syllable_type, ..] ->
+      hangul.syllable_type_from_name(syllable_type)
+      |> result.replace_error("Invalid Syllable Type")
+    [] -> Error("No Syllable Type Field")
   }
 }
 // END

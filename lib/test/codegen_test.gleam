@@ -4,6 +4,7 @@ import chartable/latex
 import chartable/typst
 import chartable/unicode
 import chartable/unicode/codepoint.{type Codepoint}
+import chartable/unicode/hangul
 import codegen/html as html_codegen
 import codegen/latex as latex_codegen
 import codegen/notation_table
@@ -95,6 +96,16 @@ pub fn unicode_category_test() {
 
   each_range_records(categories, fn(cp, category) {
     assert unicode.category_from_codepoint(cp) == category
+  })
+}
+
+pub fn hangul_syllable_type_test() {
+  let assert Ok(txt) = simplifile.read("data/unicode/hangul-syllable-type.txt")
+  let assert Ok(syllable_types) =
+    unicode_codegen.parse_hangul_syllable_type(txt)
+
+  each_range_records(syllable_types, fn(cp, syllable_type) {
+    assert hangul.syllable_type_from_codepoint(cp) == Ok(syllable_type)
   })
 }
 
