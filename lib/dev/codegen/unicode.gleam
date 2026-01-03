@@ -314,13 +314,12 @@ pub fn js_block_map(
             or: [],
           )
         ]
-        |> list.map(fn(name) { "\"" <> name <> "\"" })
-        |> string.join(with: ", ")
+        |> list.map(js_string)
       let ints = codepoint.range_to_ints(record.codepoint_range)
       let start = codepoint.int_to_hex(ints.0)
       let end = codepoint.int_to_hex(ints.1)
       // [0x0000, 0x007F, "Basic Latin", "ASCII"]
-      "[0x" <> start <> ", 0x" <> end <> ", " <> names <> "]"
+      js_array(["0x" <> start, "0x" <> end, ..names])
     })
     |> string.join(with: ",\n")
   string.replace(in: template, each: "/*{{blocks}}*/", with: blocks)
@@ -337,7 +336,7 @@ pub fn js_script_map(
         PvaRecord(property: "sc", short_name:, long_name:, ..) -> {
           let short_name = string.lowercase(short_name)
           // ["zinh", "Inherited"]
-          Ok("[\"" <> short_name <> "\", \"" <> long_name <> "\"]")
+          Ok(js_array([js_string(short_name), js_string(long_name)]))
         }
         _ -> Error(Nil)
       }
@@ -350,8 +349,8 @@ pub fn js_script_map(
       let pair = codepoint.range_to_ints(record.codepoint_range)
       let start = codepoint.int_to_hex(pair.0)
       let end = codepoint.int_to_hex(pair.1)
-      // [[0x0000, 0x0040], "zyyy"]
-      "[[0x" <> start <> ", 0x" <> end <> "], \"" <> record.data <> "\"]"
+      // [0x0000, 0x0040, "zyyy"]
+      js_array(["0x" <> start, "0x" <> end, js_string(record.data)])
     })
     |> string.join(with: ",\n")
 
@@ -380,13 +379,12 @@ pub fn js_category_map(
         let even_name = category.to_short_name(even)
         let odd_name = category.to_short_name(odd)
         // [0x2C80, 0x2CE2, Lu, Ll] (Coptic)
-        let range = "0x" <> start <> ", 0x" <> end
-        "[" <> range <> ", " <> even_name <> ", " <> odd_name <> "]"
+        js_array(["0x" <> start, "0x" <> end, even_name, odd_name])
       }
       ContiguousRecord(_, data:) -> {
         let category_name = category.to_short_name(data)
         // [0x0000, 0x001F, "Cc"]
-        "[0x" <> start <> ", 0x" <> end <> ", " <> category_name <> "]"
+        js_array(["0x" <> start, "0x" <> end, category_name])
       }
     }
   })
