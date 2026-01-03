@@ -583,10 +583,7 @@ fn parse_name_alias(
 pub fn parse_categories(
   txt: String,
 ) -> Result(List(RangeRecord(GeneralCategory)), ParserError) {
-  parse_range_records(txt, with: parse_category)
-}
-
-fn parse_category(data: List(String)) -> Result(GeneralCategory, String) {
+  use data <- parse_range_records(txt)
   case data {
     [cat, ..] ->
       category.from_name(cat) |> result.replace_error("Invalid Category")
