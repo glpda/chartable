@@ -1,5 +1,4 @@
 import chartable
-import chartable/internal/jamo
 import chartable/unicode/category.{type GeneralCategory}
 import chartable/unicode/codepoint.{type Codepoint}
 import chartable/unicode/hangul
@@ -141,13 +140,13 @@ pub fn name_from_codepoint(codepoint: Codepoint) -> String {
       case hangul.syllable_full_decomposition(codepoint) {
         Ok(#(leading, vowel, None)) ->
           "HANGUL SYLLABLE "
-          <> jamo.short_name(leading)
-          <> jamo.short_name(vowel)
+          <> hangul.jamo_short_name(leading)
+          <> hangul.jamo_short_name(vowel)
         Ok(#(leading, vowel, Some(trailing))) ->
           "HANGUL SYLLABLE "
-          <> jamo.short_name(leading)
-          <> jamo.short_name(vowel)
-          <> jamo.short_name(trailing)
+          <> hangul.jamo_short_name(leading)
+          <> hangul.jamo_short_name(vowel)
+          <> hangul.jamo_short_name(trailing)
         Error(Nil) -> ""
       }
 
