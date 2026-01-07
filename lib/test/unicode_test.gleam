@@ -53,12 +53,12 @@ pub fn codepoint_parse_utf_test() {
 }
 
 pub fn codepoint_range_ints_test() {
-  let assert Error(_) = codepoint.range_from_ints(-100, 0)
-  let assert Error(_) = codepoint.range_from_ints(100, -50)
-  let assert Error(_) = codepoint.range_from_ints(-50, -100)
-  let assert Error(_) = codepoint.range_from_ints(0x0041, 0x110000)
-  let assert Error(_) = codepoint.range_from_ints(0x120000, 0)
-  let assert Error(_) = codepoint.range_from_ints(0x110000, 0x120000)
+  assert codepoint.range_from_ints(-100, 0) == Error(Nil)
+  assert codepoint.range_from_ints(100, -50) == Error(Nil)
+  assert codepoint.range_from_ints(-50, -100) == Error(Nil)
+  assert codepoint.range_from_ints(0x0041, 0x110000) == Error(Nil)
+  assert codepoint.range_from_ints(0x120000, 0) == Error(Nil)
+  assert codepoint.range_from_ints(0x110000, 0x120000) == Error(Nil)
 
   use #(left, right) <- list.each([
     #(0x0000, 0x007F),
@@ -80,17 +80,17 @@ pub fn codepoint_range_ints_test() {
       assert #(right, left) == codepoint.range_to_ints(range)
     }
   }
-  let assert Ok(left) = codepoint.from_int(left)
-  let assert Ok(right) = codepoint.from_int(right)
+  let left = codepoint.unsafe(left)
+  let right = codepoint.unsafe(right)
   assert codepoint.range_from_codepoints(left, right) == range
   assert codepoint.range_from_codepoints(right, left) == range
 }
 
 pub fn codepoint_range_compare_test() {
-  let assert Ok(cp1) = codepoint.from_int(100)
-  let assert Ok(cp2) = codepoint.from_int(200)
-  let assert Ok(cp3) = codepoint.from_int(300)
-  let assert Ok(cp4) = codepoint.from_int(400)
+  let cp1 = codepoint.unsafe(100)
+  let cp2 = codepoint.unsafe(200)
+  let cp3 = codepoint.unsafe(300)
+  let cp4 = codepoint.unsafe(400)
   let range = codepoint.range_from_codepoints
 
   assert codepoint.range_compare(range(cp1, cp2), range(cp3, cp4)) == order.Lt
@@ -102,10 +102,10 @@ pub fn codepoint_range_compare_test() {
 }
 
 pub fn codepoint_range_overlap_test() {
-  let assert Ok(cp1) = codepoint.from_int(100)
-  let assert Ok(cp2) = codepoint.from_int(200)
-  let assert Ok(cp3) = codepoint.from_int(300)
-  let assert Ok(cp4) = codepoint.from_int(400)
+  let cp1 = codepoint.unsafe(100)
+  let cp2 = codepoint.unsafe(200)
+  let cp3 = codepoint.unsafe(300)
+  let cp4 = codepoint.unsafe(400)
   let range = codepoint.range_from_codepoints
 
   assert codepoint.range_intersection(range(cp2, cp2), range(cp2, cp2))
@@ -184,7 +184,7 @@ pub fn codepoint_range_overlap_test() {
   assert codepoint.range_union(range(cp2, cp2), range(cp1, cp2))
     == Ok(range(cp1, cp2))
 
-  let assert Ok(cp) = codepoint.from_int(201)
+  let cp = codepoint.unsafe(201)
   assert codepoint.range_union(range(cp1, cp2), range(cp, cp3))
     == Ok(range(cp1, cp3))
   assert codepoint.range_union(range(cp, cp3), range(cp1, cp2))
@@ -198,8 +198,8 @@ pub fn codepoint_range_overlap_test() {
 
 pub fn basic_type_from_codepoint_test() {
   let basic_type_from_int = fn(cp) {
-    let assert Ok(cp) = codepoint.from_int(cp)
-    unicode.basic_type_from_codepoint(cp)
+    codepoint.unsafe(cp)
+    |> unicode.basic_type_from_codepoint
   }
   assert basic_type_from_int(0x0041) == unicode.Graphic
   assert basic_type_from_int(0x0301) == unicode.Graphic
@@ -233,8 +233,8 @@ pub fn basic_type_from_codepoint_test() {
 
 pub fn name_from_codepoint_test() {
   let name_from_int = fn(cp) {
-    let assert Ok(cp) = codepoint.from_int(cp)
-    unicode.name_from_codepoint(cp)
+    codepoint.unsafe(cp)
+    |> unicode.name_from_codepoint
   }
   assert name_from_int(0x0041) == "LATIN CAPITAL LETTER A"
   assert name_from_int(0x03A2) == ""
@@ -250,8 +250,8 @@ pub fn name_from_codepoint_test() {
 
 pub fn aliases_from_codepoint_test() {
   let aliases_from_int = fn(cp) {
-    let assert Ok(cp) = codepoint.from_int(cp)
-    unicode.aliases_from_codepoint(cp)
+    codepoint.unsafe(cp)
+    |> unicode.aliases_from_codepoint
   }
   assert aliases_from_int(0x0041) == unicode.NameAliases([], [], [], [], [])
 
@@ -280,8 +280,8 @@ pub fn aliases_from_codepoint_test() {
 
 pub fn label_from_codepoint_test() {
   let label_from_int = fn(cp) {
-    let assert Ok(cp) = codepoint.from_int(cp)
-    unicode.label_from_codepoint(cp)
+    codepoint.unsafe(cp)
+    |> unicode.label_from_codepoint
   }
   assert label_from_int(0x0041) == "LATIN CAPITAL LETTER A"
   assert label_from_int(0xFE18)
@@ -300,7 +300,8 @@ pub fn label_from_codepoint_test() {
 
 pub fn block_from_codepoint_test() {
   let block_from_int = fn(cp) {
-    case result.try(codepoint.from_int(cp), unicode.block_from_codepoint) {
+    let codepoint = codepoint.unsafe(cp)
+    case unicode.block_from_codepoint(codepoint) {
       Ok(block) -> {
         let #(start, end) = codepoint.range_to_ints(block.range)
         #(start, end, block.name)
@@ -342,8 +343,8 @@ pub fn block_consistency_test() {
   let #(start, end) = codepoint.range_to_ints(block.range)
   assert start % 16 == 0
   assert end % 16 == 15
-  let assert Ok(cp) = codepoint.from_int({ start + end } / 2)
-  assert unicode.block_from_codepoint(cp) == Ok(block)
+  let middle = codepoint.unsafe({ start + end } / 2)
+  assert unicode.block_from_codepoint(middle) == Ok(block)
 }
 
 // END
@@ -384,8 +385,8 @@ pub fn script_name_test() {
 
 pub fn script_from_codepoint_test() {
   let script_from_int = fn(cp) {
-    let assert Ok(codepoint) = codepoint.from_int(cp)
-    script.from_codepoint(codepoint)
+    codepoint.unsafe(cp)
+    |> script.from_codepoint
   }
   let common = script_from_int(0x0020)
   assert script.to_short_name(common) == "Zyyy"
@@ -451,8 +452,8 @@ pub fn script_consistency_test() {
   assert script.from_codepoint(start) == script
   assert script.from_codepoint(end) == script
   let #(start, end) = codepoint.range_to_ints(range)
-  let assert Ok(cp) = codepoint.from_int({ start + end } / 2)
-  assert script.from_codepoint(cp) == script
+  let middle = codepoint.unsafe({ start + end } / 2)
+  assert script.from_codepoint(middle) == script
 }
 
 // END
@@ -461,9 +462,9 @@ pub fn script_consistency_test() {
 // BEGIN General Category Tests
 
 pub fn category_from_codepoint_test() {
-  use #(cp, cat) <- list.each(list.zip(example_codepoints, category.list))
-  let assert Ok(cp) = codepoint.from_int(cp)
-  assert unicode.category_from_codepoint(cp) == cat
+  use #(codepoint, cat) <- list.each(list.zip(example_codepoints, category.list))
+  let codepoint = codepoint.unsafe(codepoint)
+  assert unicode.category_from_codepoint(codepoint) == cat
 }
 
 pub fn category_from_name_test() {
@@ -621,8 +622,8 @@ pub fn combining_class_from_codepoint_test() {
 
 pub fn full_decomposition_test() {
   let full_decomposition_int = fn(cp) {
-    let assert Ok(cp) = codepoint.from_int(cp)
-    unicode.full_decomposition(cp)
+    codepoint.unsafe(cp)
+    |> unicode.full_decomposition
     |> list.map(codepoint.to_int)
   }
   assert full_decomposition_int(0x0041) == [0x0041]
@@ -667,7 +668,7 @@ pub fn hangul_decomposition_consistency_test() {
     }
   }
   use cp <- list.each([0, 0xAC00, 0xD4DB, 0xD7A3, 0xBCBC, 0xBCC4])
-  let assert Ok(codepoint) = codepoint.from_int(cp)
+  let codepoint = codepoint.unsafe(cp)
   assert recursive_decomposition(codepoint)
     == hangul.syllable_full_decomposition(codepoint)
 }
