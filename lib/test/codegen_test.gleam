@@ -5,6 +5,7 @@ import chartable/typst
 import chartable/unicode
 import chartable/unicode/category
 import chartable/unicode/codepoint.{type Codepoint}
+import chartable/unicode/combining_class
 import chartable/unicode/hangul
 import codegen/html as html_codegen
 import codegen/latex as latex_codegen
@@ -27,6 +28,14 @@ pub fn unicode_property_value_test() {
 
   use record <- list.each(property_value_aliases)
   case record {
+    // Canonical_Combining_Class (ccc):
+    unicode_codegen.CccRecord(numeric:, short_name:, long_name:) -> {
+      let assert Ok(ccc) = combining_class.from_int(numeric)
+      assert combining_class.to_short_name(ccc) == short_name
+      assert combining_class.to_long_name(ccc) == long_name
+      assert combining_class.from_name(short_name) == Ok(ccc)
+      assert combining_class.from_name(long_name) == Ok(ccc)
+    }
     // General_Category (gc):
     unicode_codegen.PvaRecord(property: "gc", short_name:, long_name:, ..) -> {
       case short_name {

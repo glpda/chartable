@@ -1,6 +1,7 @@
 import chartable/unicode
 import chartable/unicode/category
 import chartable/unicode/codepoint
+import chartable/unicode/combining_class
 import chartable/unicode/hangul
 import chartable/unicode/script
 import gleam/list
@@ -568,6 +569,36 @@ pub fn category_consistency_test() {
         _ -> panic as "Invalid long_name suffix!"
       }
   }
+}
+
+// END
+
+// =============================================================================
+// BEGIN Combining Class Tests
+
+pub fn combining_class_value_test() {
+  let assert Ok(not_reordered) = combining_class.from_int(0)
+  assert combining_class.from_name("not reordered") == Ok(not_reordered)
+  assert combining_class.from_name("NR") == Ok(not_reordered)
+  assert combining_class.to_int(not_reordered) == 0
+  assert combining_class.to_short_name(not_reordered) == "NR"
+  assert combining_class.to_long_name(not_reordered) == "Not_Reordered"
+  assert !combining_class.is_fixed_position(not_reordered)
+
+  let assert Ok(ccc10) = combining_class.from_int(10)
+  assert combining_class.from_name("CCC10") == Ok(ccc10)
+  assert combining_class.to_int(ccc10) == 10
+  assert combining_class.to_short_name(ccc10) == "CCC10"
+  assert combining_class.to_long_name(ccc10) == "CCC10"
+  assert combining_class.is_fixed_position(ccc10)
+
+  let assert Ok(above) = combining_class.from_int(230)
+  assert combining_class.from_name("above") == Ok(above)
+  assert combining_class.from_name("a") == Ok(above)
+  assert combining_class.to_int(above) == 230
+  assert combining_class.to_short_name(above) == "A"
+  assert combining_class.to_long_name(above) == "Above"
+  assert !combining_class.is_fixed_position(above)
 }
 
 // END
