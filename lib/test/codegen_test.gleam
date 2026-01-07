@@ -3,6 +3,7 @@ import chartable/html
 import chartable/latex
 import chartable/typst
 import chartable/unicode
+import chartable/unicode/category
 import chartable/unicode/codepoint.{type Codepoint}
 import chartable/unicode/hangul
 import codegen/html as html_codegen
@@ -17,6 +18,44 @@ import simplifile
 
 // =============================================================================
 // BEGIN Unicode Tests
+
+pub fn unicode_property_value_test() {
+  let assert Ok(txt) =
+    simplifile.read("data/unicode/property-value-aliases.txt")
+  let assert Ok(property_value_aliases) =
+    unicode_codegen.parse_property_value_aliases(txt)
+
+  use record <- list.each(property_value_aliases)
+  case record {
+    // General_Category (gc):
+    unicode_codegen.PvaRecord(property: "gc", short_name:, long_name:, ..) -> {
+      case short_name {
+        "C" | "L" | "LC" | "M" | "N" | "P" | "S" | "Z" -> Nil
+        _ -> {
+          let assert Ok(cat) = category.from_name(short_name)
+          assert category.to_short_name(cat) == short_name
+          assert category.to_long_name(cat) == long_name
+          assert category.from_name(long_name) == Ok(cat)
+        }
+      }
+    }
+    // Hangul_Syllable_Type (hst):
+    unicode_codegen.PvaRecord(property: "hst", short_name:, long_name:, ..) -> {
+      case hangul.syllable_type_from_name(short_name) {
+        Ok(syllable_type) -> {
+          assert hangul.syllable_type_to_short_name(syllable_type) == short_name
+          assert hangul.syllable_type_to_long_name(syllable_type) == long_name
+          assert hangul.syllable_type_from_name(long_name) == Ok(syllable_type)
+        }
+        Error(Nil) -> {
+          assert short_name == "NA"
+          assert long_name == "Not_Applicable"
+        }
+      }
+    }
+    _ -> Nil
+  }
+}
 
 fn each_range_records(
   records: List(unicode_codegen.RangeRecord(data)),
