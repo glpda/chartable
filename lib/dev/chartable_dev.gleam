@@ -51,6 +51,13 @@ pub fn main() {
       unicode.js_category_map(unidata:, template:),
       to: "src/chartable/unicode/category_map.mjs",
     )
+  let assert Ok(template) =
+    simplifile.read("codegen_templates/combining_class_map.mjs")
+  let assert Ok(Nil) =
+    simplifile.write(
+      unicode.js_combining_class_map(unidata:, template:),
+      to: "src/chartable/unicode/combining_class_map.mjs",
+    )
 
   let assert Ok(template) =
     simplifile.read("codegen_templates/notation_map.mjs")

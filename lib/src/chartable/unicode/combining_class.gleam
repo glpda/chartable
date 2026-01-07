@@ -13,6 +13,15 @@ pub opaque type CombiningClass {
 
 // pub const not_reordered = Ccc(0)
 
+/// Converts an integer to a [`CombiningClass`](#CombiningClass),
+/// skipping boundary checks.
+///
+/// Only call on integer between `0` and `254`!
+@internal
+pub fn unsafe(value: Int) -> CombiningClass {
+  Ccc(value:)
+}
+
 /// Converts an integer to a [`CombiningClass`](#CombiningClass) value.
 ///
 /// Returns an `Error` if the integer is not between `0` and `254`.

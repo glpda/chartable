@@ -1,6 +1,7 @@
 import chartable
 import chartable/unicode/category.{type GeneralCategory}
 import chartable/unicode/codepoint.{type Codepoint}
+import chartable/unicode/combining_class.{type CombiningClass}
 import chartable/unicode/hangul
 import codegen/parser.{type ParserError}
 import gleam/bool
@@ -24,6 +25,7 @@ pub type UnicodeDataRecord {
     index: Index,
     name: Option(String),
     category: GeneralCategory,
+    combining_class: CombiningClass,
   )
 }
 
@@ -392,6 +394,34 @@ pub fn js_category_map(
   |> string.replace(in: template, each: "/*{{categories}}*/")
 }
 
+pub fn js_combining_class_map(
+  unidata unidata: List(UnicodeDataRecord),
+  template template: String,
+) -> String {
+  list.filter_map(unidata, fn(record) {
+    let codepoint_range = case record.index {
+      Index(codepoint) -> codepoint.range_from_codepoints(codepoint, codepoint)
+      Range(range) -> range
+    }
+    case combining_class.to_int(record.combining_class) {
+      0 -> Error(Nil)
+      data -> Ok(RangeRecord(codepoint_range:, data:))
+    }
+  })
+  |> concat_range_records
+  // |> sort_range_records
+  |> list.reverse
+  |> list.map(fn(record) {
+    let #(start, end) = codepoint.range_to_ints(record.codepoint_range)
+    let start = codepoint.int_to_hex(start)
+    let end = codepoint.int_to_hex(end)
+    // [0x0334, 0x0338, 1]
+    js_array(["0x" <> start, "0x" <> end, int.to_string(record.data)])
+  })
+  |> string.join(with: ",\n")
+  |> string.replace(in: template, each: "/*{{combining_classes}}*/")
+}
+
 // END
 
 // =============================================================================
@@ -436,19 +466,31 @@ pub fn parse_unicode_data(
     // NOTE: could test if name is valid
     _ -> #(SingleCodepoint, Some(name_field))
   }
-  let #(cat_field, _, _rest) = splitter.split(semicolon, rest)
+  let #(cat_field, _, rest) = splitter.split(semicolon, rest)
   use category <- result.try(
     category.from_name(cat_field) |> result.replace_error("Invalid Category"),
   )
+  let #(ccc_field, _, _rest) = splitter.split(semicolon, rest)
+  use combining_class <- result.try(
+    int.base_parse(ccc_field, 10)
+    |> result.try(combining_class.from_int)
+    |> result.replace_error("Invalid Combining Class"),
+  )
   // TODO parse other fields...
-  let record = UnicodeDataRecord(index: Index(codepoint), name:, category:)
+  let record =
+    UnicodeDataRecord(
+      index: Index(codepoint),
+      name:,
+      category:,
+      combining_class:,
+    )
   case range_start, index_kind {
     None, SingleCodepoint -> Ok(#(None, [record, ..records]))
     None, FirstCodepoint -> Ok(#(Some(codepoint), records))
     None, LastCodepoint -> Error("Range Not Opened")
     Some(first), LastCodepoint -> {
       let index = Range(codepoint.range_from_codepoints(first, codepoint))
-      let record = UnicodeDataRecord(index:, name:, category:)
+      let record = UnicodeDataRecord(..record, index:)
       // NOTE: could test if range first & last record fields match
       Ok(#(None, [record, ..records]))
     }
@@ -578,6 +620,19 @@ pub fn parse_categories(
   case data {
     [cat, ..] ->
       category.from_name(cat) |> result.replace_error("Invalid Category")
+    [] -> Error("No Category Field")
+  }
+}
+
+pub fn parse_combining_classes(
+  txt: String,
+) -> Result(List(RangeRecord(CombiningClass)), ParserError) {
+  use data <- parse_range_records(txt)
+  case data {
+    [ccc, ..] ->
+      int.base_parse(ccc, 10)
+      |> result.try(combining_class.from_int)
+      |> result.replace_error("Invalid Combining Class")
     [] -> Error("No Category Field")
   }
 }

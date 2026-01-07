@@ -1,6 +1,7 @@
 import chartable
 import chartable/unicode/category.{type GeneralCategory}
 import chartable/unicode/codepoint.{type Codepoint}
+import chartable/unicode/combining_class.{type CombiningClass}
 import chartable/unicode/hangul
 import gleam/bool
 import gleam/list
@@ -325,6 +326,25 @@ pub fn category_from_codepoint(cp: Codepoint) -> GeneralCategory {
 
 @external(javascript, "./unicode/category_map.mjs", "codepoint_to_category")
 fn category_from_codepoint_ffi(cp: Int) -> GeneralCategory
+
+/// Get the Unicode "Combining Class" property of a code point.
+///
+/// ## Examples
+///
+/// ```gleam
+/// let assert Ok(cp) = codepoint.from_int(0x0301)
+/// let above = unicode.combining_class_from_codepoint(cp)
+/// assert combining_class.to_int(above) == 230
+/// ```
+///
+pub fn combining_class_from_codepoint(cp: Codepoint) -> CombiningClass {
+  codepoint.to_int(cp)
+  |> combining_class_from_codepoint_ffi
+  |> combining_class.unsafe
+}
+
+@external(javascript, "./unicode/combining_class_map.mjs", "codepoint_to_combining_class")
+fn combining_class_from_codepoint_ffi(cp: Int) -> Int
 
 pub fn full_decomposition(codepoint: Codepoint) -> List(Codepoint) {
   // TODO add all full decompositions

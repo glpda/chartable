@@ -601,6 +601,19 @@ pub fn combining_class_value_test() {
   assert !combining_class.is_fixed_position(above)
 }
 
+pub fn combining_class_from_codepoint_test() {
+  let combining_class_int = fn(cp) {
+    codepoint.unsafe(cp)
+    |> unicode.combining_class_from_codepoint
+    |> combining_class.to_int
+  }
+  assert combining_class_int(0) == 0
+  assert combining_class_int(0x0041) == 0
+  assert combining_class_int(0x0301) == 230
+  assert combining_class_int(0x0334) == 1
+  assert combining_class_int(0x05B0) == 10
+}
+
 // END
 
 // =============================================================================

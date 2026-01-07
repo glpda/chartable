@@ -61,6 +61,7 @@ fetch-unidata: \
 (dl-data unidata "Blocks.txt" "unicode/blocks.txt") \
 (dl-data unidata "Scripts.txt" "unicode/scripts.txt") \
 (dl-data unidata "ScriptExtensions.txt" "unicode/script-extensions.txt") \
+(dl-data unidata "extracted/DerivedCombiningClass.txt" "unicode/combining-classes.txt") \
 (dl-data unidata "HangulSyllableType.txt" "unicode/hangul-syllable-type.txt")
 
 whatwg := "https://html.spec.whatwg.org/"

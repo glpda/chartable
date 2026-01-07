@@ -123,6 +123,16 @@ pub fn unicode_category_test() {
   })
 }
 
+pub fn unicode_combining_class_test() {
+  let assert Ok(txt) = simplifile.read("data/unicode/combining-classes.txt")
+  let assert Ok(combining_classes) =
+    unicode_codegen.parse_combining_classes(txt)
+
+  each_range_records(combining_classes, fn(cp, combining_class) {
+    assert unicode.combining_class_from_codepoint(cp) == combining_class
+  })
+}
+
 pub fn hangul_syllable_type_test() {
   let assert Ok(txt) = simplifile.read("data/unicode/hangul-syllable-type.txt")
   let assert Ok(syllable_types) =
