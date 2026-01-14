@@ -4,6 +4,7 @@ import chartable/unicode/codepoint.{type Codepoint}
 import chartable/unicode/combining_class.{type CombiningClass}
 import chartable/unicode/hangul
 import gleam/bool
+import gleam/int
 import gleam/list
 import gleam/option.{None, Some}
 import gleam/result
@@ -136,6 +137,11 @@ pub fn name_from_codepoint(codepoint: Codepoint) -> String {
 
     "" if 0x1B170 <= cp && cp <= 0x1B2FB ->
       "NUSHU CHARACTER-" <> codepoint.int_to_hex(cp)
+
+    "" if { 0xFE00 <= cp && cp <= 0xFE0F } ->
+      "VARIATION SELECTOR-" <> int.to_string(cp - 0xFE00 + 1)
+    "" if { 0xE0100 <= cp && cp <= 0xE01EF } ->
+      "VARIATION SELECTOR-" <> int.to_string(cp - 0xE0100 + 17)
 
     "" ->
       case hangul.syllable_full_decomposition(codepoint) {

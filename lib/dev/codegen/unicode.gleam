@@ -250,6 +250,7 @@ pub fn js_name_map(
       Some("TANGUT IDEOGRAPH-" <> _) -> Error(Nil)
       Some("KHITAN SMALL SCRIPT CHARACTER-" <> _) -> Error(Nil)
       Some("NUSHU CHARACTER-" <> _) -> Error(Nil)
+      Some("VARIATION SELECTOR-" <> _) -> Error(Nil)
       // TODO assert name is (uppercase letter + space + dash)
       Some(name) -> Ok(name)
       _ -> Error(Nil)
