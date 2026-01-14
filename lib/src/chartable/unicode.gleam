@@ -8,6 +8,7 @@ import gleam/int
 import gleam/list
 import gleam/option.{None, Some}
 import gleam/result
+import gleam/string
 
 /// The basic types of code points
 /// (see [Table 2-3](https://www.unicode.org/versions/latest/core-spec/chapter-2/#G286941))
@@ -131,6 +132,13 @@ pub fn name_from_codepoint(codepoint: Codepoint) -> String {
       if { 0x17000 <= cp && cp <= 0x187FF }
       || { 0x18D00 <= cp && cp <= 0x18D1E }
     -> "TANGUT IDEOGRAPH-" <> codepoint.int_to_hex(cp)
+
+    "" if { 0x18800 <= cp && cp <= 0x18AFF } ->
+      "TANGUT COMPONENT-"
+      <> int.to_string(cp - 0x18800 + 1) |> string.pad_start(to: 3, with: "0")
+    "" if { 0x18D80 <= cp && cp <= 0x18DF2 } ->
+      "TANGUT COMPONENT-"
+      <> int.to_string(cp - 0x18D80 + 769) |> string.pad_start(to: 3, with: "0")
 
     "" if { 0x18B00 <= cp && cp <= 0x18CD5 } || cp == 0x18CFF ->
       "KHITAN SMALL SCRIPT CHARACTER-" <> codepoint.int_to_hex(cp)
