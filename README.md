@@ -19,6 +19,7 @@ Inspirations (a prior art list):
 - [Compart Unicode](https://www.compart.com/en/unicode/)
 - [Codepoints.net](https://codepoints.net/)
 - [Typst ASCII Table](https://typst.app/tools/ascii-table/)
+- [Uucd (Ocaml Unicode Character Database Decoder)](https://github.com/dbuenzli/uucd/tree/master)
 
 
 ## Development
