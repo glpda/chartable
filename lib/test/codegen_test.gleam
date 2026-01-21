@@ -3,6 +3,7 @@ import chartable/html
 import chartable/latex
 import chartable/typst
 import chartable/unicode
+import chartable/unicode/bidi
 import chartable/unicode/category
 import chartable/unicode/codepoint.{type Codepoint}
 import chartable/unicode/combining_class
@@ -47,6 +48,13 @@ pub fn unicode_property_value_test() {
           assert category.from_name(long_name) == Ok(cat)
         }
       }
+    }
+    // Bidi_Class (bc):
+    unicode_codegen.PvaRecord(property: "bc", short_name:, long_name:, ..) -> {
+      let assert Ok(bidi_class) = bidi.class_from_name(short_name)
+      assert bidi.class_to_short_name(bidi_class) == short_name
+      assert bidi.class_to_long_name(bidi_class) == long_name
+      assert bidi.class_from_name(long_name) == Ok(bidi_class)
     }
     // Hangul_Syllable_Type (hst):
     unicode_codegen.PvaRecord(property: "hst", short_name:, long_name:, ..) -> {

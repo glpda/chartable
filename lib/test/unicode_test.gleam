@@ -1,4 +1,5 @@
 import chartable/unicode
+import chartable/unicode/bidi
 import chartable/unicode/category
 import chartable/unicode/codepoint
 import chartable/unicode/combining_class
@@ -613,6 +614,18 @@ pub fn combining_class_from_codepoint_test() {
   assert combining_class_int(0x0301) == 230
   assert combining_class_int(0x0334) == 1
   assert combining_class_int(0x05B0) == 10
+}
+
+// END
+
+// =============================================================================
+// BEGIN Bidirectional Tests
+
+pub fn bidi_class_name_test() {
+  assert bidi.class_from_name("L") == Ok(bidi.LeftToRight)
+  assert bidi.class_from_name("Left to Right") == Ok(bidi.LeftToRight)
+  assert bidi.class_to_short_name(bidi.LeftToRight) == "L"
+  assert bidi.class_to_long_name(bidi.LeftToRight) == "Left_To_Right"
 }
 
 // END
