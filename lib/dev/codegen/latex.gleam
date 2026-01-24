@@ -28,7 +28,7 @@ pub fn parse_math_symbols(
 pub fn parse_texmath_symbols(
   txt txt: String,
 ) -> Result(List(MathSymbol), ParserError) {
-  let comment = parser.Anywhere(["//"])
+  let comment = parser.After(["//"])
   let space = splitter.new([" "])
   use line <- parse_math_symbols(txt:, comment:)
   // alpha ABC α
@@ -52,7 +52,7 @@ pub fn parse_unimath_symbols(
   tex txt: String,
 ) -> Result(List(MathSymbol), ParserError) {
   let curly = splitter.new(["}{"])
-  let comment = parser.Anywhere(["%"])
+  let comment = parser.After(["%"])
   use line <- parse_math_symbols(txt:, comment:)
   // \UnicodeMathSymbol{"00021}{\mathexclam   }{\mathclose}{exclamation mark}%
   use rest <- result.try(case line {

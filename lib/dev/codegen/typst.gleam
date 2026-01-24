@@ -20,7 +20,7 @@ pub fn js_map(
 
 pub fn parse_codex(txt: String) -> Result(NotationTable, ParserError) {
   let init = ParserState(prefix: "", module: "", table: notation_table.new())
-  let comment = parser.Anywhere(["//", "@"])
+  let comment = parser.After(["//", "@"])
   let space = splitter.new([" "])
   let reducer = fn(state: ParserState) {
     case state.module {

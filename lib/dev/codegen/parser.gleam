@@ -8,7 +8,8 @@ pub type ParserError {
 }
 
 pub type SplitPosition {
-  Anywhere(List(String))
+  After(List(String))
+  Before(List(String))
   LineStart(List(String))
 }
 
@@ -26,11 +27,21 @@ pub fn parse_lines(
 ) -> Result(output, ParserError) {
   let line_end = splitter.new(["\n", "\r\n"])
   case comment {
-    Anywhere(comment_markers) -> {
+    After(comment_markers) -> {
       let comment_splitter = splitter.new(comment_markers)
       use txt, state <- loop(txt:, line: 0, state:, reducer:)
       let #(line, _, rest) = splitter.split(line_end, txt)
       let line = splitter.split_before(comment_splitter, line).0 |> string.trim
+      case line {
+        "" -> #(Ok(state), rest)
+        _ -> #(parser(line, state), rest)
+      }
+    }
+    Before(comment_markers) -> {
+      let comment_splitter = splitter.new(comment_markers)
+      use txt, state <- loop(txt:, line: 0, state:, reducer:)
+      let #(line, _, rest) = splitter.split(line_end, txt)
+      let line = splitter.split_after(comment_splitter, line).1 |> string.trim
       case line {
         "" -> #(Ok(state), rest)
         _ -> #(parser(line, state), rest)

@@ -509,7 +509,7 @@ fn parse_records(
   reducer reducer: fn(List(record)) -> output,
 ) -> Result(output, ParserError) {
   let reducer = fn(records) { Ok(reducer(records)) }
-  let comment = parser.Anywhere(["#"])
+  let comment = parser.After(["#"])
   use line, records <- parser.parse_lines(txt:, init: [], comment:, reducer:)
   use record <- result.try(parser(line))
   Ok([record, ..records])
