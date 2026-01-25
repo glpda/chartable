@@ -631,6 +631,16 @@ pub fn bidi_class_name_test() {
 // END
 
 // =============================================================================
+// BEGIN Binary Properties Tests
+
+pub fn binary_properties_test() {
+  assert unicode.is_white_space(codepoint.unsafe(0x0020))
+  assert !unicode.is_white_space(codepoint.unsafe(0x0041))
+}
+
+// END
+
+// =============================================================================
 // BEGIN Decomposition Tests
 
 pub fn full_decomposition_test() {

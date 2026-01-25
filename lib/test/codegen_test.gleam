@@ -74,6 +74,63 @@ pub fn unicode_property_value_test() {
   }
 }
 
+fn each_ranges(
+  ranges: List(codepoint.Range),
+  callback: fn(Codepoint) -> Nil,
+) -> Nil {
+  use range <- list.each(ranges)
+  let codepoints = codepoint.range_to_list(range)
+  use codepoint <- list.each(codepoints)
+  callback(codepoint)
+}
+
+fn complement_ranges(ranges: List(codepoint.Range)) -> List(codepoint.Range) {
+  complement_ranges_loop(ranges, acc: [], next: -1)
+}
+
+fn complement_ranges_loop(
+  rest input: List(codepoint.Range),
+  acc output: List(codepoint.Range),
+  next start: Int,
+) -> List(codepoint.Range) {
+  case input {
+    [] -> {
+      case codepoint.range_from_ints(start + 1, 0x10FFFF) {
+        Ok(range) if start + 1 < 0x10FFFF -> [range, ..output]
+        Ok(_) -> output
+        Error(_) -> output
+      }
+      |> list.reverse
+    }
+    [range, ..rest] -> {
+      let #(end, next) = codepoint.range_to_ints(range)
+      let acc = case codepoint.range_from_ints(start + 1, end - 1) {
+        Ok(range) if start + 1 < end -> [range, ..output]
+        Ok(_) -> output
+        Error(_) -> output
+      }
+      complement_ranges_loop(rest:, acc:, next:)
+    }
+  }
+}
+
+pub fn unicode_binary_properties_test() {
+  let assert Ok(txt) = simplifile.read("data/unicode/binary-properties.txt")
+  let assert Ok(binary_properties) =
+    unicode_codegen.parse_binary_properties(txt)
+  let assert_binary_property = fn(name, function) {
+    let assert Ok(ranges) = dict.get(binary_properties, name)
+    each_ranges(ranges, fn(codepoint) {
+      assert function(codepoint)
+    })
+    each_ranges(complement_ranges(ranges), fn(codepoint) {
+      assert !function(codepoint)
+    })
+  }
+
+  assert_binary_property("White_Space", unicode.is_white_space)
+}
+
 fn each_range_records(
   records: List(unicode_codegen.RangeRecord(data)),
   callback: fn(Codepoint, data) -> Nil,

@@ -535,6 +535,31 @@ pub fn parse_property_value_aliases(
   }
 }
 
+pub fn parse_binary_properties(
+  txt: String,
+) -> Result(Dict(String, List(codepoint.Range)), ParserError) {
+  let semicolon = splitter.new([";"])
+  let comment = parser.After(["#"])
+  let init = dict.new()
+  let reducer = dict.map_values(_, fn(_, ranges) {
+    list.sort(ranges, codepoint.range_compare)
+  })
+  let reducer = fn(dict) { Ok(reducer(dict)) }
+  use line, dict <- parser.parse_lines(txt:, init:, comment:, reducer:)
+  let #(index_field, _, rest) = splitter.split(semicolon, line)
+  use codepoint_range <- result.try(
+    string.trim(index_field) |> parse_codepoint_range,
+  )
+  let binary_property = string.trim(rest)
+  dict.upsert(binary_property, in: dict, with: fn(option) {
+    case option {
+      Some(ranges) -> [codepoint_range, ..ranges]
+      None -> [codepoint_range]
+    }
+  })
+  |> Ok
+}
+
 fn parse_range_records(
   txt: String,
   with fields_parser: fn(List(String)) -> Result(data, String),

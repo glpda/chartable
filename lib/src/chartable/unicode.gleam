@@ -368,3 +368,20 @@ pub fn full_decomposition(codepoint: Codepoint) -> List(Codepoint) {
     Error(Nil) -> [codepoint]
   }
 }
+
+pub fn is_white_space(codepoint: Codepoint) -> Bool {
+  case codepoint.to_int(codepoint) {
+    cp if 0x0009 <= cp && cp <= 0x000D -> True
+    0x0020 -> True
+    0x0085 -> True
+    0x00A0 -> True
+    0x1680 -> True
+    cp if 0x2000 <= cp && cp <= 0x200A -> True
+    0x2028 -> True
+    0x2029 -> True
+    0x202F -> True
+    0x205F -> True
+    0x3000 -> True
+    _ -> False
+  }
+}
