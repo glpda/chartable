@@ -129,6 +129,7 @@ pub fn unicode_binary_properties_test() {
   }
 
   assert_binary_property("White_Space", unicode.is_white_space)
+  assert_binary_property("Variation_Selector", unicode.is_variation_selector)
 }
 
 fn each_range_records(

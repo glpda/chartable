@@ -369,6 +369,16 @@ pub fn full_decomposition(codepoint: Codepoint) -> List(Codepoint) {
   }
 }
 
+pub fn is_variation_selector(codepoint: Codepoint) -> Bool {
+  case codepoint.to_int(codepoint) {
+    cp if 0x180B <= cp && cp <= 0x180D -> True
+    0x180F -> True
+    cp if 0xFE00 <= cp && cp <= 0xFE0F -> True
+    cp if 0xE0100 <= cp && cp <= 0xE01EF -> True
+    _ -> False
+  }
+}
+
 pub fn is_white_space(codepoint: Codepoint) -> Bool {
   case codepoint.to_int(codepoint) {
     cp if 0x0009 <= cp && cp <= 0x000D -> True
