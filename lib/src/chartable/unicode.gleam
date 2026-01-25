@@ -369,6 +369,19 @@ pub fn full_decomposition(codepoint: Codepoint) -> List(Codepoint) {
   }
 }
 
+pub fn is_prepended_concatenation_mark(codepoint: Codepoint) -> Bool {
+  case codepoint.to_int(codepoint) {
+    cp if 0x0600 <= cp && cp <= 0x0605 -> True
+    0x06DD -> True
+    0x070F -> True
+    cp if 0x0890 <= cp && cp <= 0x0891 -> True
+    0x08E2 -> True
+    0x110BD -> True
+    0x110CD -> True
+    _ -> False
+  }
+}
+
 pub fn is_variation_selector(codepoint: Codepoint) -> Bool {
   case codepoint.to_int(codepoint) {
     cp if 0x180B <= cp && cp <= 0x180D -> True

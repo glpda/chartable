@@ -130,6 +130,10 @@ pub fn unicode_binary_properties_test() {
 
   assert_binary_property("White_Space", unicode.is_white_space)
   assert_binary_property("Variation_Selector", unicode.is_variation_selector)
+  assert_binary_property(
+    "Prepended_Concatenation_Mark",
+    unicode.is_prepended_concatenation_mark,
+  )
 }
 
 fn each_range_records(
