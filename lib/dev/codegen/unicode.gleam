@@ -1,4 +1,5 @@
 import chartable
+import chartable/unicode/bidi.{type BidiClass}
 import chartable/unicode/category.{type GeneralCategory}
 import chartable/unicode/codepoint.{type Codepoint}
 import chartable/unicode/combining_class.{type CombiningClass}
@@ -26,6 +27,7 @@ pub type UnicodeDataRecord {
     name: Option(String),
     category: GeneralCategory,
     combining_class: CombiningClass,
+    bidi_class: BidiClass,
   )
 }
 
@@ -424,6 +426,64 @@ pub fn js_combining_class_map(
   |> string.replace(in: template, each: "/*{{combining_classes}}*/")
 }
 
+pub fn js_bidi_class_map(
+  unidata unidata: List(UnicodeDataRecord),
+  defaults defaults: List(RangeRecord(BidiClass)),
+  template template: String,
+) -> String {
+  let js_record = fn(record: RangeRecord(BidiClass)) {
+    let #(start, end) = codepoint.range_to_ints(record.codepoint_range)
+    let start = "0x" <> codepoint.int_to_hex(start)
+    let end = "0x" <> codepoint.int_to_hex(end)
+    // [0x0590, 0x05FF, R]
+    js_array([start, end, bidi.class_to_short_name(record.data)])
+  }
+  let defaults =
+    list.filter(defaults, fn(record) { record.data != bidi.LeftToRight })
+    |> sort_range_records
+  let default_bidi_classes =
+    list.map(defaults, js_record)
+    |> string.join(with: ",\n")
+
+  list.filter_map(unidata, fn(record) {
+    case record.index {
+      Range(range) -> Ok(RangeRecord(range, data: record.bidi_class))
+      Index(codepoint) -> {
+        let cp = codepoint.to_int(codepoint)
+        let default_lookup =
+          list.find(defaults, fn(default_record) {
+            let #(start, end) =
+              codepoint.range_to_ints(default_record.codepoint_range)
+            start <= cp && cp <= end
+          })
+        case default_lookup, record.bidi_class {
+          Ok(default_record), bidi_class if bidi_class != default_record.data -> {
+            let codepoint_range =
+              codepoint.range_from_codepoints(codepoint, codepoint)
+            Ok(RangeRecord(codepoint_range:, data: bidi_class))
+          }
+          Ok(_), _ -> Error(Nil)
+          Error(_), bidi.LeftToRight -> Error(Nil)
+          Error(_), bidi_class -> {
+            let codepoint_range =
+              codepoint.range_from_codepoints(codepoint, codepoint)
+            Ok(RangeRecord(codepoint_range:, data: bidi_class))
+          }
+        }
+      }
+    }
+  })
+  |> concat_range_records
+  |> list.reverse
+  |> list.map(js_record)
+  |> string.join(with: ",\n")
+  |> string.replace(in: template, each: "/*{{bidi_classes}}*/")
+  |> string.replace(
+    each: "/*{{default_bidi_classes}}*/",
+    with: default_bidi_classes,
+  )
+}
+
 // END
 
 // =============================================================================
@@ -472,11 +532,16 @@ pub fn parse_unicode_data(
   use category <- result.try(
     category.from_name(cat_field) |> result.replace_error("Invalid Category"),
   )
-  let #(ccc_field, _, _rest) = splitter.split(semicolon, rest)
+  let #(ccc_field, _, rest) = splitter.split(semicolon, rest)
   use combining_class <- result.try(
     int.base_parse(ccc_field, 10)
     |> result.try(combining_class.from_int)
     |> result.replace_error("Invalid Combining Class"),
+  )
+  let #(bc_field, _, _rest) = splitter.split(semicolon, rest)
+  use bidi_class <- result.try(
+    bidi.class_from_name(bc_field)
+    |> result.replace_error("Invalid Bidi Class"),
   )
   // TODO parse other fields...
   let record =
@@ -485,6 +550,7 @@ pub fn parse_unicode_data(
       name:,
       category:,
       combining_class:,
+      bidi_class:,
     )
   case range_start, index_kind {
     None, SingleCodepoint -> Ok(#(None, [record, ..records]))
@@ -498,6 +564,30 @@ pub fn parse_unicode_data(
     }
     Some(_), _ -> Error("Range Not Closed")
   }
+}
+
+fn parse_missing_records(
+  txt txt: String,
+  with fields_parser: fn(List(String)) -> Result(data, String),
+) -> Result(List(RangeRecord(data)), ParserError) {
+  let comment = parser.Before(["# @missing:"])
+  let reducer = fn(records) { Ok(list.reverse(records)) }
+  use line, records <- parser.parse_lines(txt:, init: [], comment:, reducer:)
+  let fields = string.split(line, on: ";") |> list.map(string.trim)
+  case fields {
+    [first_field, ..other_fields] -> {
+      use codepoint_range <- result.try(parse_codepoint_range(first_field))
+      use data <- result.try(fields_parser(other_fields))
+      Ok([RangeRecord(codepoint_range:, data:), ..records])
+    }
+    _ -> Error("Missing Fields")
+  }
+}
+
+pub fn parse_missing_bidi_classes(
+  txt: String,
+) -> Result(List(RangeRecord(BidiClass)), ParserError) {
+  parse_missing_records(txt, with: parse_bidi_class)
 }
 
 fn parse_records(
@@ -661,6 +751,20 @@ pub fn parse_combining_classes(
       |> result.try(combining_class.from_int)
       |> result.replace_error("Invalid Combining Class")
     [] -> Error("No Category Field")
+  }
+}
+
+pub fn parse_bidi_classes(
+  txt: String,
+) -> Result(List(RangeRecord(BidiClass)), ParserError) {
+  parse_range_records(txt, with: parse_bidi_class)
+}
+
+fn parse_bidi_class(fields: List(String)) -> Result(BidiClass, String) {
+  case fields {
+    [bc, ..] ->
+      bidi.class_from_name(bc) |> result.replace_error("Invalid Bidi Class")
+    [] -> Error("No Bidi Class Field")
   }
 }
 

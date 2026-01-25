@@ -11,10 +11,16 @@ import gleam/order
 import gleam/result
 import gleam/string
 
-const example_codepoints = [
+const category_codepoints = [
   0x0041, 0x0061, 0x01F2, 0x02B0, 0x661F, 0x0301, 0x0903, 0x20E0, 0x0032, 0x2162,
   0x00BD, 0x2040, 0x2013, 0x007B, 0x007D, 0x201C, 0x201D, 0x0021, 0x002B, 0x0024,
   0x005E, 0x2B50, 0x0020, 0x2028, 0x2029, 0x0007, 0x00AD, 0xDB7F, 0xE777, 0x03A2,
+]
+
+const bidi_class_codepoints = [
+  0x0041, 0x05D0, 0x062D, 0x0032, 0x002B, 0x0024, 0x0662, 0x002C, 0x0301, 0x00AD,
+  0x000D, 0x0009, 0x0020, 0x0021, 0x202A, 0x202D, 0x202B, 0x202E, 0x202C, 0x2066,
+  0x2067, 0x2068, 0x2069,
 ]
 
 // =============================================================================
@@ -24,7 +30,7 @@ pub fn codepoint_test() {
   assert codepoint.from_int(-100) == Error(Nil)
   assert codepoint.from_int(0x110000) == Error(Nil)
 
-  use int <- list.each([0, 0x10FFFF, ..example_codepoints])
+  use int <- list.each([0, 0x10FFFF, ..category_codepoints])
   let assert Ok(cp) = codepoint.from_int(int)
   assert codepoint.to_int(cp) == int
   case string.utf_codepoint(int) {
@@ -463,8 +469,8 @@ pub fn script_consistency_test() {
 // BEGIN General Category Tests
 
 pub fn category_from_codepoint_test() {
-  use #(codepoint, cat) <- list.each(list.zip(example_codepoints, category.list))
-  let codepoint = codepoint.unsafe(codepoint)
+  use #(cp, cat) <- list.each(list.zip(category_codepoints, category.list))
+  let codepoint = codepoint.unsafe(cp)
   assert unicode.category_from_codepoint(codepoint) == cat
 }
 
@@ -626,6 +632,15 @@ pub fn bidi_class_name_test() {
   assert bidi.class_from_name("Left to Right") == Ok(bidi.LeftToRight)
   assert bidi.class_to_short_name(bidi.LeftToRight) == "L"
   assert bidi.class_to_long_name(bidi.LeftToRight) == "Left_To_Right"
+}
+
+pub fn bidi_class_from_codepoint_test() {
+  use #(cp, bidi_class) <- list.each(list.zip(
+    bidi_class_codepoints,
+    bidi.class_list,
+  ))
+  let codepoint = codepoint.unsafe(cp)
+  assert unicode.bidi_class_from_codepoint(codepoint) == bidi_class
 }
 
 // END

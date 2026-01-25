@@ -58,6 +58,15 @@ pub fn main() {
       unicode.js_combining_class_map(unidata:, template:),
       to: "src/chartable/unicode/combining_class_map.mjs",
     )
+  let assert Ok(template) =
+    simplifile.read("codegen_templates/bidi_class_map.mjs")
+  let assert Ok(txt) = simplifile.read("data/unicode/bidi-classes.txt")
+  let assert Ok(defaults) = unicode.parse_missing_bidi_classes(txt)
+  let assert Ok(Nil) =
+    simplifile.write(
+      unicode.js_bidi_class_map(unidata:, defaults:, template:),
+      to: "src/chartable/unicode/bidi_class_map.mjs",
+    )
 
   let assert Ok(template) =
     simplifile.read("codegen_templates/notation_map.mjs")

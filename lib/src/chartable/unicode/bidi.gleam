@@ -72,6 +72,37 @@ pub type BidiClass {
   PopDirectionalIsolate
 }
 
+/// A list of all Bidi Classes.
+pub const class_list = [
+  // Strong Types:
+  LeftToRight,
+  RightToLeft,
+  ArabicLetter,
+  // Weak Types:
+  EuropeanNumber,
+  EuropeanSeparator,
+  EuropeanTerminator,
+  ArabicNumber,
+  CommonSeparator,
+  NonspacingMark,
+  BoundaryNeutral,
+  // Neutral Types:
+  ParagraphSeparator,
+  SegmentSeparator,
+  WhiteSpace,
+  OtherNeutral,
+  // Explicit Formatting Types:
+  LeftToRightEmbedding,
+  LeftToRightOverride,
+  RightToLeftEmbedding,
+  RightToLeftOverride,
+  PopDirectionalFormat,
+  LeftToRightIsolate,
+  RightToLeftIsolate,
+  FirstStrongIsolate,
+  PopDirectionalIsolate,
+]
+
 /// Converts a name `String` to a [`BidiClass`](#BidiClass) value,
 /// property's name matching follows rule
 /// [UAX44-LM3](https://www.unicode.org/reports/tr44/#UAX44-LM3)

@@ -218,6 +218,15 @@ pub fn unicode_combining_class_test() {
   })
 }
 
+pub fn unicode_bidi_class_test() {
+  let assert Ok(txt) = simplifile.read("data/unicode/bidi-classes.txt")
+  let assert Ok(bidi_classes) = unicode_codegen.parse_bidi_classes(txt)
+
+  each_range_records(bidi_classes, fn(cp, bidi_class) {
+    assert unicode.bidi_class_from_codepoint(cp) == bidi_class
+  })
+}
+
 pub fn hangul_syllable_type_test() {
   let assert Ok(txt) = simplifile.read("data/unicode/hangul-syllable-type.txt")
   let assert Ok(syllable_types) =

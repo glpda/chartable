@@ -1,4 +1,5 @@
 import chartable
+import chartable/unicode/bidi.{type BidiClass}
 import chartable/unicode/category.{type GeneralCategory}
 import chartable/unicode/codepoint.{type Codepoint}
 import chartable/unicode/combining_class.{type CombiningClass}
@@ -356,6 +357,33 @@ pub fn combining_class_from_codepoint(cp: Codepoint) -> CombiningClass {
 
 @external(javascript, "./unicode/combining_class_map.mjs", "codepoint_to_combining_class")
 fn combining_class_from_codepoint_ffi(cp: Int) -> Int
+
+/// Get the Unicode "Bidi Class" property of a code point.
+///
+/// ## Examples
+///
+/// ```gleam
+/// let assert Ok(cp) = codepoint.from_int(0x05D0)
+/// let rtl = unicode.bidi_class_from_codepoint(cp)
+/// assert bidi.class_to_long_name(rtl) == "Right_To_Left"
+/// ```
+///
+pub fn bidi_class_from_codepoint(codepoint: Codepoint) -> BidiClass {
+  let cp = codepoint.to_int(codepoint)
+  use <- result.lazy_unwrap(bidi_class_from_codepoint_ffi(cp))
+  case basic_type_from_codepoint(codepoint) {
+    NonCharacter -> bidi.BoundaryNeutral
+    Reserved ->
+      case is_default_ignorable(codepoint) {
+        True -> bidi.BoundaryNeutral
+        False -> bidi.LeftToRight
+      }
+    _ -> bidi.LeftToRight
+  }
+}
+
+@external(javascript, "./unicode/bidi_class_map.mjs", "codepoint_to_bidi_class")
+fn bidi_class_from_codepoint_ffi(cp: Int) -> Result(BidiClass, Nil)
 
 pub fn full_decomposition(codepoint: Codepoint) -> List(Codepoint) {
   // TODO add all full decompositions
