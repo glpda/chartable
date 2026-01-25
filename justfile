@@ -64,6 +64,7 @@ fetch-unidata: \
 (dl-data unidata "extracted/DerivedCombiningClass.txt" "unicode/combining-classes.txt") \
 (dl-data unidata "extracted/DerivedBidiClass.txt" "unicode/bidi-classes.txt") \
 (dl-data unidata "PropList.txt" "unicode/binary-properties.txt") \
+(dl-data unidata "DerivedCoreProperties.txt" "unicode/derived-binary-properties.txt") \
 (dl-data unidata "HangulSyllableType.txt" "unicode/hangul-syllable-type.txt")
 
 whatwg := "https://html.spec.whatwg.org/"
