@@ -118,6 +118,12 @@ pub fn unicode_binary_properties_test() {
   let assert Ok(txt) = simplifile.read("data/unicode/binary-properties.txt")
   let assert Ok(binary_properties) =
     unicode_codegen.parse_binary_properties(txt)
+  let assert Ok(txt) =
+    simplifile.read("data/unicode/derived-binary-properties.txt")
+  let assert Ok(derived_binary_properties) =
+    unicode_codegen.parse_binary_properties(txt)
+  let binary_properties =
+    dict.merge(binary_properties, derived_binary_properties)
   let assert_binary_property = fn(name, function) {
     let assert Ok(ranges) = dict.get(binary_properties, name)
     each_ranges(ranges, fn(codepoint) {
@@ -133,6 +139,14 @@ pub fn unicode_binary_properties_test() {
   assert_binary_property(
     "Prepended_Concatenation_Mark",
     unicode.is_prepended_concatenation_mark,
+  )
+  assert_binary_property(
+    "Default_Ignorable_Code_Point",
+    unicode.is_default_ignorable,
+  )
+  assert_binary_property(
+    "Default_Ignorable_Code_Point",
+    unicode.is_default_ignorable_derived,
   )
 }
 

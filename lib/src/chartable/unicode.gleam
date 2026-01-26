@@ -369,6 +369,76 @@ pub fn full_decomposition(codepoint: Codepoint) -> List(Codepoint) {
   }
 }
 
+pub fn is_default_ignorable(codepoint: Codepoint) -> Bool {
+  case codepoint.to_int(codepoint) {
+    0x00AD -> True
+    0x034F -> True
+    0x061C -> True
+    cp if 0x115F <= cp && cp <= 0x1160 -> True
+    cp if 0x17B4 <= cp && cp <= 0x17B5 -> True
+    cp if 0x180B <= cp && cp <= 0x180D -> True
+    0x180E -> True
+    0x180F -> True
+    cp if 0x200B <= cp && cp <= 0x200F -> True
+    cp if 0x202A <= cp && cp <= 0x202E -> True
+    cp if 0x2060 <= cp && cp <= 0x2064 -> True
+    0x2065 -> True
+    cp if 0x2066 <= cp && cp <= 0x206F -> True
+    0x3164 -> True
+    cp if 0xFE00 <= cp && cp <= 0xFE0F -> True
+    0xFEFF -> True
+    0xFFA0 -> True
+    cp if 0xFFF0 <= cp && cp <= 0xFFF8 -> True
+    cp if 0x1BCA0 <= cp && cp <= 0x1BCA3 -> True
+    cp if 0x1D173 <= cp && cp <= 0x1D17A -> True
+    0xE0000 -> True
+    0xE0001 -> True
+    cp if 0xE0002 <= cp && cp <= 0xE001F -> True
+    cp if 0xE0020 <= cp && cp <= 0xE007F -> True
+    cp if 0xE0080 <= cp && cp <= 0xE00FF -> True
+    cp if 0xE0100 <= cp && cp <= 0xE01EF -> True
+    cp if 0xE01F0 <= cp && cp <= 0xE0FFF -> True
+    _ -> False
+  }
+}
+
+@internal
+pub fn is_default_ignorable_derived(codepoint: Codepoint) -> Bool {
+  // Set Additions/Substractions:
+  // Other_Default_Ignorable_Code_Point
+  // + Cf (Format characters)
+  // + Variation_Selector
+  // - White_Space
+  // - FFF9..FFFB (Interlinear annotation format characters)
+  // - 13430..13440 (Egyptian hieroglyph format characters)
+  // - Prepended_Concatenation_Mark (Exceptional format characters that should be visible)
+  let cp = codepoint.to_int(codepoint)
+  case cp {
+    0x034F -> True
+    cp if 0x115F <= cp && cp <= 0x1160 -> True
+    cp if 0x17B4 <= cp && cp <= 0x17B5 -> True
+    0x2065 -> True
+    0x3164 -> True
+    0xFFA0 -> True
+    cp if 0xFFF0 <= cp && cp <= 0xFFF8 -> True
+    0xE0000 -> True
+    cp if 0xE0002 <= cp && cp <= 0xE001F -> True
+    cp if 0xE0080 <= cp && cp <= 0xE00FF -> True
+    cp if 0xE01F0 <= cp && cp <= 0xE0FFF -> True
+    _ ->
+      case category_from_codepoint(codepoint) {
+        category.Other(category.Format) -> True
+        _ -> is_variation_selector(codepoint)
+      }
+  }
+  && case cp {
+    cp if 0xFFF9 <= cp && cp <= 0xFFFB -> False
+    cp if 0x13430 <= cp && cp <= 0x13440 -> False
+    _ ->
+      !is_white_space(codepoint) && !is_prepended_concatenation_mark(codepoint)
+  }
+}
+
 pub fn is_prepended_concatenation_mark(codepoint: Codepoint) -> Bool {
   case codepoint.to_int(codepoint) {
     cp if 0x0600 <= cp && cp <= 0x0605 -> True
