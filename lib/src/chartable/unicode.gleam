@@ -60,14 +60,11 @@ pub fn basic_type_from_codepoint(cp: Codepoint) -> BasicType {
     category.Other(category.Control) -> Control
     category.Other(category.PrivateUse) -> PrivateUse
     category.Other(category.Surrogate) -> Surrogate
-    _ -> {
-      let int = codepoint.to_int(cp)
-      case int % 0x10000 {
-        0xFFFE | 0xFFFF -> NonCharacter
-        _ if 0xFDD0 <= int && int <= 0xFDEF -> NonCharacter
-        _ -> Reserved
+    _ ->
+      case is_noncharacter(cp) {
+        True -> NonCharacter
+        False -> Reserved
       }
-    }
   }
 }
 
@@ -436,6 +433,16 @@ pub fn is_default_ignorable_derived(codepoint: Codepoint) -> Bool {
     cp if 0x13430 <= cp && cp <= 0x13440 -> False
     _ ->
       !is_white_space(codepoint) && !is_prepended_concatenation_mark(codepoint)
+  }
+}
+
+@internal
+pub fn is_noncharacter(codepoint: Codepoint) -> Bool {
+  let cp = codepoint.to_int(codepoint)
+  case cp % 0x10000 {
+    0xFFFE | 0xFFFF -> True
+    _ if 0xFDD0 <= cp && cp <= 0xFDEF -> True
+    _ -> False
   }
 }
 

@@ -638,6 +638,8 @@ pub fn binary_properties_test() {
   assert !unicode.is_white_space(codepoint.unsafe(0x0041))
   assert unicode.is_variation_selector(codepoint.unsafe(0xFE00))
   assert !unicode.is_variation_selector(codepoint.unsafe(0x0041))
+  assert unicode.is_noncharacter(codepoint.unsafe(0xFFFE))
+  assert !unicode.is_noncharacter(codepoint.unsafe(0x0041))
 }
 
 // END

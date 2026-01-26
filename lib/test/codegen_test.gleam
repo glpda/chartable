@@ -148,6 +148,7 @@ pub fn unicode_binary_properties_test() {
     "Default_Ignorable_Code_Point",
     unicode.is_default_ignorable_derived,
   )
+  assert_binary_property("Noncharacter_Code_Point", unicode.is_noncharacter)
 }
 
 fn each_range_records(
